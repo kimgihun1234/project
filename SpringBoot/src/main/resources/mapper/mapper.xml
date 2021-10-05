@@ -1,13 +1,21 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cse.knu.cdp1.mapper.mainMapper">
-
-    <select id="select" resultType="cse.knu.cdp1.domain.info">
-        select *
-        from user
+<mapper namespace="mapper">
+    <select id="storingList" resultType="Storing">
+        SELECT * from t_mesbuyma05;
     </select>
+
+    <insert id="storingInsert" parameterType="Storing">
+        insert into t_mesbuyma05(corp_cd, busi_id, purc_in_no) values(#{corp_cd},
+            #{busi_id},
+            #{purc_in_no}
+        )
+    </insert>
+
+    <delete id="storingDelete" parameterType="Storing">
+        delete from t_mesbuyma05 where corp_cd=#{corp_cd} and busi_id=#{busi_id} and purc_in_no=#{purc_in_no}
+    </delete>
 
 </mapper>
