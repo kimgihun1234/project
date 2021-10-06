@@ -15,7 +15,8 @@ class MyPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         return when (position){
             0 -> { FragmentHome.newInstance("홈", "")}
             //0 -> FragmentHome()
-            1 -> { FragmentHome.newInstance("입출고", "")}
+            //1 -> { FragmentHome.newInstance("입출고", "")}
+            1 -> FragmentIO()
             2 -> { FragmentHome.newInstance("기록", "")}
             else -> { FragmentHome.newInstance("현황보기", "")}
 
