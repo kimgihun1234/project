@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SearchViewStyle">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/radius</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+</resources>
