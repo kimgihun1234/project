@@ -1,5 +1,7 @@
 package com.example.materialmanagement
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,10 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.widget.AlertDialogLayout
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.zxing.integration.android.IntentIntegrator
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,10 +35,13 @@ class FragmentIO : Fragment() {
     private lateinit var toggleButton : MaterialButtonToggleGroup
     private lateinit var btnIn : Button
     private lateinit var btnOut : Button
+    private lateinit var putBtn : Button
+    private lateinit var barCodeScanBtn : ImageButton
     private lateinit var searchOrder : SearchView
     private lateinit var searchCustomer : SearchView
     private lateinit var searchStorage : SearchView
     private lateinit var searchBarCode : SearchView
+    private lateinit var dialogView : View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +63,8 @@ class FragmentIO : Fragment() {
         toggleButton = view.findViewById(R.id.toggleButton)
         btnIn = view.findViewById(R.id.btnIn)
         btnOut = view.findViewById(R.id.btnOut)
+        putBtn = view.findViewById(R.id.putBtn)
+        barCodeScanBtn = view.findViewById(R.id.barCodeScanBtn)
 
         toggleButton.addOnButtonCheckedListener{ toggleButton, checkedId, isChecked ->
             if(isChecked) {
@@ -72,7 +82,7 @@ class FragmentIO : Fragment() {
                 }
             } else {
                 if(toggleButton.checkedButtonId == View.NO_ID) {
-                    Toast.makeText(activity,"선택 사항 없", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity,"선택 사항 없음", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -150,6 +160,37 @@ class FragmentIO : Fragment() {
                 return true
             }
         })
+
+        barCodeScanBtn.setOnClickListener {
+            val scanIntegrator = IntentIntegrator.forSupportFragment(this@FragmentIO)
+            scanIntegrator.setPrompt("Scan")
+            scanIntegrator.setBeepEnabled(true)
+            scanIntegrator.setBarcodeImageEnabled(true)
+            scanIntegrator.initiateScan()
+        }
+
+        putBtn.setOnClickListener {
+            dialogView = View.inflate(view.context, R.layout.in_dialog, null)
+            var dlg = AlertDialog.Builder(view.context)
+            dlg.setTitle("입고 등록")
+            dlg.setView(dialogView)
+            dlg.setPositiveButton("입고", null)
+            dlg.setNegativeButton("취소", null)
+            dlg.show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data) //결과 파
+        if (scanningResult != null) { //정상적으로 전달
+            if (scanningResult.contents != null) { //result 값
+                Toast.makeText(activity,"Scanned : ${scanningResult.contents} format : ${scanningResult.formatName}",
+                    Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(activity, "Nothing scanned", Toast.LENGTH_SHORT).show()
+        }
     }
 
     companion object {

@@ -2,7 +2,6 @@ package com.example.materialmanagement
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import com.example.materialmanagement.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator

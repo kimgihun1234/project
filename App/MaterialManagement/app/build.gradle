@@ -46,4 +46,6 @@ dependencies {
 
     //noinspection GradleCompatible
     implementation 'com.android.support:design:29.0.0'
+
+    implementation 'com.journeyapps:zxing-android-embedded:3.5.0'
 }

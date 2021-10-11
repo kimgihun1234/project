@@ -165,6 +165,7 @@
                         app:searchIcon="@drawable/ic_baseline_search_24" />
 
                     <ImageButton
+                        android:id="@+id/barCodeScanBtn"
                         android:layout_width="55dp"
                         android:layout_height="55dp"
                         android:layout_marginLeft="2dp"
@@ -173,23 +174,165 @@
                         android:src="@drawable/ic_baseline_qr_code_scanner_24" />
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="15dp"
                     >
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="처리 결과"
                         android:textColor="@color/black"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-
+                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
                         />
-                </LinearLayout>
+                    <Button
+                        android:id="@+id/putBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="입고"
+                        android:layout_toLeftOf="@id/deleteBtn"
+                        android:layout_marginRight="5dp"
+                        android:backgroundTint="@color/green"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        />
+
+                    <Button
+                        android:id="@+id/deleteBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="삭제"
+                        android:layout_alignParentRight="true"
+                        android:backgroundTint="@color/red"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        />
+                </RelativeLayout>
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/black"
+                    android:stretchColumns="1,2"
+                    android:shrinkColumns="0,3"
+                    >
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        />
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="1dp"
+                            android:layout_marginBottom="1dp"
+                            android:background="@color/darkGray"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="선택"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:background="@color/darkGray"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="입고일자"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:background="@color/darkGray"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="품목명"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:background="@color/darkGray"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:text="수량"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        >
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="1dp"
+                            android:layout_marginBottom="1dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_gravity="center"
+                            android:padding="3dp"
+                            android:text="입고일자"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_gravity="center"
+                            android:padding="3dp"
+                            android:text="품목명"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_gravity="center"
+                            android:padding="3dp"
+                            android:text="123"
+                            android:textStyle="bold"
+                            android:textColor="@color/mainBlue"
+                            />
+                    </TableRow>
+                </TableLayout>
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
