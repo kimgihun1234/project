@@ -40,4 +40,6 @@ public class StoringDetailDTO {
     String upd_dttm; // 수정 일시
 
     public StoringDetailDTO() {}
+
+    public String getPurc_in_no() { return purc_in_no; }
 }

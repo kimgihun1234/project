@@ -20,7 +20,7 @@ public class UnstoringDTO {
     String cust_cd; // 거래처 코드
     String supp_cd; // 납품처
     String pic_cd; // 담당자 코드
-    String depa_no; // 부서 코드
+    String depa_cd; // 부서 코드
     String emp_no; // 사원 번호
 
     String remark; // 비고
@@ -31,4 +31,8 @@ public class UnstoringDTO {
     String upd_dttm; // 수정 일시
 
     public UnstoringDTO() {}
+
+    public String getEx_no() {
+        return ex_no;
+    }
 }

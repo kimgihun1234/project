@@ -40,4 +40,9 @@ public class UserDTO {
     String upd_dttm; // 수정 일시
 
     public UserDTO() {}
+
+    public UserDTO(String emp_id, String pwd) {
+        this.emp_id = emp_id;
+        this.pwd = pwd;
+    }
 }

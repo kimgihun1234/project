@@ -19,7 +19,7 @@ public class StoringDTO {
     String purc_in_dt; // 구매 입고 일자
     String purc_close_divi; // 구매 마감 구분
     String cust_cd; // 거래처 코드
-    String pic_no; // 담당자 코드
+    String pic_cd; // 담당자 코드
     String depa_cd; // 부서 코드
     String emp_no; // 사원 번호
 
@@ -38,4 +38,6 @@ public class StoringDTO {
         this.busi_id = busi_id;
         this.purc_in_no = purc_in_no;
     }
+
+    public String getPurc_in_no() { return purc_in_no; }
 }

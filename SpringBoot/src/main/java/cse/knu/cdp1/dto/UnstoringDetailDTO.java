@@ -41,4 +41,8 @@ public class UnstoringDetailDTO {
     String upd_dttm; // 수정 일시
 
     public UnstoringDetailDTO() {}
+
+    public String getEx_no() {
+        return ex_no;
+    }
 }

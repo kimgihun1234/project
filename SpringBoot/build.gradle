@@ -39,7 +39,8 @@ dependencies {
 
 	implementation 'org.mariadb.jdbc:mariadb-java-client'
 
-	// 웹 테스트용. 완성 시에는 지워야 함. //
+	implementation 'com.google.code.gson:gson:2.8.7'
+
 	// https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
 	compileOnly 'javax.servlet:javax.servlet-api'
 	// https://mvnrepository.com/artifact/javax.servlet.jsp/jsp-api
