@@ -1,6 +1,7 @@
 package com.example.materialmanagement
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -10,12 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AlertDialogLayout
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
+import org.w3c.dom.Text
+import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,10 +43,12 @@ class FragmentIO : Fragment() {
     private lateinit var putBtn : Button
     private lateinit var barCodeScanBtn : ImageButton
     private lateinit var searchOrder : SearchView
-    private lateinit var searchCustomer : SearchView
+    private lateinit var searchCustomer : TextView
     private lateinit var searchStorage : SearchView
     private lateinit var searchBarCode : SearchView
     private lateinit var dialogView : View
+    private lateinit var searchItemName : SearchView
+    private lateinit var setDate : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,11 +80,15 @@ class FragmentIO : Fragment() {
                         Toast.makeText(activity,"입고", Toast.LENGTH_SHORT).show()
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.white));
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
+
+                        searchOrder.setQueryHint("발주 번호")
                     }
                     R.id.btnOut -> {
                         Toast.makeText(activity,"출고", Toast.LENGTH_SHORT).show()
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.white));
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
+
+                        searchOrder.setQueryHint("수주 번호")
                     }
                 }
             } else {
@@ -93,28 +104,15 @@ class FragmentIO : Fragment() {
         searchBarCode = view.findViewById(R.id.searchBarCode)
 
         searchOrder.isSubmitButtonEnabled = true
-        searchCustomer.isSubmitButtonEnabled = true
         searchStorage.isSubmitButtonEnabled = true
         searchBarCode.isSubmitButtonEnabled = true
 
         searchOrder.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                var intent = Intent(getActivity(), SearchOrder::class.java)
+                intent.putExtra("query", query)
+                getActivity()?.startActivity(intent)
 
-                // 검색 버튼 누를 때 호출
-
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
-
-                return true
-            }
-        })
-
-        searchCustomer.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
 
                 // 검색 버튼 누를 때 호출
 
@@ -171,6 +169,16 @@ class FragmentIO : Fragment() {
 
         putBtn.setOnClickListener {
             dialogView = View.inflate(view.context, R.layout.in_dialog, null)
+            searchItemName = dialogView.findViewById(R.id.searchItemName)
+            setDate = dialogView.findViewById(R.id.setDate)
+            //searchItemName.isSubmitButtonEnabled = true
+
+            val now = System.currentTimeMillis()
+            var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
+
+            setDate.setText(simpleDateFormat)
+
+
             var dlg = AlertDialog.Builder(view.context)
             dlg.setTitle("입고 등록")
             dlg.setView(dialogView)

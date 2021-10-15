@@ -88,18 +88,17 @@
                         app:searchIcon="@drawable/ic_baseline_search_24"
                         />
 
-                    <androidx.appcompat.widget.SearchView
+                    <TextView
                         android:id="@+id/searchCustomer"
                         android:layout_width="350dp"
                         android:layout_height="55dp"
-                        style="@style/SearchViewStyle"
-                        app:iconifiedByDefault="false"
-                        app:queryBackground="@null"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:queryHint="거래"
-                        app:searchIcon="@drawable/ic_baseline_search_24"
+                        android:background="@drawable/radius"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:hint="거래처"
+                        android:padding="15dp"
+                        android:textSize="17sp"
+                        android:paddingStart="60dp"
                         />
 
                     <androidx.appcompat.widget.SearchView
@@ -191,18 +190,18 @@
                         android:layout_marginLeft="10dp"
                         android:layout_gravity="center"
                         />
+
                     <Button
                         android:id="@+id/putBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="입고"
-                        android:layout_toLeftOf="@id/deleteBtn"
                         android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@id/deleteBtn"
                         android:backgroundTint="@color/green"
+                        android:text="입고"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
                         android:textSize="17sp"
-                        />
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/deleteBtn"
@@ -306,6 +305,7 @@
                             android:layout_gravity="center"
                             android:padding="3dp"
                             android:text="입고일자"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             />
@@ -317,6 +317,7 @@
                             android:layout_gravity="center"
                             android:padding="3dp"
                             android:text="품목명"
+                            android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             />
@@ -327,6 +328,8 @@
                             android:layout_marginLeft="1dp"
                             android:layout_gravity="center"
                             android:padding="3dp"
+                            android:layout_marginRight="30dp"
+                            android:textSize="18sp"
                             android:text="123"
                             android:textStyle="bold"
                             android:textColor="@color/mainBlue"
