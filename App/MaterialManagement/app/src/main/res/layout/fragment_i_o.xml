@@ -115,6 +115,20 @@
                         app:searchIcon="@drawable/ic_baseline_search_24"
                         />
 
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/searchItemName"
+                        android:layout_width="350dp"
+                        android:layout_height="55dp"
+                        style="@style/SearchViewStyle"
+                        app:iconifiedByDefault="false"
+                        app:queryBackground="@null"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:queryHint="품목명 검색"
+                        app:searchIcon="@drawable/ic_baseline_search_24"
+                        />
+
                 </LinearLayout>
 
                 <androidx.appcompat.widget.Toolbar
@@ -125,6 +139,14 @@
                     app:expandedTitleGravity="center"
                     android:background="@color/white"
                     >
+                    <Button
+                        android:id="@+id/refreshBtn"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="end"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/ic_baseline_refresh_24"
+                        />
                 </androidx.appcompat.widget.Toolbar>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -173,6 +195,14 @@
                         android:src="@drawable/ic_baseline_qr_code_scanner_24" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/searchResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="검색결과"
+                    />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -182,14 +212,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="처리 결과"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="검색 결과"
                         android:textColor="@color/black"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_gravity="center"
-                        />
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/putBtn"
@@ -287,6 +316,9 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginLeft="1dp"
                         android:background="@color/white"
                         >
 

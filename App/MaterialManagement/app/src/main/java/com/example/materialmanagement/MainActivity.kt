@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity(){
 //    )
 
     private val tabName = listOf(
-        "홈", "입출고", "기록", "현황보기"
+        "입출고", "반품", "현황보기", "설정"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

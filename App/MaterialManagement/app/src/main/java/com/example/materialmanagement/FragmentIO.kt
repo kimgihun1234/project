@@ -1,9 +1,7 @@
 package com.example.materialmanagement
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,12 +11,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AlertDialogLayout
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,8 +43,9 @@ class FragmentIO : Fragment() {
     private lateinit var searchStorage : SearchView
     private lateinit var searchBarCode : SearchView
     private lateinit var dialogView : View
-    private lateinit var searchItemName : SearchView
     private lateinit var setDate : TextView
+
+    private lateinit var refreshBtn : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,19 +69,20 @@ class FragmentIO : Fragment() {
         btnOut = view.findViewById(R.id.btnOut)
         putBtn = view.findViewById(R.id.putBtn)
         barCodeScanBtn = view.findViewById(R.id.barCodeScanBtn)
+        refreshBtn = view.findViewById(R.id.refreshBtn)
 
         toggleButton.addOnButtonCheckedListener{ toggleButton, checkedId, isChecked ->
             if(isChecked) {
                 when (checkedId) {
                     R.id.btnIn -> {
-                        Toast.makeText(activity,"입고", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(activity,"입고", Toast.LENGTH_SHORT).show()
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.white));
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
                         searchOrder.setQueryHint("발주 번호")
                     }
                     R.id.btnOut -> {
-                        Toast.makeText(activity,"출고", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(activity,"출고", Toast.LENGTH_SHORT).show()
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.white));
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
@@ -96,6 +94,10 @@ class FragmentIO : Fragment() {
                     Toast.makeText(activity,"선택 사항 없음", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        refreshBtn.setOnClickListener{
+            Toast.makeText(activity, "refresh", Toast.LENGTH_SHORT).show()
         }
 
         searchOrder = view.findViewById(R.id.searchOrder)
@@ -112,7 +114,6 @@ class FragmentIO : Fragment() {
                 var intent = Intent(getActivity(), SearchOrder::class.java)
                 intent.putExtra("query", query)
                 getActivity()?.startActivity(intent)
-
 
                 // 검색 버튼 누를 때 호출
 
@@ -169,9 +170,7 @@ class FragmentIO : Fragment() {
 
         putBtn.setOnClickListener {
             dialogView = View.inflate(view.context, R.layout.in_dialog, null)
-            searchItemName = dialogView.findViewById(R.id.searchItemName)
             setDate = dialogView.findViewById(R.id.setDate)
-            //searchItemName.isSubmitButtonEnabled = true
 
             val now = System.currentTimeMillis()
             var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
