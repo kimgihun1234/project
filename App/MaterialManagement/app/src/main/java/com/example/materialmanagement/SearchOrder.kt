@@ -11,13 +11,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabItem
 
 
 class SearchOrder : AppCompatActivity() {
     private lateinit var refreshBtn : TabItem
     private lateinit var searchText : TextView
-    private lateinit var row1 : TableRow
+
+    private lateinit var numRecyclerAdapter: NumRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,14 +37,18 @@ class SearchOrder : AppCompatActivity() {
             searchText.setText(itemNumber)
         }
 
-        refreshBtn.setOnClickListener{
+        refreshBtn.setOnClickListener {
             Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
         }
 
-        row1 = findViewById(R.id.row1)
+        numRecyclerAdapter = NumRecyclerAdapter()
 
-        row1.setOnClickListener{
-            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show()
+        this.findViewById<RecyclerView>(R.id.in_num_list).apply {
+            layoutManager =
+                LinearLayoutManager(this@SearchOrder, LinearLayoutManager.VERTICAL,false)
+            adapter = numRecyclerAdapter
         }
+
+
     }
 }

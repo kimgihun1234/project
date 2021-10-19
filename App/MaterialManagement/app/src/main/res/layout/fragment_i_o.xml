@@ -114,21 +114,6 @@
                         app:queryHint="창고/위치명"
                         app:searchIcon="@drawable/ic_baseline_search_24"
                         />
-
-                    <androidx.appcompat.widget.SearchView
-                        android:id="@+id/searchItemName"
-                        android:layout_width="350dp"
-                        android:layout_height="55dp"
-                        style="@style/SearchViewStyle"
-                        app:iconifiedByDefault="false"
-                        app:queryBackground="@null"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:queryHint="품목명 검색"
-                        app:searchIcon="@drawable/ic_baseline_search_24"
-                        />
-
                 </LinearLayout>
 
                 <androidx.appcompat.widget.Toolbar
@@ -165,6 +150,19 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 >
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchItemName"
+                    android:layout_width="350dp"
+                    android:layout_height="55dp"
+                    style="@style/SearchViewStyle"
+                    app:iconifiedByDefault="false"
+                    app:queryBackground="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:queryHint="품목명 검색"
+                    app:searchIcon="@drawable/ic_baseline_search_24"
+                    />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -313,60 +311,66 @@
                             android:textColor="@color/black"
                             />
                     </TableRow>
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:background="@color/white"
-                        >
 
-                        <CheckBox
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="1dp"
-                            android:layout_marginBottom="1dp"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="1dp"
-                            android:layout_marginLeft="1dp"
-                            android:layout_gravity="center"
-                            android:padding="3dp"
-                            android:text="입고일자"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/black"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="1dp"
-                            android:layout_marginLeft="1dp"
-                            android:layout_gravity="center"
-                            android:padding="3dp"
-                            android:text="품목명"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/black"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="1dp"
-                            android:layout_marginLeft="1dp"
-                            android:layout_gravity="center"
-                            android:padding="3dp"
-                            android:layout_marginRight="30dp"
-                            android:textSize="18sp"
-                            android:text="123"
-                            android:textStyle="bold"
-                            android:textColor="@color/mainBlue"
-                            />
-                    </TableRow>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/item_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+<!--                    <TableRow-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginBottom="1dp"-->
+<!--                        android:layout_marginRight="1dp"-->
+<!--                        android:layout_marginLeft="1dp"-->
+<!--                        android:background="@color/white"-->
+<!--                        >-->
+
+<!--                        <CheckBox-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:layout_marginLeft="1dp"-->
+<!--                            android:layout_marginBottom="1dp"-->
+<!--                            />-->
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginBottom="1dp"-->
+<!--                            android:layout_marginLeft="1dp"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:padding="3dp"-->
+<!--                            android:text="입고일자"-->
+<!--                            android:textSize="18sp"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            />-->
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginBottom="1dp"-->
+<!--                            android:layout_marginLeft="1dp"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:padding="3dp"-->
+<!--                            android:text="품목명"-->
+<!--                            android:textSize="18sp"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            />-->
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginBottom="1dp"-->
+<!--                            android:layout_marginLeft="1dp"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:padding="3dp"-->
+<!--                            android:layout_marginRight="30dp"-->
+<!--                            android:textSize="18sp"-->
+<!--                            android:text="123"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:textColor="@color/mainBlue"-->
+<!--                            />-->
+<!--                    </TableRow>-->
                 </TableLayout>
             </LinearLayout>
 

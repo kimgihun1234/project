@@ -12,7 +12,8 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
 import java.text.SimpleDateFormat
@@ -42,6 +43,8 @@ class FragmentIO : Fragment() {
     private lateinit var searchCustomer : TextView
     private lateinit var searchStorage : SearchView
     private lateinit var searchBarCode : SearchView
+    private lateinit var searchItemName : SearchView
+
     private lateinit var dialogView : View
     private lateinit var setDate : TextView
 
@@ -58,7 +61,14 @@ class FragmentIO : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_i_o, container, false)
+
+        //recycler view
+        val view = inflater.inflate(R.layout.fragment_i_o, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = InoutRecyclerAdapter()
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,6 +106,7 @@ class FragmentIO : Fragment() {
             }
         }
 
+        //새로 고침 버튼
         refreshBtn.setOnClickListener{
             Toast.makeText(activity, "refresh", Toast.LENGTH_SHORT).show()
         }
@@ -104,10 +115,12 @@ class FragmentIO : Fragment() {
         searchCustomer = view.findViewById(R.id.searchCustomer)
         searchStorage = view.findViewById(R.id.searchStorage)
         searchBarCode = view.findViewById(R.id.searchBarCode)
+        searchItemName = view.findViewById(R.id.searchItemName)
 
         searchOrder.isSubmitButtonEnabled = true
         searchStorage.isSubmitButtonEnabled = true
         searchBarCode.isSubmitButtonEnabled = true
+        searchItemName.isSubmitButtonEnabled = true
 
         searchOrder.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -144,6 +157,22 @@ class FragmentIO : Fragment() {
             }
         })
 
+        searchItemName.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+
+                // 검색 버튼 누를 때 호출
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                // 검색창에서 글자가 변경이 일어날 때마다 호출
+
+                return true
+            }
+        })
+
         searchBarCode.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
@@ -160,6 +189,7 @@ class FragmentIO : Fragment() {
             }
         })
 
+        //바코드 스캔
         barCodeScanBtn.setOnClickListener {
             val scanIntegrator = IntentIntegrator.forSupportFragment(this@FragmentIO)
             scanIntegrator.setPrompt("Scan")
@@ -168,6 +198,7 @@ class FragmentIO : Fragment() {
             scanIntegrator.initiateScan()
         }
 
+        //입고 dialog // 현재 시간
         putBtn.setOnClickListener {
             dialogView = View.inflate(view.context, R.layout.in_dialog, null)
             setDate = dialogView.findViewById(R.id.setDate)
