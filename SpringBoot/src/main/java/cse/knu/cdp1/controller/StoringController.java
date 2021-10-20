@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/* 작성 일자 : 2021. 10. 05. */
-
 @RestController
 public class StoringController {
     @Autowired

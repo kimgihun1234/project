@@ -10,7 +10,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class WarehouseDTO {
-    /* 작성 일자 : 2021. 10. 05. */
 
     String corp_cd; // 회사 코드
     String busi_cd; // 사업장 코드
@@ -25,4 +24,12 @@ public class WarehouseDTO {
     String upd_dttm; // 수정 일시
 
     public WarehouseDTO() {}
+
+    public String getStor_cd() {
+        return stor_cd;
+    }
+
+    public String getStor_nm() {
+        return stor_nm;
+    }
 }

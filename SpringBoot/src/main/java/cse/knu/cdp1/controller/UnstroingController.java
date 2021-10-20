@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/* 작성 일자 : 2021. 10. 12. */
-
 public class UnstroingController {
     @Autowired
     UnstoringService unstoringService;

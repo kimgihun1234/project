@@ -10,7 +10,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class StoringReturnDetailDTO {
-    /* 작성 일자 : 2021. 10. 05. */
 
     String seq; // 순번
     String corp_cd;// 회사 코드

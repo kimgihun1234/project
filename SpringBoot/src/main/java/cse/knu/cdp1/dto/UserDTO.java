@@ -10,7 +10,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class UserDTO {
-    /* 작성 일자 : 2021. 10. 05. */
 
     String emp_no; // 사원 번호
     String emp_nm; // 사원 명

@@ -10,7 +10,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class BarcodeDTO {
-    /* 작성 일자 : 2021. 10. 05. */
 
     String corp_cd; // 회사 코드
     String seq; // 순번

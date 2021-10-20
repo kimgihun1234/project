@@ -10,7 +10,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class CustomerDTO {
-    /* 작성 일자 : 2021. 10. 04. */
 
     String cust_cd; // 거래처 코드
     String cust_nm; // 거래처명

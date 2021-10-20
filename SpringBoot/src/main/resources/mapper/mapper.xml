@@ -96,4 +96,6 @@
     <select id="userInfo" resultType="User">
         SELECT * from t_mesbasma04 where emp_id=#{emp_id} and pwd=#{pwd}
     </select>
+
+
 </mapper>

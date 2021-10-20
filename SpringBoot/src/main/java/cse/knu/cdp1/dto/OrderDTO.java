@@ -10,7 +10,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class OrderDTO {
-    /* 작성 일자 : 2021. 10. 04. */
 
     String corp_cd; // 회사 코드
     String busi_id; // 사업장 코드
@@ -28,4 +27,8 @@ public class OrderDTO {
     String upd_dttm; // 수정 일시
 
     public OrderDTO() {}
+
+    public String getPlord_no() {
+        return plord_no;
+    }
 }

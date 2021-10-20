@@ -10,7 +10,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class LocationDTO {
-    /* 작성 일자 : 2021. 10. 05. */
 
     String loca_cd; // 위치 코드
     String stor_cd; // 창고 코드
@@ -23,4 +22,16 @@ public class LocationDTO {
     String upd_dttm; // 수정 일시
 
     public LocationDTO() {}
+
+    public String getStor_cd() {
+        return stor_cd;
+    }
+
+    public String getLoca_nm() {
+        return loca_nm;
+    }
+
+    public String getLoca_cd() {
+        return loca_cd;
+    }
 }

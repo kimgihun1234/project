@@ -10,8 +10,6 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class StoringDTO {
-    /* 작성 일자 : 2021. 09. 18. */
-    /* 마지막 수정 일자 : 2021. 10. 05.  */
 
     String corp_cd; // 회사 코드
     String busi_id; // 사업장 코드

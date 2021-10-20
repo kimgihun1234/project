@@ -15,6 +15,8 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     SqlSessionTemplate session;
+
+    @Override
     public List<UserDTO> getLoginInfo(UserDTO searchData) {
         return dao.getLoginInfo(session, searchData);
     }

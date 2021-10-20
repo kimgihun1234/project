@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/* 작성 일자 : 2021. 10. 14. */
-
 @RestController
 public class UserController {
     @Autowired
