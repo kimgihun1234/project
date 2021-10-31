@@ -24,4 +24,12 @@ public class BarcodeDTO {
     String upd_dttm; // 수정 일시
 
     public BarcodeDTO() {}
+
+    public String getItem_cd() {
+        return item_cd;
+    }
+
+    public String getInfo() {
+        return item_cd + "/" + qty;
+    }
 }

@@ -12,7 +12,7 @@ import org.apache.ibatis.type.Alias;
 public class StoringReturnDTO {
 
     String corp_cd; // 회사 코드
-    String busi_id; // 사업장 코드
+    String busi_cd; // 사업장 코드
     String purc_retu_no; // 구매 반품 번호
     String purc_retu_dt; // 구매 입고 일자
     String purc_close_divi; // 구매 마감 구분

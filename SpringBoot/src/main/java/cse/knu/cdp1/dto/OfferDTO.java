@@ -12,7 +12,7 @@ import org.apache.ibatis.type.Alias;
 public class OfferDTO {
 
     String corp_cd; // 회사 코드
-    String busi_id; // 사업장 코드
+    String busi_cd; // 사업장 코드
     String ex_requ_no; // 출고 요청 번호
     String ex_requ_dt; // 출고 요청 일자
     String cust_cd; // 거래처 코드

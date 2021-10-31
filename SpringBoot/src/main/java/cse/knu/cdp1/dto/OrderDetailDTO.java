@@ -43,6 +43,10 @@ public class OrderDetailDTO {
         return plord_no;
     }
 
+    public String getItem_cd() {
+        return item_cd;
+    }
+
     public String getInfo() {
         return plord_no + "/" + seq + "/" + item_cd;
     }

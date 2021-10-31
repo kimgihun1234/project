@@ -41,4 +41,12 @@ public class ItemDTO {
     String upd_dttm; // 수정 일시
 
     public ItemDTO() {}
+
+    public String getItem_nm() {
+        return item_nm;
+    }
+
+    public String getAc_divi_cd() {
+        return ac_divi_cd;
+    }
 }

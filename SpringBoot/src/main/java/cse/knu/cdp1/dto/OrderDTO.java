@@ -12,7 +12,7 @@ import org.apache.ibatis.type.Alias;
 public class OrderDTO {
 
     String corp_cd; // 회사 코드
-    String busi_id; // 사업장 코드
+    String busi_cd; // 사업장 코드
     String plord_no; // 발주 번호
     String plord_dt; // 발주 일자
     String cust_cd; // 거래처 코드
@@ -31,4 +31,6 @@ public class OrderDTO {
     public String getPlord_no() {
         return plord_no;
     }
+
+    public String getCust_cd() { return cust_cd; }
 }

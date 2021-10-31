@@ -15,7 +15,7 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/login")
-    public boolean checkLoginInfo(@RequestBody String idpw) {
+    public String checkLoginInfo(@RequestBody String idpw) {
         String[] info = idpw.split("/");
 
         UserDTO loginInfo = new UserDTO(info[0], info[1]);
@@ -24,8 +24,11 @@ public class UserController {
 
         List<UserDTO> result = userService.getLoginInfo(loginInfo);
 
-        if(result.isEmpty()) return false;
+        if(result.isEmpty() || result.size() > 1) return "false";
 
-        return true;
+        loginInfo = result.get(0);
+
+        /* 사원번호/사원ID */
+        return loginInfo.getInfo();
     }
 }

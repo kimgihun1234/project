@@ -44,4 +44,8 @@ public class UserDTO {
         this.emp_id = emp_id;
         this.pwd = pwd;
     }
+
+    public String getInfo(){
+        return emp_no + "/" + emp_id;
+    }
 }

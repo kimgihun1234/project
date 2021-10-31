@@ -39,4 +39,8 @@ public class CustomerDTO {
     String upd_dttm; // 수정 일시
 
     public CustomerDTO() {}
+
+    public String getCust_nm() {
+        return cust_nm;
+    }
 }
