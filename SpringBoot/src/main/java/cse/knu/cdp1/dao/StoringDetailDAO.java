@@ -9,4 +9,5 @@ public interface StoringDetailDAO {
     public abstract List<StoringDetailDTO> storingDetailList(SqlSessionTemplate session);
     public abstract void storingDetailInsert(SqlSessionTemplate session, StoringDetailDTO insertData);
     public abstract void storingDetailDelete(SqlSessionTemplate session, StoringDetailDTO deleteData);
+    public abstract List<StoringDetailDTO> checkFormerDetailList(SqlSessionTemplate session, String plord_no);
 }

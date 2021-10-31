@@ -13,11 +13,18 @@ public class StoringDAOImpl implements StoringDAO{
         return session.selectList("mapper.storingList");
     }
 
+    @Override
     public void storingInsert(SqlSessionTemplate session, StoringDTO insertData) {
         session.insert("mapper.storingInsert", insertData);
     }
 
+    @Override
     public void storingDelete(SqlSessionTemplate session, StoringDTO deleteData) {
         session.delete("mapper.storingDelete", deleteData);
+    }
+
+    @Override
+    public String purc_in_no_Cal(SqlSessionTemplate session, String corp_cd) {
+        return session.selectOne("mapper.storingNo", corp_cd);
     }
 }

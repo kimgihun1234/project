@@ -8,4 +8,5 @@ public interface StoringDetailService {
     public abstract List<StoringDetailDTO> storingDetailList();
     public abstract void storingDetailInsert(StoringDetailDTO insertData);
     public abstract void storingDetailDelete(StoringDetailDTO deleteData);
+    public abstract List<StoringDetailDTO> checkFormerDetailList(String plord_no);
 }

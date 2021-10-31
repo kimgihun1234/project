@@ -28,6 +28,10 @@ public class OrderDTO {
 
     public OrderDTO() {}
 
+    public String getCorp_cd() {
+        return corp_cd;
+    }
+
     public String getPlord_no() {
         return plord_no;
     }

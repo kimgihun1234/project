@@ -10,11 +10,15 @@
         SELECT * from t_mesbuyma05;
     </select>
 
+    <select id="storingNo" parameterType="String" resultType="String">
+        SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(purc_in_no,7,12)),0)+1,5,'0')) FROM t_mesbuyma05 WHERE corp_cd = #{corp_cd};
+    </select>
+
     <insert id="storingInsert" parameterType="Storing">
         insert ignore into t_mesbuyma05 values(
         #{corp_cd},
         #{busi_cd},
-        (SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(purc_in_no,7,12)),0)+1,5,'0')) FROM t_mesbuyma05 a WHERE a.corp_cd = #{corp_cd}),
+        #{purc_in_no},
         #{purc_in_dt},
         #{purc_close_divi},
         #{cust_cd},
@@ -42,7 +46,7 @@
     <insert id="storingDetailInsert" parameterType="StoringDetail">
         insert into t_mesbuyma06 values(
         #{corp_cd},
-        (SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(purc_in_no,7,12)),0)+1,5,'0')) FROM t_mesbuyma05 a WHERE a.corp_cd = #{corp_cd}),
+        #{purc_in_no},
         #{seq},
         #{item_cd},
         #{tax_divi},
@@ -71,6 +75,10 @@
     <delete id="storingDetailDelete" parameterType="StoringDetail">
         delete from t_mesbuyma06 where seq=#{seq} and corp_cd=#{corp_cd} and purc_in_no=#{purc_in_no};
     </delete>
+
+    <select id="checkFormerDetailList" parameterType="String" resultType="StoringDetail">
+        SELECT * from t_mesbuyma06 where plord_no=#{plord_no};
+    </select>
 
     <!-- Unstoring -->
     <select id="unstoringList" resultType="Unstoring">

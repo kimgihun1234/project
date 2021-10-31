@@ -14,9 +14,9 @@ import java.util.Date;
 @ToString
 public class StoringDetailDTO {
 
-    String seq; // 순번
     String corp_cd;// 회사 코드
     String purc_in_no; // 구매 입고 번호
+    String seq; // 순번
     String item_cd; // 품목 코드
     String tax_divi; // 세금 구분
     String vat_divi; // 부가세 구분
@@ -45,10 +45,10 @@ public class StoringDetailDTO {
 
     public String getPurc_in_no() { return purc_in_no; }
 
-    public StoringDetailDTO(OrderDetailDTO input, String emp_no, String stor_cd, String loca_cd, String plord_no, String qty) {
+    public StoringDetailDTO(OrderDetailDTO input, String purc_in_no, String emp_no, String stor_cd, String loca_cd, String plord_no, String qty) {
         this.seq = input.seq;
         this.corp_cd = input.corp_cd;
-
+        this.purc_in_no = purc_in_no;
         this.item_cd = input.getItem_cd();
         this.tax_divi = input.tax_divi;
         this.vat_divi = input.vat_divi;

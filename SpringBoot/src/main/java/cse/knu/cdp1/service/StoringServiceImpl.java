@@ -32,4 +32,9 @@ public class StoringServiceImpl implements StoringService {
     public void storingDelete(StoringDTO deleteData) {
         dao.storingDelete(session, deleteData);
     }
+
+    @Override
+    public String purc_in_no_Cal(String corp_cd) {
+        return dao.purc_in_no_Cal(session, corp_cd);
+    }
 }

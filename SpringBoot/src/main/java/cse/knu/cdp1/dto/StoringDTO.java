@@ -40,13 +40,13 @@ public class StoringDTO {
         this.purc_in_no = purc_in_no;
     }
 
-    public StoringDTO(OrderDTO input, String emp_no) {
+    public StoringDTO(OrderDTO input, String purc_in_no, String emp_no) {
         SimpleDateFormat format1 = new SimpleDateFormat( "yyyyMMdd");
         Date time = new Date();
 
         this.corp_cd = input.corp_cd;
         this.busi_cd = input.busi_cd;
-
+        this.purc_in_no = purc_in_no;
         this.purc_in_dt = format1.format(time);
         this.purc_close_divi = null;
         this.cust_cd = input.getCust_cd();

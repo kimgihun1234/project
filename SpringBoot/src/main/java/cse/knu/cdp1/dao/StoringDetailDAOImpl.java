@@ -13,11 +13,18 @@ public class StoringDetailDAOImpl implements StoringDetailDAO {
         return session.selectList("mapper.storingDetailList");
     }
 
+    @Override
     public void storingDetailInsert(SqlSessionTemplate session, StoringDetailDTO insertData) {
         session.insert("mapper.storingDetailInsert", insertData);
     }
 
+    @Override
     public void storingDetailDelete(SqlSessionTemplate session, StoringDetailDTO deleteData) {
         session.delete("mapper.storingDetailDelete", deleteData);
+    }
+
+    @Override
+    public List<StoringDetailDTO> checkFormerDetailList(SqlSessionTemplate session, String plord_no) {
+        return session.selectList("mapper.checkFormerDetailList", plord_no);
     }
 }

@@ -30,4 +30,9 @@ public class StoringDetailServiceImpl implements StoringDetailService {
     public void storingDetailDelete(StoringDetailDTO deleteData) {
         dao.storingDetailDelete(session, deleteData);
     }
+
+    @Override
+    public List<StoringDetailDTO> checkFormerDetailList(String plord_no) {
+        return dao.checkFormerDetailList(session, plord_no);
+    }
 }
