@@ -3,15 +3,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper">
+    <!-- table 이름 옆의 a : 서브 쿼리의 결과를 담는 임시 테이블 -->
+
     <!-- Storing -->
     <select id="storingList" resultType="Storing">
         SELECT * from t_mesbuyma05;
     </select>
 
     <insert id="storingInsert" parameterType="Storing">
-        insert into t_mesbuyma05 values(#{corp_cd},
-        #{busi_id},
-        #{purc_in_no},
+        insert ignore into t_mesbuyma05 values(
+        #{corp_cd},
+        #{busi_cd},
+        (SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(purc_in_no,7,12)),0)+1,5,'0')) FROM t_mesbuyma05 a WHERE a.corp_cd = #{corp_cd}),
         #{purc_in_dt},
         #{purc_close_divi},
         #{cust_cd},
@@ -21,14 +24,14 @@
         #{remark},
         #{close_yn},
         #{inp_id},
-        #{inp_dttm},
+        NOW(),
         #{upd_id},
-        #{upd_dttm}
-        )
+        NOW()
+        );
     </insert>
 
     <delete id="storingDelete" parameterType="Storing">
-        delete from t_mesbuyma05 where corp_cd=#{corp_cd} and busi_id=#{busi_id} and purc_in_no=#{purc_in_no}
+        delete from t_mesbuyma05 where corp_cd=#{corp_cd} and busi_id=#{busi_id} and purc_in_no=#{purc_in_no};
     </delete>
 
     <!-- StoringDetail -->
@@ -37,14 +40,36 @@
     </select>
 
     <insert id="storingDetailInsert" parameterType="StoringDetail">
-        insert into t_mesbuyma06(seq, corp_cd, purc_in_no) values(#{seq},
+        insert into t_mesbuyma06 values(
         #{corp_cd},
-        #{purc_in_no}
-        )
+        (SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(purc_in_no,7,12)),0)+1,5,'0')) FROM t_mesbuyma05 a WHERE a.corp_cd = #{corp_cd}),
+        #{seq},
+        #{item_cd},
+        #{tax_divi},
+        #{vat_divi},
+        #{qty},
+        #{upr},
+        #{sup_amt},
+        #{tax},
+        #{tot_amt},
+        #{stor_cd},
+        #{loca_cd},
+        #{deli_close_dt},
+        #{in_due_dt},
+        #{purc_requ_no},
+        #{plord_no},
+        #{pj_cd},
+        #{remark},
+        #{apply_qty},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        );
     </insert>
 
     <delete id="storingDetailDelete" parameterType="StoringDetail">
-        delete from t_mesbuyma06 where seq=#{seq} and corp_cd=#{corp_cd} and purc_in_no=#{purc_in_no}
+        delete from t_mesbuyma06 where seq=#{seq} and corp_cd=#{corp_cd} and purc_in_no=#{purc_in_no};
     </delete>
 
     <!-- Unstoring -->
@@ -54,7 +79,7 @@
 
     <insert id="unstoringInsert" parameterType="Unstoring">
         insert into t_messalma07 values(#{corp_cd},
-        #{busi_id},
+        #{busi_cd},
         #{ex_no},
         #{ex_dt},
         #{sale_close_divi},
@@ -69,11 +94,11 @@
         #{inp_dttm},
         #{upd_id},
         #{upd_dttm}
-        )
+        );
     </insert>
 
     <delete id="unstoringDelete" parameterType="Unstoring">
-        delete from t_messalma07 where corp_cd=#{corp_cd} and busi_id=#{busi_id} and purc_in_no=#{purc_in_no}
+        delete from t_messalma07 where corp_cd=#{corp_cd} and busi_id=#{busi_id} and purc_in_no=#{purc_in_no};
     </delete>
 
     <!-- UnstoringDetail -->
@@ -85,16 +110,59 @@
         insert into t_messalma08(seq, corp_cd, ex_no) values(#{seq},
         #{corp_cd},
         #{ex_no}
-        )
+        );
     </insert>
 
     <delete id="unstoringDetailDelete" parameterType="UnstoringDetail">
-        delete from t_messalma08 where seq=#{seq} and corp_cd=#{corp_cd} and ex_no=#{ex_no}
+        delete from t_messalma08 where seq=#{seq} and corp_cd=#{corp_cd} and ex_no=#{ex_no};
     </delete>
 
     <!-- User -->
     <select id="userInfo" resultType="User">
-        SELECT * from t_mesbasma04 where emp_id=#{emp_id} and pwd=#{pwd}
+        SELECT * from t_mesbasma04 where emp_id=#{emp_id} and pwd=#{pwd};
+    </select>
+
+    <!-- Warehouse -->
+    <select id="warehouseList" resultType="Warehouse">
+        SELECT * from t_mesbasma11;
+    </select>
+
+    <!-- Location -->
+    <select id="locationList" resultType="Location">
+        SELECT * from t_mesbasma12;
+    </select>
+
+    <!-- Order -->
+    <select id="orderList" resultType="Order">
+        SELECT * from t_mesbuyma03;
+    </select>
+
+    <select id="getOrderInfo" parameterType="String" resultType="Order">
+        SELECT * from t_mesbuyma03 where plord_no=#{plord_no};
+    </select>
+
+    <!-- OrderDetail -->
+    <select id="orderDetailList" resultType="OrderDetail">
+        SELECT * from t_mesbuyma04;
+    </select>
+
+    <select id="getOrderDetailInfo" parameterType="String" resultType="OrderDetail">
+        SELECT * from t_mesbuyma04 where plord_no=#{plord_no} and item_cd=#{item_cd};
+    </select>
+
+    <!-- Customer -->
+    <select id="getCustomerInfo" parameterType="String" resultType="Customer">
+        SELECT * from t_mesbasma05 where cust_cd=#{cust_cd};
+    </select>
+
+    <!-- Barcode -->
+    <select id="getBarcodeInfo" parameterType="String" resultType="Barcode">
+        SELECT * from t_mesbasma17 where barcode=#{barcode};
+    </select>
+
+    <!-- Item -->
+    <select id="getItemInfo" parameterType="String" resultType="Item">
+        SELECT * from t_mesbasma10 where item_cd=#{item_cd};
     </select>
 
 
