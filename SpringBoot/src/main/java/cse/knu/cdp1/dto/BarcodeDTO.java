@@ -32,4 +32,8 @@ public class BarcodeDTO {
     public String getInfo() {
         return item_cd + "/" + qty;
     }
+
+    public Double getQty() {
+        return qty;
+    }
 }

@@ -20,4 +20,9 @@ public class WarehouseServiceImpl implements WarehouseService{
     public List<WarehouseDTO> warehouseList() {
         return dao.warehouseList(session);
     }
+
+    @Override
+    public WarehouseDTO getWarehouseInfo(String stor_cd) {
+        return dao.getWarehouseInfo(session, stor_cd);
+    }
 }

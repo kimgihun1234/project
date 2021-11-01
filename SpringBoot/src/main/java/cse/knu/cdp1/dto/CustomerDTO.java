@@ -43,4 +43,8 @@ public class CustomerDTO {
     public String getCust_nm() {
         return cust_nm;
     }
+
+    public String getCust_cd() {
+        return cust_cd;
+    }
 }

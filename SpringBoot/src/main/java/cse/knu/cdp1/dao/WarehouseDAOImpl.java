@@ -12,4 +12,9 @@ public class WarehouseDAOImpl implements WarehouseDAO{
     public List<WarehouseDTO> warehouseList(SqlSessionTemplate session) {
         return session.selectList("mapper.warehouseList");
     }
+
+    @Override
+    public WarehouseDTO getWarehouseInfo(SqlSessionTemplate session, String stor_cd) {
+        return session.selectOne("mapper.getWarehouseInfo", stor_cd);
+    }
 }

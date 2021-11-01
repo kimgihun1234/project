@@ -45,27 +45,40 @@ public class StoringDetailDTO {
 
     public String getPurc_in_no() { return purc_in_no; }
 
+    public String getItem_cd() {
+        return item_cd;
+    }
+
+    public Double getQty() {
+        return qty;
+    }
+
+    public StoringDetailDTO(String purc_in_no, String item_cd) {
+        this.purc_in_no = purc_in_no;
+        this.item_cd = item_cd;
+    }
+
     public StoringDetailDTO(OrderDetailDTO input, String purc_in_no, String emp_no, String stor_cd, String loca_cd, String plord_no, String qty) {
-        this.seq = input.seq;
-        this.corp_cd = input.corp_cd;
+        this.seq = input.getSeq();
+        this.corp_cd = input.getCorp_cd();
         this.purc_in_no = purc_in_no;
         this.item_cd = input.getItem_cd();
-        this.tax_divi = input.tax_divi;
-        this.vat_divi = input.vat_divi;
+        this.tax_divi = input.getTax_divi();
+        this.vat_divi = input.getVat_divi();
         this.qty = Double.parseDouble(qty);
-        this.upr = input.upr;
-        this.sup_amt = input.sup_amt;
-        this.tax = input.tax;
-        this.tot_amt = input.tot_amt;
+        this.upr = input.getUpr();
+        this.sup_amt = input.getSup_amt();
+        this.tax = input.getTax();
+        this.tot_amt = input.getTot_amt();
         this.stor_cd = stor_cd;
         this.loca_cd = loca_cd;
 
-        this.deli_close_dt = input.deli_close_dt;
-        this.in_due_dt = input.in_due_dt;
-        this.purc_requ_no = input.purc_requ_no;
+        this.deli_close_dt = input.getDeli_close_dt();
+        this.in_due_dt = input.getIn_due_dt();
+        this.purc_requ_no = input.getPurc_requ_no();
         this.plord_no = plord_no;
-        this.pj_cd = input.pj_cd;
-        this.apply_qty = input.apply_qty;
+        this.pj_cd = input.getPj_cd();
+        this.apply_qty = input.getApply_qty();
 
         this.remark = null;
 

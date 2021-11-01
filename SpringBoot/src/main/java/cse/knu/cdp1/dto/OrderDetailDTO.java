@@ -47,6 +47,58 @@ public class OrderDetailDTO {
         return item_cd;
     }
 
+    public String getSeq() {
+        return seq;
+    }
+
+    public String getCorp_cd() {
+        return corp_cd;
+    }
+
+    public String getTax_divi() {
+        return tax_divi;
+    }
+
+    public String getVat_divi() {
+        return vat_divi;
+    }
+
+    public Double getUpr() {
+        return upr;
+    }
+
+    public Double getSup_amt() {
+        return sup_amt;
+    }
+
+    public Double getTax() {
+        return tax;
+    }
+
+    public Double getTot_amt() {
+        return tot_amt;
+    }
+
+    public String getDeli_close_dt() {
+        return deli_close_dt;
+    }
+
+    public String getIn_due_dt() {
+        return in_due_dt;
+    }
+
+    public String getPurc_requ_no() {
+        return purc_requ_no;
+    }
+
+    public String getPj_cd() {
+        return pj_cd;
+    }
+
+    public Double getApply_qty() {
+        return apply_qty;
+    }
+
     public String getInfo() {
         return plord_no + "/" + seq + "/" + item_cd;
     }

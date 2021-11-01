@@ -42,6 +42,10 @@ public class ItemDTO {
 
     public ItemDTO() {}
 
+    public String getItem_cd() {
+        return item_cd;
+    }
+
     public String getItem_nm() {
         return item_nm;
     }

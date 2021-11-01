@@ -28,7 +28,7 @@ public class UserController {
 
         loginInfo = result.get(0);
 
-        /* 사원번호/사원ID */
+        /* 사원번호/비밀번호 */
         return loginInfo.getInfo();
     }
 }

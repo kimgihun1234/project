@@ -37,4 +37,8 @@ public class OrderDTO {
     }
 
     public String getCust_cd() { return cust_cd; }
+
+    public String getBusi_cd() {
+        return busi_cd;
+    }
 }

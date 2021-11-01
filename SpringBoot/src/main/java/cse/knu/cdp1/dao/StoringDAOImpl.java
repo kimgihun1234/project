@@ -1,16 +1,38 @@
 package cse.knu.cdp1.dao;
 
 import cse.knu.cdp1.dto.StoringDTO;
+import cse.knu.cdp1.dto.StoringListDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
 public class StoringDAOImpl implements StoringDAO{
     @Override
-    public List<StoringDTO> storingList(SqlSessionTemplate session) {
-        return session.selectList("mapper.storingList");
+    public List<StoringDTO> storingTotalList(SqlSessionTemplate session) {
+        return session.selectList("mapper.storingTotalList");
+    }
+
+    @Override
+    public StoringDTO storingOne(SqlSessionTemplate session, String purc_in_no) {
+        return session.selectOne("mapper.storingOne", purc_in_no);
+    }
+
+    @Override
+    public List<StoringListDTO> storingSpecList(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
+        return session.selectList("mapper.storingSpecList", searchInfo);
+    }
+
+    @Override
+    public String calDate(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
+        return session.selectOne("mapper.calDate", searchInfo);
+    }
+
+    @Override
+    public double calTotalSum(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
+        return session.selectOne("mapper.calTotalSum", searchInfo);
     }
 
     @Override

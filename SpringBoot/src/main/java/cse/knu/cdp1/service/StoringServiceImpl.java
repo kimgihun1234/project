@@ -1,6 +1,7 @@
 package cse.knu.cdp1.service;
 
 
+import cse.knu.cdp1.dto.StoringListDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import cse.knu.cdp1.dao.StoringDAO;
 import cse.knu.cdp1.dto.StoringDTO;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -19,8 +21,28 @@ public class StoringServiceImpl implements StoringService {
     SqlSessionTemplate session;
 
     @Override
-    public List<StoringDTO> storingList() {
-        return dao.storingList(session);
+    public List<StoringDTO> storingTotalList() {
+        return dao.storingTotalList(session);
+    }
+
+    @Override
+    public StoringDTO storingOne(String purc_in_no) {
+        return dao.storingOne(session, purc_in_no);
+    }
+
+    @Override
+    public List<StoringListDTO> storingSpecList(HashMap<String, String> searchInfo) {
+        return dao.storingSpecList(session, searchInfo);
+    }
+
+    @Override
+    public String calDate(HashMap<String, String> searchInfo) {
+        return dao.calDate(session, searchInfo);
+    }
+
+    @Override
+    public double calTotalSum(HashMap<String, String> searchInfo) {
+        return dao.calTotalSum(session, searchInfo);
     }
 
     @Override

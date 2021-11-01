@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface WarehouseDAO {
     public abstract List<WarehouseDTO> warehouseList(SqlSessionTemplate session);
+    public abstract WarehouseDTO getWarehouseInfo(SqlSessionTemplate session, String stor_cd);
 }

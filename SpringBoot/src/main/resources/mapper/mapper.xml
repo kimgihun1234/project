@@ -6,8 +6,24 @@
     <!-- table 이름 옆의 a : 서브 쿼리의 결과를 담는 임시 테이블 -->
 
     <!-- Storing -->
-    <select id="storingList" resultType="Storing">
+    <select id="storingTotalList" resultType="Storing">
         SELECT * from t_mesbuyma05;
+    </select>
+
+    <select id="storingOne" parameterType="String" resultType="Storing">
+        select * from t_mesbuyma05 where purc_in_no=#{purc_in_no};
+    </select>
+
+    <select id="storingSpecList" parameterType="HashMap" resultType="StoringList">
+        select t_mesbuyma06.item_cd from t_mesbuyma05 inner join t_mesbuyma06 on t_mesbuyma05.purc_in_no=t_mesbuyma06.purc_in_no where cust_cd=#{cust_cd} and date_format(purc_in_dt, '%Y%m%d') between #{purc_in_dt_1} and #{purc_in_dt_2} group by item_cd;
+    </select>
+
+    <select id="calDate" parameterType="HashMap" resultType="String">
+        select max(purc_in_dt) from t_mesbuyma05 inner join t_mesbuyma06 on t_mesbuyma05.purc_in_no=t_mesbuyma06.purc_in_no where cust_cd=#{cust_cd} and date_format(purc_in_dt, '%Y%m%d') between #{purc_in_dt_1} and #{purc_in_dt_2} and item_cd=#{item_cd} group by item_cd;
+    </select>
+
+    <select id="calTotalSum" parameterType="HashMap" resultType="double">
+        select sum(t_mesbuyma06.qty) from t_mesbuyma05 inner join t_mesbuyma06 on t_mesbuyma05.purc_in_no=t_mesbuyma06.purc_in_no where cust_cd=#{cust_cd} and date_format(purc_in_dt, '%Y%m%d') between #{purc_in_dt_1} and #{purc_in_dt_2} and item_cd=#{item_cd} group by item_cd;
     </select>
 
     <select id="storingNo" parameterType="String" resultType="String">
@@ -15,7 +31,7 @@
     </select>
 
     <insert id="storingInsert" parameterType="Storing">
-        insert ignore into t_mesbuyma05 values(
+        insert into t_mesbuyma05 values(
         #{corp_cd},
         #{busi_cd},
         #{purc_in_no},
@@ -31,16 +47,20 @@
         NOW(),
         #{upd_id},
         NOW()
-        );
+        ) on duplicate key update purc_in_dt=#{purc_in_dt}, upd_id=#{upd_id}, upd_dttm=now();
     </insert>
 
     <delete id="storingDelete" parameterType="Storing">
-        delete from t_mesbuyma05 where corp_cd=#{corp_cd} and busi_id=#{busi_id} and purc_in_no=#{purc_in_no};
+        delete from t_mesbuyma05 where purc_in_no=#{purc_in_no};
     </delete>
 
     <!-- StoringDetail -->
     <select id="storingDetailList" resultType="StoringDetail">
         SELECT * from t_mesbuyma06;
+    </select>
+
+    <select id="storingDetailSpecList" parameterType="HashMap" resultType="StoringList">
+        select purc_in_dt, cust_cd, t_mesbuyma06.item_cd, t_mesbuyma06.qty, t_mesbuyma06.plord_no, t_mesbuyma06.stor_cd, t_mesbuyma06.loca_cd from t_mesbuyma05 inner join t_mesbuyma06 on t_mesbuyma05.purc_in_no=t_mesbuyma06.purc_in_no where cust_cd=#{cust_cd} and date_format(purc_in_dt, '%Y%m%d') between #{purc_in_dt_1} and #{purc_in_dt_2} and t_mesbuyma06.item_cd=#{item_cd};
     </select>
 
     <insert id="storingDetailInsert" parameterType="StoringDetail">
@@ -73,11 +93,15 @@
     </insert>
 
     <delete id="storingDetailDelete" parameterType="StoringDetail">
-        delete from t_mesbuyma06 where seq=#{seq} and corp_cd=#{corp_cd} and purc_in_no=#{purc_in_no};
+        delete from t_mesbuyma06 where purc_in_no=#{purc_in_no} and item_cd=#{item_cd};
     </delete>
 
     <select id="checkFormerDetailList" parameterType="String" resultType="StoringDetail">
         SELECT * from t_mesbuyma06 where plord_no=#{plord_no};
+    </select>
+
+    <select id="checkDetailList" parameterType="String" resultType="StoringDetail">
+        SELECT * from t_mesbuyma06 where purc_in_no=#{purc_in_no};
     </select>
 
     <!-- Unstoring -->
@@ -131,11 +155,19 @@
     </select>
 
     <!-- Warehouse -->
+    <select id="getWarehouseInfo" parameterType="String" resultType="Warehouse">
+        SELECT * from t_mesbasma11 where stor_cd=#{stor_cd};
+    </select>
+
     <select id="warehouseList" resultType="Warehouse">
         SELECT * from t_mesbasma11;
     </select>
 
     <!-- Location -->
+    <select id="getLocationInfo" parameterType="HashMap" resultType="Location">
+        SELECT * from t_mesbasma12 where stor_cd=#{stor_cd} and loca_cd=#{loca_cd};
+    </select>
+
     <select id="locationList" resultType="Location">
         SELECT * from t_mesbasma12;
     </select>
@@ -163,12 +195,21 @@
         SELECT * from t_mesbasma05 where cust_cd=#{cust_cd};
     </select>
 
+    <select id="customerList" resultType="Customer">
+        SELECT * from t_mesbasma05;
+    </select>
+
+
     <!-- Barcode -->
     <select id="getBarcodeInfo" parameterType="String" resultType="Barcode">
         SELECT * from t_mesbasma17 where barcode=#{barcode};
     </select>
 
     <!-- Item -->
+    <select id="itemList" resultType="Item">
+        SELECT * from t_mesbasma10;
+    </select>
+
     <select id="getItemInfo" parameterType="String" resultType="Item">
         SELECT * from t_mesbasma10 where item_cd=#{item_cd};
     </select>
