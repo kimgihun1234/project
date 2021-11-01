@@ -21,6 +21,7 @@ public class CustomerServiceImpl implements CustomerService{
         return dao.customerList(session);
     }
 
+    @Override
     public CustomerDTO getCustomerInfo(String cust_cd) {
         return dao.getCustomerInfo(session, cust_cd);
     }
