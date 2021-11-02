@@ -1,18 +1,12 @@
-package com.example.materialmanagement
+package com.example.materialmanagement.NumSearchActivity
 
-import android.R.attr
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TableRow
 import android.widget.TextView
-import android.R.attr.data
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.R
 import com.google.android.material.tabs.TabItem
 
 

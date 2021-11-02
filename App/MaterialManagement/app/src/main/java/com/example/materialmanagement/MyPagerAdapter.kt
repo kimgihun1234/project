@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
+import com.example.materialmanagement.InOutActivity.FragmentIO
 
 //https://developer.android.com/training/animation/screen-slide-2?hl=ko
 

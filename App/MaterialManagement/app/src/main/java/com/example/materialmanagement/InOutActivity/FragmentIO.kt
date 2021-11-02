@@ -1,4 +1,4 @@
-package com.example.materialmanagement
+package com.example.materialmanagement.InOutActivity
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.materialmanagement.R
+import com.example.materialmanagement.NumSearchActivity.SearchOrder
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
 import java.text.SimpleDateFormat

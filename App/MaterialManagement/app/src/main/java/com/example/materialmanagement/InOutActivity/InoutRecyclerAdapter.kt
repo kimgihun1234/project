@@ -1,10 +1,11 @@
-package com.example.materialmanagement;
+package com.example.materialmanagement.InOutActivity;
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.R
 import java.text.SimpleDateFormat
 import java.util.*
 
