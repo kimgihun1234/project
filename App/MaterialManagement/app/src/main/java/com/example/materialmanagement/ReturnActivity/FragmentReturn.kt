@@ -1,6 +1,5 @@
-package com.example.materialmanagement.InOutActivity
+package com.example.materialmanagement.ReturnActivity
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,13 +11,12 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.materialmanagement.R
+import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.NumSearchActivity.SearchOrder
+import com.example.materialmanagement.R
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
-import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -28,10 +26,10 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FragmentIO.newInstance] factory method to
+ * Use the [FragmentReturn.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FragmentIO : Fragment() {
+class FragmentReturn : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -39,7 +37,6 @@ class FragmentIO : Fragment() {
     private lateinit var toggleButton : MaterialButtonToggleGroup
     private lateinit var btnIn : Button
     private lateinit var btnOut : Button
-    private lateinit var putBtn : Button
     private lateinit var barCodeScanBtn : ImageButton
     private lateinit var searchOrder : SearchView
     private lateinit var searchCustomer : TextView
@@ -47,8 +44,6 @@ class FragmentIO : Fragment() {
     private lateinit var searchBarCode : SearchView
     private lateinit var searchItemName : SearchView
 
-    private lateinit var dialogView : View
-    private lateinit var setDate : TextView
     private lateinit var deleteBtn : Button
 
     private lateinit var refreshBtn : Button
@@ -56,8 +51,8 @@ class FragmentIO : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            param1 = it.getString(com.example.materialmanagement.ReturnActivity.ARG_PARAM1)
+            param2 = it.getString(com.example.materialmanagement.ReturnActivity.ARG_PARAM2)
         }
     }
 
@@ -66,10 +61,10 @@ class FragmentIO : Fragment() {
         // Inflate the layout for this fragment
 
         //recycler view
-        val view = inflater.inflate(R.layout.fragment_i_o, container, false)
+        val view = inflater.inflate(R.layout.fragment_return, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = InoutRecyclerAdapter()
+        recyclerView.adapter = ReturnRecyclerAdapter()
 
         return view
     }
@@ -80,9 +75,8 @@ class FragmentIO : Fragment() {
         toggleButton = view.findViewById(R.id.toggleButton)
         btnIn = view.findViewById(R.id.btnIn)
         btnOut = view.findViewById(R.id.btnOut)
-        putBtn = view.findViewById(R.id.putBtn)
-        deleteBtn = view.findViewById(R.id.deleteBtn)
         barCodeScanBtn = view.findViewById(R.id.barCodeScanBtn)
+        deleteBtn = view.findViewById(R.id.deleteBtn)
         refreshBtn = view.findViewById(R.id.refreshBtn)
 
         toggleButton.addOnButtonCheckedListener{ toggleButton, checkedId, isChecked ->
@@ -195,33 +189,14 @@ class FragmentIO : Fragment() {
 
         //바코드 스캔
         barCodeScanBtn.setOnClickListener {
-            val scanIntegrator = IntentIntegrator.forSupportFragment(this@FragmentIO)
+            val scanIntegrator = IntentIntegrator.forSupportFragment(this@FragmentReturn)
             scanIntegrator.setPrompt("Scan")
             scanIntegrator.setBeepEnabled(true)
             scanIntegrator.setBarcodeImageEnabled(true)
             scanIntegrator.initiateScan()
         }
 
-        //입고 dialog // 현재 시간
-        putBtn.setOnClickListener {
-            dialogView = View.inflate(view.context, R.layout.in_dialog, null)
-            setDate = dialogView.findViewById(R.id.setDate)
-
-            val now = System.currentTimeMillis()
-            var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
-
-            setDate.setText(simpleDateFormat)
-
-
-            var dlg = AlertDialog.Builder(view.context)
-            dlg.setTitle("입고 등록")
-            dlg.setView(dialogView)
-            dlg.setPositiveButton("입고", null)
-            dlg.setNegativeButton("취소", null)
-            dlg.show()
-        }
-
-        deleteBtn.setOnClickListener {
+        deleteBtn.setOnClickListener{
             Toast.makeText(activity, "삭제되었습니다", Toast.LENGTH_SHORT).show()
         }
     }
@@ -246,15 +221,16 @@ class FragmentIO : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment FragmentIO.
+         * @return A new instance of fragment FragmentReturn.
          */
         // TODO: Rename and change types and number of parameters
-        @JvmStatic fun newInstance(param1: String, param2: String) =
-                FragmentIO().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
+        @JvmStatic
+        fun newInstance(param1: String, param2: String) =
+            FragmentReturn().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
                 }
+            }
     }
 }

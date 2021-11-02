@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Splash">
         <activity
+            android:name=".StateActivity.DatePickerDialog"
+            android:exported="true" />
+        <activity
             android:name=".NumSearchActivity.SearchOrder"
             android:exported="true" />
         <activity
@@ -26,7 +29,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".SplashActivity"
+            android:name=".SplashScreen.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

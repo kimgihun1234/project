@@ -138,7 +138,8 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
+<!--        <androidx.core.widget.NestedScrollView-->
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
@@ -193,13 +194,13 @@
                         android:src="@drawable/ic_baseline_qr_code_scanner_24" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/searchResult"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="검색결과"
-                    />
+<!--                <TextView-->
+<!--                    android:id="@+id/searchResult"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="검색결과"-->
+<!--                    />-->
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -213,7 +214,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="검색 결과"
+                        android:text="처리 결과"
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -374,7 +375,7 @@
                 </TableLayout>
             </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -3,8 +3,9 @@ package com.example.materialmanagement
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.adapter.FragmentViewHolder
 import com.example.materialmanagement.InOutActivity.FragmentIO
+import com.example.materialmanagement.ReturnActivity.FragmentReturn
+import com.example.materialmanagement.StateActivity.FragmentState
 
 //https://developer.android.com/training/animation/screen-slide-2?hl=ko
 
@@ -16,8 +17,8 @@ class MyPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
     override fun createFragment(position: Int): Fragment {
         return when (position){
             0 -> FragmentIO()
-            1 -> { FragmentHome.newInstance("반품", "")}
-            2 -> { FragmentHome.newInstance("현황보기", "")}
+            1 -> FragmentReturn()
+            2 -> FragmentState()
             else -> { FragmentHome.newInstance("설정", "")}
 
         }

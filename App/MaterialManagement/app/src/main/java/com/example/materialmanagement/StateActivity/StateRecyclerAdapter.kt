@@ -1,4 +1,4 @@
-package com.example.materialmanagement.InOutActivity;
+package com.example.materialmanagement.StateActivity;
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import com.example.materialmanagement.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-class InoutRecyclerAdapter() : RecyclerView.Adapter<InoutRecyclerAdapter.MyViewHolder>() {
+class StateRecyclerAdapter() : RecyclerView.Adapter<StateRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_input, parent, false)
@@ -24,8 +24,8 @@ class InoutRecyclerAdapter() : RecyclerView.Adapter<InoutRecyclerAdapter.MyViewH
         var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
         holder.in_date.text = simpleDateFormat
-        holder.item_name.text = position.toString()
-        holder.item_num.text = position.toString()
+        holder.item_name.text = position.toString() + 2
+        holder.item_num.text = position.toString() + 2
 //        holder.root.setOnClickListener(object : View.OnClickListener{
 //            override fun onClick(p0: View?) {
 //                holder.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
