@@ -24,6 +24,11 @@ public class StoringDetailServiceImpl implements StoringDetailService {
     }
 
     @Override
+    public List<StoringDetailDTO> storingDetailOne(HashMap<String, String> searchInfo) {
+        return dao.storingDetailOne(session, searchInfo);
+    }
+
+    @Override
     public List<StoringListDTO> storingDetailSpecList(HashMap<String, String> searchInfo) {
         return dao.storingDetailSpecList(session, searchInfo);
     }
@@ -39,12 +44,12 @@ public class StoringDetailServiceImpl implements StoringDetailService {
     }
 
     @Override
-    public List<StoringDetailDTO> checkFormerDetailList(String plord_no) {
-        return dao.checkFormerDetailList(session, plord_no);
+    public List<StoringDetailDTO> checkFormerStoringDetailList(String plord_no) {
+        return dao.checkFormerStoringDetailList(session, plord_no);
     }
 
     @Override
-    public List<StoringDetailDTO> checkDetailList(String purc_in_no){
-        return dao.checkDetailList(session, purc_in_no);
+    public List<StoringDetailDTO> checkStoringDetailList(String purc_in_no){
+        return dao.checkStoringDetailList(session, purc_in_no);
     }
 }

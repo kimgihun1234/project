@@ -36,16 +36,6 @@ public class StoringServiceImpl implements StoringService {
     }
 
     @Override
-    public String calDate(HashMap<String, String> searchInfo) {
-        return dao.calDate(session, searchInfo);
-    }
-
-    @Override
-    public double calTotalSum(HashMap<String, String> searchInfo) {
-        return dao.calTotalSum(session, searchInfo);
-    }
-
-    @Override
     public void storingInsert(StoringDTO insertData) {
         dao.storingInsert(session, insertData);
     }

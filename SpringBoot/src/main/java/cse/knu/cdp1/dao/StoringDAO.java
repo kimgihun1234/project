@@ -11,8 +11,6 @@ public interface StoringDAO {
     public abstract List<StoringDTO> storingTotalList(SqlSessionTemplate session);
     public abstract List<StoringListDTO> storingSpecList(SqlSessionTemplate session, HashMap<String, String> searchInfo);
     public abstract StoringDTO storingOne(SqlSessionTemplate session, String purc_in_no);
-    public abstract String calDate (SqlSessionTemplate session, HashMap<String, String> searchInfo);
-    public abstract double calTotalSum (SqlSessionTemplate session, HashMap<String, String> searchInfo);
     public abstract void storingInsert(SqlSessionTemplate session, StoringDTO insertData);
     public abstract void storingDelete(SqlSessionTemplate session, StoringDTO deleteData);
     public abstract String purc_in_no_Cal(SqlSessionTemplate session, String corp_cd);

@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
-public class StoringController {
+public class StoringReturnController {
     @Autowired
-    StoringService storingService;
+    StoringReturnService storingReturnService;
+
+    @Autowired
+    StoringReturnDetailService storingReturnDetailService;
 
     @Autowired
     StoringDetailService storingDetailService;
@@ -40,19 +44,19 @@ public class StoringController {
     @Autowired
     LocationService locationService;
 
-    @GetMapping("/storingList")
-    public List<StoringListDTO> storingList(@RequestBody String input) {
+    @GetMapping("/storingReturnList")
+    public List<StoringReturnListDTO> storingReturnList(@RequestBody String input) {
         HashMap<String, String> searchInfo = new HashMap<>();
 
         List<String> info = InfoTokenizer.getInfo(input); // 전송된 Data를 저장
         searchInfo.put("cust_cd", info.get(0));
-        searchInfo.put("purc_in_dt_1", info.get(1));
-        searchInfo.put("purc_in_dt_2", info.get(2));
+        searchInfo.put("purc_retu_dt_1", info.get(1));
+        searchInfo.put("purc_retu_dt_2", info.get(2));
 
-        // 조건에 맞는 StoringList 생성
-        List<StoringListDTO> searchResult = storingService.storingSpecList(searchInfo);
+        // 조건에 맞는 StoringReturnList 생성
+        List<StoringReturnListDTO> searchResult = storingReturnService.storingReturnSpecList(searchInfo);
 
-        for(StoringListDTO listTemp : searchResult) {
+        for(StoringReturnListDTO listTemp : searchResult) {
             searchInfo.put("item_cd", listTemp.getItem_cd());
             listTemp.setItem_nm(itemService.getItemInfo(listTemp.getItem_cd()).getItem_nm());
         }
@@ -60,20 +64,20 @@ public class StoringController {
         return searchResult;
     }
 
-    @GetMapping("/storingDetailList")
-    public List<StoringListDTO> storingDetailList(@RequestBody String input) {
+    @GetMapping("/storingReturnDetailList")
+    public List<StoringReturnListDTO> storingReturnDetailList(@RequestBody String input) {
         HashMap<String, String> searchInfo = new HashMap<>();
 
         List<String> info = InfoTokenizer.getInfo(input); // 전송된 Data를 저장
         searchInfo.put("cust_cd", info.get(0));
-        searchInfo.put("purc_in_dt_1", info.get(1));
-        searchInfo.put("purc_in_dt_2", info.get(2));
+        searchInfo.put("purc_retu_dt_1", info.get(1));
+        searchInfo.put("purc_retu_dt_2", info.get(2));
         searchInfo.put("item_cd", info.get(3));
 
-        // 조건에 맞는 StoringDetailList 생성
-        List<StoringListDTO> searchResult = storingDetailService.storingDetailSpecList(searchInfo);
+        // 조건에 맞는 StoringReturnDetailList 생성
+        List<StoringReturnListDTO> searchResult = storingReturnDetailService.storingReturnDetailSpecList(searchInfo);
 
-        for(StoringListDTO listTemp : searchResult) {
+        for(StoringReturnListDTO listTemp : searchResult) {
             // 아이템 이름 삽입
             if(listTemp.getItem_cd() == null) listTemp.setItem_nm("null");
             else listTemp.setItem_nm(itemService.getItemInfo(listTemp.getItem_cd()).getItem_nm());
@@ -103,14 +107,13 @@ public class StoringController {
     /* 창고이름/창고번호/위치이름/위치번호 */
     /* ID/사원코드 */
     /* 품목코드/수량 */
-
-    @Alias("storinginputresult")
+    @Alias("storingreturninputresult")
     @Getter
     @Setter
     @ToString
     public class InputResultClass {
-        String purc_in_no;
-        String purc_in_dt;
+        String purc_retu_no;
+        String purc_retu_dt;
         String item_nm;
         String item_cd;
         Double qty;
@@ -118,13 +121,14 @@ public class StoringController {
         public InputResultClass() {}
     }
 
-    @GetMapping("/storingInsert")
-    public InputResultClass insertStoring(@RequestBody String input) {
-        StoringDTO storedData; StoringDetailDTO storedDetailData;
+    @GetMapping("/storingReturnInsert")
+    public InputResultClass insertStoringReturn(@RequestBody String input) {
+        StoringReturnDTO storedData; StoringReturnDetailDTO storedDetailData;
         OrderDTO orderTemp = null; OrderDetailDTO orderDetailTemp = null;
-        String purc_in_no = null; // 입고 번호 저장용
+        List<StoringDetailDTO> storingDetailTemp = null;
+        String purc_retu_no = null; // 입고 반품 번호 저장용
         InputResultClass result = new InputResultClass(); // 오류 등이 발생했을 경우에는 result에 오류 내용을 담아서 전송
-        List<StoringDetailDTO> searchResult;
+        List<StoringReturnDetailDTO> searchResult;
 
         // System.out.println(input);
 
@@ -145,41 +149,52 @@ public class StoringController {
             }
         }
 
-        searchResult = storingDetailService.checkFormerStoringDetailList(orderTemp.getPlord_no()); // 이미 해당 발주 번호로 저장된 물건이 있는지 확인
-        if(searchResult.isEmpty()) { // 발주 번호로 저장된 물건이 없으면 새로 입고와 입고 상세 데이터를 생성
-            purc_in_no = storingService.purc_in_no_Cal(orderTemp.getCorp_cd()); // 입고 번호 생성
-
-            storedData = new StoringDTO(orderTemp, purc_in_no, info.get(8));
-            storedDetailData = new StoringDetailDTO(orderDetailTemp, purc_in_no, info.get(8), info.get(4), info.get(5), info.get(0), info.get(10));
-
-            storingService.storingInsert(storedData);
-            storingDetailService.storingDetailInsert(storedDetailData);
-
-            result.purc_in_no = purc_in_no;
-        } else { // 이전에 같은 발주 번호로 물건이 입고되었으면, 입고 상세 데이터만 생성하고, 기존 입고 데이터는 갱신.
-            purc_in_no = searchResult.get(0).getPurc_in_no();
-            storedDetailData = new StoringDetailDTO(orderDetailTemp, purc_in_no, info.get(8), info.get(4), info.get(5), info.get(0), info.get(10));
-            storingDetailService.storingDetailInsert(storedDetailData);
-
-            storedData = storingService.storingOne(purc_in_no);
-            storingService.storingInsert(storedData);
-
-            result.purc_in_no = purc_in_no;
+        HashMap<String, String> detailInfo = new HashMap<>();
+        detailInfo.put("plord_no", info.get(0));
+        detailInfo.put("item_cd", info.get(9));
+        storingDetailTemp = storingDetailService.storingDetailOne(detailInfo);
+        if(storingDetailTemp.isEmpty()) { // 입고 데이터가 없는데 입고 반품을 시도 => 에러
+            result.purc_retu_no = "ERROR-NO STORING DATA";
+            return result;
         }
 
-        result.purc_in_dt = storedData.getPurc_in_dt();
+        searchResult = storingReturnDetailService.checkFormerStoringReturnDetailList(orderTemp.getPlord_no()); // 이미 해당 발주 번호로 저장된 물건이 있는지 확인
+        if(searchResult.isEmpty()) { // 발주 번호로 저장된 물건이 없으면 새로 입고와 입고 상세 데이터를 생성
+            purc_retu_no = storingReturnService.purc_retu_no_Cal(orderTemp.getCorp_cd()); // 입고 번호 생성
+
+            storedData = new StoringReturnDTO(orderTemp, purc_retu_no, info.get(8));
+            storedDetailData = new StoringReturnDetailDTO(orderDetailTemp, purc_retu_no, info.get(8),
+                    info.get(4), info.get(5), info.get(0), info.get(10), storingDetailTemp.get(0).getPurc_in_no());
+
+            storingReturnService.storingReturnInsert(storedData);
+            storingReturnDetailService.storingReturnDetailInsert(storedDetailData);
+
+            result.purc_retu_no = purc_retu_no;
+        } else { // 이전에 같은 발주 번호로 물건이 입고되었으면, 입고 상세 데이터만 생성하고, 기존 입고 데이터는 갱신.
+            purc_retu_no = searchResult.get(0).getPurc_retu_no();
+            storedDetailData = new StoringReturnDetailDTO(orderDetailTemp, purc_retu_no, info.get(8),
+                    info.get(4), info.get(5), info.get(0), info.get(10), storingDetailTemp.get(0).getPurc_in_no());
+            storingReturnDetailService.storingReturnDetailInsert(storedDetailData);
+
+            storedData = storingReturnService.storingReturnOne(purc_retu_no);
+            storingReturnService.storingReturnInsert(storedData);
+
+            result.purc_retu_no = purc_retu_no;
+        }
+
+        result.purc_retu_dt = storedData.getPurc_retu_dt();
         result.item_cd = storedDetailData.getItem_cd();
         result.item_nm = itemService.getItemInfo(result.item_cd).getItem_nm();
         result.qty = storedDetailData.getQty();
         return result; // 오류가 없었으면 return
     }
 
-    /* 입고번호/품목코드 * n */
-    @GetMapping("/storingDelete")
-    public boolean deleteStoring(@RequestBody String input) {
+    /* 입고반품번호/품목코드 * n */
+    @GetMapping("/storingReturnDelete")
+    public boolean deleteStoringReturn(@RequestBody String input) {
         boolean result = false;
-        StoringDTO storedData; StoringDetailDTO storedDetailData;
-        List<StoringDetailDTO> searchResult;
+        StoringReturnDTO storedData; StoringReturnDetailDTO storedDetailData;
+        List<StoringReturnDetailDTO> searchResult;
 
         // System.out.println(input);
 
@@ -190,22 +205,22 @@ public class StoringController {
         }
 
         for(int i = 0; i < info.size(); i+=2) { // 들어온 String의 갯수만큼 반복해서 처리
-            searchResult = storingDetailService.checkStoringDetailList(info.get(i)); // 이미 해당 입고 번호로 저장된 물건이 있는지 확인
-            if(searchResult.size() > 1) { // 입고된 자재가 1개 이상이면 StoringDetail 정보만 제거
+            searchResult = storingReturnDetailService.checkStoringReturnDetailList(info.get(i)); // 이미 해당 입고 번호로 저장된 물건이 있는지 확인
+            if(searchResult.size() > 1) { // 입고 반품된 자재가 1개 이상이면 StoringReturnDetail 정보만 제거
 
-                storedDetailData = new StoringDetailDTO(info.get(i), info.get(i + 1));
-                storingDetailService.storingDetailDelete(storedDetailData);
+                storedDetailData = new StoringReturnDetailDTO(info.get(i), info.get(i + 1));
+                storingReturnDetailService.storingReturnDetailDelete(storedDetailData);
 
-                storedData = storingService.storingOne(info.get(i)); // 수정 정보 갱신(ID는 어차피 입력한 사람이 삭제하는 구조이므로 바꾸지 않아도 됨)
-                storingService.storingInsert(storedData);
+                storedData = storingReturnService.storingReturnOne(info.get(i)); // 수정 정보 갱신(ID는 어차피 입력한 사람이 삭제하는 구조이므로 바꾸지 않아도 됨)
+                storingReturnService.storingReturnInsert(storedData);
                 result = true;
-            } else { // 입고된 자재가 1개 뿐이면 StoringDetail, Storing 둘 다 제거
+            } else { // 입고된 자재가 1개 뿐이면 StoringReturnDetail, StoringReturn 둘 다 제거
 
-                storedDetailData = new StoringDetailDTO(info.get(i), info.get(i + 1));
-                storingDetailService.storingDetailDelete(storedDetailData);
+                storedDetailData = new StoringReturnDetailDTO(info.get(i), info.get(i + 1));
+                storingReturnDetailService.storingReturnDetailDelete(storedDetailData);
 
-                storedData = storingService.storingOne(info.get(i));
-                storingService.storingDelete(storedData);
+                storedData = storingReturnService.storingReturnOne(info.get(i));
+                storingReturnService.storingReturnDelete(storedData);
                 result = true;
             }
         }

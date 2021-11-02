@@ -9,9 +9,10 @@ import java.util.List;
 
 public interface StoringDetailService {
     public abstract List<StoringDetailDTO> storingDetailList();
+    public abstract List<StoringDetailDTO> storingDetailOne(HashMap<String, String> searchInfo);
     public abstract List<StoringListDTO> storingDetailSpecList(HashMap<String, String> searchInfo);
     public abstract void storingDetailInsert(StoringDetailDTO insertData);
     public abstract void storingDetailDelete(StoringDetailDTO deleteData);
-    public abstract List<StoringDetailDTO> checkFormerDetailList(String plord_no);
-    public abstract List<StoringDetailDTO> checkDetailList(String purc_in_no);
+    public abstract List<StoringDetailDTO> checkFormerStoringDetailList(String plord_no);
+    public abstract List<StoringDetailDTO> checkStoringDetailList(String purc_in_no);
 }

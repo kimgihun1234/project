@@ -26,16 +26,6 @@ public class StoringDAOImpl implements StoringDAO{
     }
 
     @Override
-    public String calDate(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectOne("mapper.calDate", searchInfo);
-    }
-
-    @Override
-    public double calTotalSum(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectOne("mapper.calTotalSum", searchInfo);
-    }
-
-    @Override
     public void storingInsert(SqlSessionTemplate session, StoringDTO insertData) {
         session.insert("mapper.storingInsert", insertData);
     }
