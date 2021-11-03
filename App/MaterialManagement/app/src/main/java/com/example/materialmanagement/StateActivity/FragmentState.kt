@@ -97,19 +97,6 @@ class FragmentState : Fragment() {
             dateRangePicker.addOnPositiveButtonClickListener {
                 dateText.setText(dateRangePicker.headerText)
             }
-//            val calendar = Calendar.getInstance()
-//            var year = calendar.get(Calendar.YEAR)
-//            var month = calendar.get(Calendar.MONTH)
-//            var day = calendar.get(Calendar.DAY_OF_MONTH)
-//
-//            var date_listener = object : DatePickerDialog.OnDateSetListener{
-//                override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
-//                    dateText.text = "${year}년 ${month + 1}월 ${day}일"
-//                }
-//            }
-//
-//            var builder = DatePickerDialog(view.context, date_listener, year, month, day)
-//            builder.show()
         }
     }
 
