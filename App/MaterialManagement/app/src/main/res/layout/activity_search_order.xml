@@ -165,64 +165,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
-<!--        <TableRow-->
-<!--            android:id="@+id/row1"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="1dp"-->
-<!--            android:layout_marginRight="1dp"-->
-<!--            android:layout_marginLeft="1dp"-->
-<!--            android:background="@color/white"-->
-<!--            >-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="1dp"-->
-<!--                android:layout_marginLeft="1dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:padding="3dp"-->
-<!--                android:text="123145"-->
-<!--                android:textSize="18sp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:textColor="@color/black"-->
-<!--                />-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="1dp"-->
-<!--                android:layout_marginLeft="1dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:padding="3dp"-->
-<!--                android:text="2021-9-21"-->
-<!--                android:textSize="18sp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:textColor="@color/black"-->
-<!--                />-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="1dp"-->
-<!--                android:layout_marginLeft="1dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:padding="3dp"-->
-<!--                android:text="주한식품"-->
-<!--                android:textSize="18sp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:textColor="@color/black"-->
-<!--                />-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="1dp"-->
-<!--                android:layout_marginLeft="1dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:padding="3dp"-->
-<!--                android:text="창고A"-->
-<!--                android:textSize="18sp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:textColor="@color/black"-->
-<!--                />-->
-<!--        </TableRow>-->
     </TableLayout>
 
 </LinearLayout>

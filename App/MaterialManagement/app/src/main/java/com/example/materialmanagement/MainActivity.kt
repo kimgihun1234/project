@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(){
         setContentView(binding.root)
 
         binding.viewpager.apply {
-            adapter = MyPagerAdapter(context as FragmentActivity)
+            adapter = MainPagerAdapter(context as FragmentActivity)
             setPageTransformer(ZoomOutPageTransformer())
         }
 

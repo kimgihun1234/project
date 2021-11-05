@@ -1,6 +1,7 @@
 package com.example.materialmanagement.StateActivity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,18 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.example.materialmanagement.MainPagerAdapter
 import com.example.materialmanagement.R
+import com.example.materialmanagement.StateActivity.TabFragments.FragmentInState
+import com.example.materialmanagement.ZoomOutPageTransformer
+import com.example.materialmanagement.databinding.ActivityMainBinding
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -30,9 +39,11 @@ class FragmentState : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var searchCustomer : SearchView
-    private lateinit var dateText : TextView
-    private lateinit var searchDate : ImageButton
+    private lateinit var viewpager : ViewPager2
+    private lateinit var tabLayout : TabLayout
+    private val tabName = listOf(
+        "입고", "출고", "입고반품", "출고반품", "현재고"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,57 +58,38 @@ class FragmentState : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        //recycler view
-        val view = inflater.inflate(R.layout.fragment_state, container, false)
-        val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = StateRecyclerAdapter()
-
-        return view
+        return inflater.inflate(R.layout.fragment_state, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchCustomer = view.findViewById(R.id.searchCustomer)
-        dateText = view.findViewById(R.id.dateText)
-        searchDate = view.findViewById(R.id.searchDate)
+        viewpager = view.findViewById(R.id.viewpager)
+        tabLayout = view.findViewById(R.id.tabLayout)
+    }
 
-        searchCustomer.isSubmitButtonEnabled = true
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-        searchCustomer.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
+        val pagerAdapter = StatePagerAdapter(requireActivity())
+        // 3개의 Fragment Add
+        pagerAdapter.addFragment(FragmentInState())
+        //pagerAdapter.addFragment(SecondFragment())
+        //pagerAdapter.addFragment(ThirdFragment())
+        // Adapter
+        viewpager.adapter = pagerAdapter
 
-                // 검색 버튼 누를 때 호출
-
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
-
-                return true
+        viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                //Log.e("ViewPagerFragment", "Page ${position+1}")
             }
         })
-        
-        searchDate.setOnClickListener {
-            val dateRangePicker =
-                MaterialDatePicker.Builder.dateRangePicker()
-                    .setTitleText("검색 기간을 골라주세요")
-//                    .setSelection(
-//                        Pair(
-//                            MaterialDatePicker.thisMonthInUtcMilliseconds(),
-//                            MaterialDatePicker.todayInUtcMilliseconds()
-//                        )
-//                    )
-                    .build()
 
-            dateRangePicker.show(childFragmentManager, "date_picker")
-            dateRangePicker.addOnPositiveButtonClickListener {
-                dateText.setText(dateRangePicker.headerText)
-            }
-        }
+        // TabLayout attach
+        TabLayoutMediator(tabLayout, viewpager) { tab, position ->
+            tab.text = tabName[position]
+        }.attach()
     }
 
     companion object {

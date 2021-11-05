@@ -9,7 +9,7 @@ import com.example.materialmanagement.StateActivity.FragmentState
 
 //https://developer.android.com/training/animation/screen-slide-2?hl=ko
 
-class MyPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
+class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
     private val NUM_PAGES = 4
 
     override fun getItemCount(): Int = NUM_PAGES
