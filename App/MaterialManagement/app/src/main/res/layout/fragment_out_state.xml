@@ -1,14 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".StateActivity.TabFragments.FragmentOutState">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:background="@color/bgGray"
+        >
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="15dp"
+            >
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchCustomer"
+                android:layout_width="350dp"
+                android:layout_height="55dp"
+                style="@style/SearchViewStyle"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@null"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:queryHint="거래처 검색"
+                app:searchIcon="@drawable/ic_baseline_search_24"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/dateText"
+                    android:layout_width="295dp"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/radius"
+                    android:hint="검색 기간"
+                    android:padding="15dp"
+                    android:paddingStart="60dp"
+                    android:textSize="17sp"
+                    android:textColor="@color/black"
+                    >
+
+                </TextView>
+
+                <ImageButton
+                    android:id="@+id/searchDate"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="3dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_baseline_calendar_today_24"
+                    />
+            </LinearLayout>
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:stretchColumns="0, 1,2"
+                android:shrinkColumns="3"
+                >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginBottom="1dp"
+                        android:background="@color/darkGray"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="수주번호"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@color/darkGray"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="출고일자"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@color/darkGray"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="품목명"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:background="@color/darkGray"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="수량"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        />
+                </TableRow>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/item_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+            </TableLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

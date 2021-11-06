@@ -1,11 +1,17 @@
 package com.example.materialmanagement.StateActivity.TabFragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.R
+import com.example.materialmanagement.SearchActivity.SearchStorage
+import com.example.materialmanagement.StateActivity.TabRecyclerAdapter.CurrentStateRecyclerAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +28,9 @@ class FragmentCurrentState : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var intent : Intent
+    private lateinit var searchStorage : SearchView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,8 +43,39 @@ class FragmentCurrentState : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_current_state, container, false)
+        //recycler view
+        val view = inflater.inflate(R.layout.fragment_current_state, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = CurrentStateRecyclerAdapter()
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        searchStorage = view.findViewById(R.id.searchStorage)
+
+        searchStorage.isSubmitButtonEnabled = true
+
+        searchStorage.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // 검색 버튼 누를 때 호출
+                intent = Intent(getActivity(), SearchStorage::class.java)
+                intent.putExtra("query", query)
+                getActivity()?.startActivity(intent)
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                // 검색창에서 글자가 변경이 일어날 때마다 호출
+
+                return true
+            }
+        })
     }
 
     companion object {

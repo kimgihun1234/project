@@ -72,10 +72,7 @@ class FragmentState : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val pagerAdapter = StatePagerAdapter(requireActivity())
-        // 3개의 Fragment Add
-        pagerAdapter.addFragment(FragmentInState())
-        //pagerAdapter.addFragment(SecondFragment())
-        //pagerAdapter.addFragment(ThirdFragment())
+
         // Adapter
         viewpager.adapter = pagerAdapter
 

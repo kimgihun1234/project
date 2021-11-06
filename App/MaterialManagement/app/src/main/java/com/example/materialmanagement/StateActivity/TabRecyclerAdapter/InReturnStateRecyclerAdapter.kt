@@ -1,4 +1,4 @@
-package com.example.materialmanagement.NumSearchActivity
+package com.example.materialmanagement.StateActivity.TabRecyclerAdapter;
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +9,10 @@ import com.example.materialmanagement.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NumRecyclerAdapter() : RecyclerView.Adapter<NumRecyclerAdapter.MyViewHolder>() {
+class InReturnStateRecyclerAdapter() : RecyclerView.Adapter<InReturnStateRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_search, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_state, parent, false)
 
         return MyViewHolder(itemView)
     }
@@ -23,24 +23,29 @@ class NumRecyclerAdapter() : RecyclerView.Adapter<NumRecyclerAdapter.MyViewHolde
         val now = System.currentTimeMillis()
         var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
+        holder.item_num.text = position.toString() + 4
         holder.in_date.text = simpleDateFormat
-        //holder.item_num.text = position.toString()
-        holder.item_num.text = "123124"
-        holder.customer.text = position.toString()
-        holder.storage.text = position.toString()
+        holder.item_name.text = position.toString() + 4
+        holder.item_amount.text = position.toString() + 4
+//        holder.root.setOnClickListener(object : View.OnClickListener{
+//            override fun onClick(p0: View?) {
+//                holder.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
+//                    Toast.makeText(this,isChecked.toString(),Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        })
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
         //return list.size
-        return 5
+        return 20
     }
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         val item_num = itemView.findViewById<TextView>(R.id.item_num)
         val in_date = itemView.findViewById<TextView>(R.id.in_date)
-        val customer = itemView.findViewById<TextView>(R.id.customer)
-        val storage = itemView.findViewById<TextView>(R.id.storage)
-
+        val item_name = itemView.findViewById<TextView>(R.id.item_name)
+        val item_amount = itemView.findViewById<TextView>(R.id.item_amount)
 
         //val root = itemView.findViewById<TableLayout>(R.id.root)
     }

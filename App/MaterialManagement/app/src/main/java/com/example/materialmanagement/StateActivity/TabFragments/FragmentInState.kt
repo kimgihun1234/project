@@ -11,7 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.R
-import com.example.materialmanagement.StateActivity.StateRecyclerAdapter
+import com.example.materialmanagement.StateActivity.TabRecyclerAdapter.InStateRecyclerAdapter
 import com.google.android.material.datepicker.MaterialDatePicker
 
 // TODO: Rename parameter arguments, choose names that match
@@ -50,7 +50,7 @@ class FragmentInState : Fragment() {
         val view = inflater.inflate(R.layout.fragment_in_state, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = StateRecyclerAdapter()
+        recyclerView.adapter = InStateRecyclerAdapter()
 
         return view
     }

@@ -1,4 +1,4 @@
-package com.example.materialmanagement.StateActivity;
+package com.example.materialmanagement.SearchActivity.RecyclerViewAdapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +9,10 @@ import com.example.materialmanagement.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-class StateRecyclerAdapter() : RecyclerView.Adapter<StateRecyclerAdapter.MyViewHolder>() {
+class InRecyclerAdapter() : RecyclerView.Adapter<InRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_input, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_search, parent, false)
 
         return MyViewHolder(itemView)
     }
@@ -24,15 +24,10 @@ class StateRecyclerAdapter() : RecyclerView.Adapter<StateRecyclerAdapter.MyViewH
         var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
         holder.in_date.text = simpleDateFormat
-        holder.item_name.text = position.toString() + 2
-        holder.item_num.text = position.toString() + 2
-//        holder.root.setOnClickListener(object : View.OnClickListener{
-//            override fun onClick(p0: View?) {
-//                holder.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
-//                    Toast.makeText(this,isChecked.toString(),Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
+        //holder.item_num.text = position.toString()
+        holder.item_num.text = "발주번호"
+        holder.customer.text = position.toString()
+        holder.storage.text = position.toString()
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
@@ -41,10 +36,12 @@ class StateRecyclerAdapter() : RecyclerView.Adapter<StateRecyclerAdapter.MyViewH
     }
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        //val checkbox = itemView.findViewById<CheckBox>(R.id.checkbox)
-        val in_date = itemView.findViewById<TextView>(R.id.in_date)
-        val item_name = itemView.findViewById<TextView>(R.id.item_name)
         val item_num = itemView.findViewById<TextView>(R.id.item_num)
+        val in_date = itemView.findViewById<TextView>(R.id.in_date)
+        val customer = itemView.findViewById<TextView>(R.id.customer)
+        val storage = itemView.findViewById<TextView>(R.id.storage)
+
+
         //val root = itemView.findViewById<TableLayout>(R.id.root)
     }
 }

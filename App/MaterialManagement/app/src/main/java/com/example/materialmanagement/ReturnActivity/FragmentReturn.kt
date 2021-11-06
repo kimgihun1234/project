@@ -13,8 +13,10 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.materialmanagement.NumSearchActivity.SearchOrder
+import com.example.materialmanagement.SearchActivity.SearchInOrder
+import com.example.materialmanagement.SearchActivity.SearchOutOrder
 import com.example.materialmanagement.R
+import com.example.materialmanagement.SearchActivity.SearchStorage
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
 import java.util.*
@@ -43,6 +45,9 @@ class FragmentReturn : Fragment() {
     private lateinit var searchStorage : SearchView
     private lateinit var searchBarCode : SearchView
     private lateinit var searchItemName : SearchView
+
+    private var buttonState : Boolean = true // 입고는 true, 출고는 false
+    private lateinit var intent : Intent
 
     private lateinit var deleteBtn : Button
 
@@ -88,6 +93,7 @@ class FragmentReturn : Fragment() {
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
                         searchOrder.setQueryHint("발주 번호")
+                        buttonState = true
                     }
                     R.id.btnOut -> {
                         //Toast.makeText(activity,"출고", Toast.LENGTH_SHORT).show()
@@ -95,6 +101,7 @@ class FragmentReturn : Fragment() {
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
                         searchOrder.setQueryHint("수주 번호")
+                        buttonState = false
                     }
                 }
             } else {
@@ -122,7 +129,12 @@ class FragmentReturn : Fragment() {
 
         searchOrder.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                var intent = Intent(getActivity(), SearchOrder::class.java)
+                if(buttonState){
+                    intent = Intent(getActivity(), SearchInOrder::class.java)
+
+                } else {
+                    intent = Intent(getActivity(), SearchOutOrder::class.java)
+                }
                 intent.putExtra("query", query)
                 getActivity()?.startActivity(intent)
 
@@ -141,7 +153,9 @@ class FragmentReturn : Fragment() {
 
         searchStorage.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
+                intent = Intent(getActivity(), SearchStorage::class.java)
+                intent.putExtra("query", query)
+                getActivity()?.startActivity(intent)
                 // 검색 버튼 누를 때 호출
 
                 return true

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.materialmanagement">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -12,10 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Splash">
         <activity
-            android:name=".StateActivity.DatePickerDialog"
+            android:name=".SearchActivity.SearchInOrder"
             android:exported="true" />
         <activity
-            android:name=".NumSearchActivity.SearchOrder"
+            android:name=".SearchActivity.SearchOutOrder"
+            android:exported="true" />
+        <activity
+            android:name=".SearchActivity.SearchStorage"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

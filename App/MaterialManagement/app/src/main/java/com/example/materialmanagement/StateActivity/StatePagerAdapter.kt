@@ -3,10 +3,7 @@ package com.example.materialmanagement.StateActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.materialmanagement.StateActivity.TabFragments.FragmentInReturnState
-import com.example.materialmanagement.StateActivity.TabFragments.FragmentInState
-import com.example.materialmanagement.StateActivity.TabFragments.FragmentOutReturnState
-import com.example.materialmanagement.StateActivity.TabFragments.FragmentOutState
+import com.example.materialmanagement.StateActivity.TabFragments.*
 
 //https://developer.android.com/training/animation/screen-slide-2?hl=ko
 
@@ -32,7 +29,7 @@ class StatePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
             1 -> FragmentOutState()
             2 -> FragmentInReturnState()
             3 -> FragmentOutReturnState()
-            else -> FragmentInReturnState()
+            else -> FragmentCurrentState()
 
         }
     }
