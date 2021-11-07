@@ -2,7 +2,6 @@ package cse.knu.cdp1.controller;
 
 import cse.knu.cdp1.dto.LocationDTO;
 import cse.knu.cdp1.dto.WarehouseDTO;
-import cse.knu.cdp1.service.CustomerService;
 import cse.knu.cdp1.service.LocationService;
 import cse.knu.cdp1.service.WarehouseService;
 import lombok.Getter;

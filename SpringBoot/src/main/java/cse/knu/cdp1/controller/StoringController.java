@@ -23,12 +23,6 @@ public class StoringController {
     StoringDetailService storingDetailService;
 
     @Autowired
-    OrderService orderService;
-
-    @Autowired
-    OrderDetailService orderDetailService;
-
-    @Autowired
     ItemService itemService;
 
     @Autowired
@@ -99,32 +93,24 @@ public class StoringController {
         return searchResult;
     }
 
-    /* 발주번호/거래처이름/거래처번호 */
-    /* 창고이름/창고번호/위치이름/위치번호 */
-    /* ID/사원코드 */
-    /* 품목코드/수량 */
-
+    /* cust_cd, stor_cd, loca_cd, item_cd, qty, corp_cd, busi_cd, emp_no */
+    /*    0        1        2        3      4      5         6       7   */
     @Alias("storinginputresult")
     @Getter
     @Setter
     @ToString
     public class InputResultClass {
         String purc_in_no;
-        String purc_in_dt;
-        String item_nm;
-        String item_cd;
-        Double qty;
-
+        // String qty;
         public InputResultClass() {}
     }
 
     @GetMapping("/storingInsert")
     public InputResultClass insertStoring(@RequestBody String input) {
         StoringDTO storedData; StoringDetailDTO storedDetailData;
-        OrderDTO orderTemp = null; OrderDetailDTO orderDetailTemp = null;
         String purc_in_no = null; // 입고 번호 저장용
         InputResultClass result = new InputResultClass(); // 오류 등이 발생했을 경우에는 result에 오류 내용을 담아서 전송
-        List<StoringDetailDTO> searchResult;
+        List<StoringDTO> searchResult; List<StoringDetailDTO> searchDetailResult;
 
         // System.out.println(input);
 
@@ -134,23 +120,12 @@ public class StoringController {
             // System.out.println(temp);
         }
 
-        orderTemp = orderService.getOrderInfo(info.get(0)); // 필요한 발주 정보를 받아 옴
+        searchResult = storingService.checkFormerStoringList(); // 오늘 날짜 기준으로 이미 입고된 적이 있는지 확인
+        if(searchResult.isEmpty()) { // 없으면 새로 입고와 입고 상세 데이터를 생성
+            purc_in_no = storingService.purc_in_no_Cal(info.get(5)); // 입고 번호 생성
 
-        List<OrderDetailDTO> orderDetailList = orderDetailService.orderDetailList();
-        // 하나의 발주 번호에 여러 개의 품목이 담겨져 있음 => 저장하고자 하는 물건의 품목 코드, 발주 번호와 일치하는 발주 상세 정보를 갖고 옴
-        for(OrderDetailDTO temp : orderDetailList) {
-            if(orderTemp.getPlord_no().equals(temp.getPlord_no()) && info.get(9).equals(temp.getItem_cd())) {
-                orderDetailTemp = temp;
-                break;
-            }
-        }
-
-        searchResult = storingDetailService.checkFormerStoringDetailList(orderTemp.getPlord_no()); // 이미 해당 발주 번호로 저장된 물건이 있는지 확인
-        if(searchResult.isEmpty()) { // 발주 번호로 저장된 물건이 없으면 새로 입고와 입고 상세 데이터를 생성
-            purc_in_no = storingService.purc_in_no_Cal(orderTemp.getCorp_cd()); // 입고 번호 생성
-
-            storedData = new StoringDTO(orderTemp, purc_in_no, info.get(8));
-            storedDetailData = new StoringDetailDTO(orderDetailTemp, purc_in_no, info.get(8), info.get(4), info.get(5), info.get(0), info.get(10));
+            storedData = new StoringDTO(info.get(5), info.get(6), purc_in_no, info.get(0), info.get(7));
+            storedDetailData = new StoringDetailDTO(info.get(5), purc_in_no, info.get(3), info.get(4), info.get(1), info.get(2), info.get(7));
 
             storingService.storingInsert(storedData);
             storingDetailService.storingDetailInsert(storedDetailData);
@@ -158,23 +133,32 @@ public class StoringController {
             result.purc_in_no = purc_in_no;
         } else { // 이전에 같은 발주 번호로 물건이 입고되었으면, 입고 상세 데이터만 생성하고, 기존 입고 데이터는 갱신.
             purc_in_no = searchResult.get(0).getPurc_in_no();
-            storedDetailData = new StoringDetailDTO(orderDetailTemp, purc_in_no, info.get(8), info.get(4), info.get(5), info.get(0), info.get(10));
-            storingDetailService.storingDetailInsert(storedDetailData);
 
-            storedData = storingService.storingOne(purc_in_no);
+            searchDetailResult = storingDetailService.checkStoringDetailList(purc_in_no);
+
+            storedDetailData = new StoringDetailDTO(info.get(5), purc_in_no, info.get(3), info.get(4), info.get(1), info.get(2), info.get(7));
+            boolean checkDuplicate = false;
+            for(StoringDetailDTO listTemp : searchDetailResult) {
+                if(info.get(3).equals(listTemp.getItem_cd())) { // 만약 같은 물품 번호로 들어간게 있으면
+                    storingDetailService.storingDetailUpdate(storedDetailData);// 갯수 업데이트만 실시
+                    checkDuplicate = true;
+                    break;
+                }
+            }
+
+            if(checkDuplicate == false) storingDetailService.storingDetailInsert(storedDetailData); // 중복되는 물품 번호 없으면 새로 생성
+
+            storedData = storingService.storingOne(purc_in_no); // 데이터 갱신만 실시
             storingService.storingInsert(storedData);
 
             result.purc_in_no = purc_in_no;
         }
 
-        result.purc_in_dt = storedData.getPurc_in_dt();
-        result.item_cd = storedDetailData.getItem_cd();
-        result.item_nm = itemService.getItemInfo(result.item_cd).getItem_nm();
-        result.qty = storedDetailData.getQty();
+        // result.qty = info.get(4); // 갯수 반환 => delete에서 사용
         return result; // 오류가 없었으면 return
     }
 
-    /* 입고번호/품목코드 * n */
+    /* 입고번호/품목코드/수량 */
     @GetMapping("/storingDelete")
     public boolean deleteStoring(@RequestBody String input) {
         boolean result = false;
@@ -189,26 +173,30 @@ public class StoringController {
             // System.out.println(temp);
         }
 
-        for(int i = 0; i < info.size(); i+=2) { // 들어온 String의 갯수만큼 반복해서 처리
-            searchResult = storingDetailService.checkStoringDetailList(info.get(i)); // 이미 해당 입고 번호로 저장된 물건이 있는지 확인
-            if(searchResult.size() > 1) { // 입고된 자재가 1개 이상이면 StoringDetail 정보만 제거
+        for(int i = 0; i < info.size(); i+=3) { // 들어온 String의 갯수만큼 반복해서 처리
+            searchResult = storingDetailService.checkStoringDetailList(info.get(i)); // 해당 입고 번호에 대한 상세 리스트를 먼저 불러옴
 
-                storedDetailData = new StoringDetailDTO(info.get(i), info.get(i + 1));
-                storingDetailService.storingDetailDelete(storedDetailData);
+            storedDetailData = new StoringDetailDTO(info.get(i), info.get(i + 1), info.get(i + 2)); // delete를 위한 class 생성
+            storingDetailService.storingDetailDelete(storedDetailData);
 
-                storedData = storingService.storingOne(info.get(i)); // 수정 정보 갱신(ID는 어차피 입력한 사람이 삭제하는 구조이므로 바꾸지 않아도 됨)
-                storingService.storingInsert(storedData);
-                result = true;
-            } else { // 입고된 자재가 1개 뿐이면 StoringDetail, Storing 둘 다 제거
+            for(StoringDetailDTO listTemp : searchResult) { // 같은 물품 번호가 있는 상세 정보에 대해 먼저 찾음
+                if(info.get(i + 1).equals(listTemp.getItem_cd())) { // 만약 같은 물품 번호가 있으면
+                    storingDetailService.storingDetailUpdate(storedDetailData);// 갯수 업데이트를 먼저 실시
+                    break;
+                }
+            }
 
-                storedDetailData = new StoringDetailDTO(info.get(i), info.get(i + 1));
-                storingDetailService.storingDetailDelete(storedDetailData);
+            storingDetailService.storingDetailDelete(storedDetailData); // 갯수 업데이트 후 Delete 실시. qty가 0이면 삭제.
 
-                storedData = storingService.storingOne(info.get(i));
-                storingService.storingDelete(storedData);
-                result = true;
+            searchResult = storingDetailService.checkStoringDetailList(info.get(i)); // Delete 이후 List를 확인
+
+            if(searchResult.isEmpty()) { // 더이상 해당 입고 번호에 대한 입고 상세 정보가 없으면
+                storedData = storingService.storingOne(info.get(i)); // 입고 정보 삭제를 위해 해당 입고 정보를 갖고 오고
+                storingService.storingDelete(storedData); // 그 입고 정보를 삭제
             }
         }
+
+        result = true;
 
         return result;
     }

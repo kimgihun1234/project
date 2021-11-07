@@ -16,11 +16,6 @@ public class StoringDetailDAOImpl implements StoringDetailDAO {
     }
 
     @Override
-    public List<StoringDetailDTO> storingDetailOne(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectList("mapper.storingDetailOne", searchInfo);
-    }
-
-    @Override
     public List<StoringListDTO> storingDetailSpecList(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
         return session.selectList("mapper.storingDetailSpecList", searchInfo);
     }
@@ -36,12 +31,12 @@ public class StoringDetailDAOImpl implements StoringDetailDAO {
     }
 
     @Override
-    public List<StoringDetailDTO> checkFormerStoringDetailList(SqlSessionTemplate session, String plord_no) {
-        return session.selectList("mapper.checkFormerStoringDetailList", plord_no);
+    public List<StoringDetailDTO> checkStoringDetailList(SqlSessionTemplate session, String purc_in_no) {
+        return session.selectList("mapper.checkStoringDetailList", purc_in_no);
     }
 
     @Override
-    public List<StoringDetailDTO> checkStoringDetailList(SqlSessionTemplate session, String purc_in_no) {
-        return session.selectList("mapper.checkStoringDetailList", purc_in_no);
+    public void storingDetailUpdate(SqlSessionTemplate session, StoringDetailDTO updateData) {
+        session.update("mapper.storingDetailUpdate", updateData);
     }
 }

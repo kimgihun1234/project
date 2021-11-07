@@ -28,4 +28,24 @@ public class OfferDTO {
     String upd_dttm; // 수정 일시
 
     public OfferDTO() {}
+
+    public String getEx_requ_no() {
+        return ex_requ_no;
+    }
+
+    public String getCorp_cd() {
+        return corp_cd;
+    }
+
+    public String getBusi_cd() {
+        return busi_cd;
+    }
+
+    public String getCust_cd() {
+        return cust_cd;
+    }
+
+    public String getSupp_cd() {
+        return supp_cd;
+    }
 }

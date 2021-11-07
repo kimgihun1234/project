@@ -52,33 +52,24 @@ public class StoringReturnDetailDTO {
 
     public StoringReturnDetailDTO() {}
 
-    public StoringReturnDetailDTO(String purc_retu_no, String item_cd) {
+    // Delete용 생성자
+    public StoringReturnDetailDTO(String purc_retu_no, String item_cd, String qty) {
         this.purc_retu_no = purc_retu_no;
         this.item_cd = item_cd;
+        this.qty = -Double.parseDouble(qty);
     }
 
-    public StoringReturnDetailDTO(OrderDetailDTO input, String purc_retu_no, String emp_no, String stor_cd, String loca_cd, String plord_no, String qty, String purc_in_no) {
-        this.seq = input.getSeq();
-        this.corp_cd = input.getCorp_cd();
+    // Insert용 생성자
+    public StoringReturnDetailDTO(String corp_cd, String purc_retu_no, String item_cd, String qty, String stor_cd, String loca_cd, String emp_no) {
+        this.corp_cd = corp_cd;
         this.purc_retu_no = purc_retu_no;
-        this.item_cd = input.getItem_cd();
-        this.tax_divi = input.getTax_divi();
-        this.vat_divi = input.getVat_divi();
+        // seq는 sql 코드로 생성
+        this.item_cd = item_cd;
+
         this.qty = Double.parseDouble(qty);
-        this.upr = input.getUpr();
-        this.sup_amt = input.getSup_amt();
-        this.tax = input.getTax();
-        this.tot_amt = input.getTot_amt();
+
         this.stor_cd = stor_cd;
         this.loca_cd = loca_cd;
-
-        this.purc_requ_no = input.getPurc_requ_no();
-        this.plord_no = plord_no;
-        this.purc_in_no = purc_in_no;
-        this.pj_cd = input.getPj_cd();
-        this.apply_qty = input.getApply_qty();
-
-        this.remark = null;
 
         this.inp_id = emp_no;
 

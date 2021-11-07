@@ -34,22 +34,26 @@ public class StoringReturnDTO {
 
     public StoringReturnDTO() {}
 
-    public StoringReturnDTO(OrderDTO input, String purc_retu_no, String emp_no) {
+    public StoringReturnDTO(String purc_retu_no) {
+        super();
         SimpleDateFormat format1 = new SimpleDateFormat( "yyyyMMdd");
         Date time = new Date();
 
-        this.corp_cd = input.getCorp_cd();
-        this.busi_cd = input.getBusi_cd();
+        this.purc_retu_dt = format1.format(time);
+        this.purc_retu_no = purc_retu_no;
+    }
+
+    public StoringReturnDTO(String corp_cd, String busi_cd, String purc_retu_no, String cust_cd, String emp_no) {
+        SimpleDateFormat format1 = new SimpleDateFormat( "yyyyMMdd");
+        Date time = new Date();
+
+        this.corp_cd = corp_cd;
+        this.busi_cd = busi_cd;
         this.purc_retu_no = purc_retu_no;
         this.purc_retu_dt = format1.format(time);
-        this.purc_close_divi = null;
-        this.cust_cd = input.getCust_cd();
-        this.pic_cd = null;
-        this.depa_cd = null;
-        this.emp_no = emp_no;
 
-        this.remark = null;
-        this.close_yn = "0";
+        this.cust_cd = cust_cd;
+
         this.inp_id = emp_no;
 
         this.upd_id = emp_no;

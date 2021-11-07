@@ -1,8 +1,6 @@
 package cse.knu.cdp1.controller;
 
 import cse.knu.cdp1.dto.CustomerDTO;
-import cse.knu.cdp1.dto.UnstoringDTO;
-import cse.knu.cdp1.dto.UnstoringDetailDTO;
 import cse.knu.cdp1.service.CustomerService;
 import lombok.Getter;
 import lombok.Setter;

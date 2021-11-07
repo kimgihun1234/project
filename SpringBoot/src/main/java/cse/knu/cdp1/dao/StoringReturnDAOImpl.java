@@ -1,6 +1,5 @@
 package cse.knu.cdp1.dao;
 
-import cse.knu.cdp1.dto.StoringDTO;
 import cse.knu.cdp1.dto.StoringReturnDTO;
 import cse.knu.cdp1.dto.StoringReturnListDTO;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -27,13 +26,8 @@ public class StoringReturnDAOImpl implements StoringReturnDAO{
     }
 
     @Override
-    public String calStoringReturnDate(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectOne("mapper.calStoringReturnDate", searchInfo);
-    }
-
-    @Override
-    public double calStoringReturnTotalSum(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectOne("mapper.calStoringReturnTotalSum", searchInfo);
+    public List<StoringReturnDTO> checkFormerStoringReturnList(SqlSessionTemplate session, String purc_retu_dt) {
+        return session.selectList("mapper.checkFormerStoringReturnList", purc_retu_dt);
     }
 
     @Override

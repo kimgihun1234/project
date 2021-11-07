@@ -39,12 +39,12 @@ public class StoringReturnDetailServiceImpl implements StoringReturnDetailServic
     }
 
     @Override
-    public List<StoringReturnDetailDTO> checkFormerStoringReturnDetailList(String plord_no) {
-        return dao.checkFormerStoringReturnDetailList(session, plord_no);
+    public List<StoringReturnDetailDTO> checkStoringReturnDetailList(String purc_retu_no) {
+        return dao.checkStoringReturnDetailList(session, purc_retu_no);
     }
 
     @Override
-    public List<StoringReturnDetailDTO> checkStoringReturnDetailList(String purc_retu_no) {
-        return dao.checkStoringReturnDetailList(session, purc_retu_no);
+    public void storingReturnDetailUpdate(StoringReturnDetailDTO updateData) {
+        dao.storingReturnDetailUpdate(session, updateData);
     }
 }

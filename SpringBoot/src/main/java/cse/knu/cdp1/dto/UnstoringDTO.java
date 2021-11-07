@@ -5,6 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Alias("unstoring")
 @Getter
 @Setter
@@ -33,5 +36,34 @@ public class UnstoringDTO {
 
     public String getEx_no() {
         return ex_no;
+    }
+
+    public String getEx_dt() {
+        return ex_dt;
+    }
+
+    public UnstoringDTO(String ex_no) {
+        super();
+        SimpleDateFormat format1 = new SimpleDateFormat( "yyyyMMdd");
+        Date time = new Date();
+
+        this.ex_dt = format1.format(time);
+        this.ex_no = ex_no;
+    }
+
+    public UnstoringDTO(String corp_cd, String busi_cd, String ex_no, String cust_cd, String emp_no) {
+        SimpleDateFormat format1 = new SimpleDateFormat( "yyyyMMdd");
+        Date time = new Date();
+
+        this.corp_cd = corp_cd;
+        this.busi_cd = busi_cd;
+        this.ex_no = ex_no;
+        this.ex_dt = format1.format(time);
+
+        this.cust_cd = cust_cd;
+
+        this.inp_id = emp_no;
+
+        this.upd_id = emp_no;
     }
 }

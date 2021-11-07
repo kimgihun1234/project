@@ -98,8 +98,4 @@ public class OrderDetailDTO {
     public Double getApply_qty() {
         return apply_qty;
     }
-
-    public String getInfo() {
-        return plord_no + "/" + seq + "/" + item_cd;
-    }
 }

@@ -1,7 +1,6 @@
 package cse.knu.cdp1.dao;
 
 import cse.knu.cdp1.dto.CustomerDTO;
-import cse.knu.cdp1.dto.StoringDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import java.util.List;

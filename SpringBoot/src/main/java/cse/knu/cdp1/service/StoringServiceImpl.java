@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import cse.knu.cdp1.dao.StoringDAO;
 import cse.knu.cdp1.dto.StoringDTO;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,6 +35,13 @@ public class StoringServiceImpl implements StoringService {
     @Override
     public List<StoringListDTO> storingSpecList(HashMap<String, String> searchInfo) {
         return dao.storingSpecList(session, searchInfo);
+    }
+
+    @Override
+    public List<StoringDTO> checkFormerStoringList() {
+        SimpleDateFormat format1 = new SimpleDateFormat( "yyyyMMdd");
+        Date time = new Date();
+        return dao.checkFormerStoringList(session, format1.format(time));
     }
 
     @Override

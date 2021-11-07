@@ -2,7 +2,6 @@ package cse.knu.cdp1.controller;
 
 import cse.knu.cdp1.dto.CustomerDTO;
 import cse.knu.cdp1.dto.OrderDTO;
-import cse.knu.cdp1.dto.OrderDetailDTO;
 import cse.knu.cdp1.service.CustomerService;
 import cse.knu.cdp1.service.OrderDetailService;
 import cse.knu.cdp1.service.OrderService;

@@ -8,6 +8,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,13 +37,10 @@ public class StoringReturnServiceImpl implements StoringReturnService{
     }
 
     @Override
-    public String calStoringReturnDate(HashMap<String, String> searchInfo) {
-        return dao.calStoringReturnDate(session, searchInfo);
-    }
-
-    @Override
-    public double calStoringReturnTotalSum(HashMap<String, String> searchInfo) {
-        return dao.calStoringReturnTotalSum(session, searchInfo);
+    public List<StoringReturnDTO> checkFormerStoringReturnList() {
+        SimpleDateFormat format1 = new SimpleDateFormat( "yyyyMMdd");
+        Date time = new Date();
+        return dao.checkFormerStoringReturnList(session, format1.format(time));
     }
 
     @Override

@@ -31,12 +31,12 @@ public class StoringReturnDetailDAOImpl implements StoringReturnDetailDAO{
     }
 
     @Override
-    public List<StoringReturnDetailDTO> checkFormerStoringReturnDetailList(SqlSessionTemplate session, String plord_no) {
-        return session.selectList("mapper.checkFormerStoringReturnDetailList", plord_no);
+    public List<StoringReturnDetailDTO> checkStoringReturnDetailList(SqlSessionTemplate session, String purc_retu_no) {
+        return session.selectList("mapper.checkStoringReturnDetailList", purc_retu_no);
     }
 
     @Override
-    public List<StoringReturnDetailDTO> checkStoringReturnDetailList(SqlSessionTemplate session, String purc_retu_no) {
-        return session.selectList("mapper.checkStoringReturnDetailList", purc_retu_no);
+    public void storingReturnDetailUpdate(SqlSessionTemplate session, StoringReturnDetailDTO updateData) {
+        session.update("mapper.storingReturnDetailUpdate", updateData);
     }
 }

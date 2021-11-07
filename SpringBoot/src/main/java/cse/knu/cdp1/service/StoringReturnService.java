@@ -13,8 +13,7 @@ public interface StoringReturnService {
     public abstract List<StoringReturnDTO> storingReturnTotalList();
     public abstract List<StoringReturnListDTO> storingReturnSpecList(HashMap<String, String> searchInfo);
     public abstract StoringReturnDTO storingReturnOne(String purc_retu_no);
-    public abstract String calStoringReturnDate (HashMap<String, String> searchInfo);
-    public abstract double calStoringReturnTotalSum (HashMap<String, String> searchInfo);
+    public abstract List<StoringReturnDTO> checkFormerStoringReturnList();
     public abstract void storingReturnInsert(StoringReturnDTO insertData);
     public abstract void storingReturnDelete(StoringReturnDTO deleteData);
     public abstract String purc_retu_no_Cal(String corp_cd);

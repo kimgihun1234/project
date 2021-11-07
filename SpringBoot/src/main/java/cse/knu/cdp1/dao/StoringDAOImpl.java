@@ -26,6 +26,11 @@ public class StoringDAOImpl implements StoringDAO{
     }
 
     @Override
+    public List<StoringDTO> checkFormerStoringList(SqlSessionTemplate session, String purc_in_dt) {
+        return session.selectList("mapper.checkFormerStoringList", purc_in_dt);
+    }
+
+    @Override
     public void storingInsert(SqlSessionTemplate session, StoringDTO insertData) {
         session.insert("mapper.storingInsert", insertData);
     }
