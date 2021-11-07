@@ -10,12 +10,12 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 public class UnstoringReturnListDTO {
-    String ex_retu_dt; // 입고 일자
+    String ex_retu_dt; // 출고 반품 일자
     String item_cd; // 품목 번호
     String item_nm; // 품목명
     Double qty; // 수량
 
-    String ex_requ_no; // 발주 번호
+    String ex_retu_no; // 출고 반품 번호
     String cust_cd; // 거래처 번호
     String cust_nm; // 거래처명
     String stor_cd; // 창고 번호
@@ -49,8 +49,8 @@ public class UnstoringReturnListDTO {
         this.loca_nm = loca_nm;
     }
 
-    public String getEx_requ_no() {
-        return ex_requ_no;
+    public String getEx_retu_no() {
+        return ex_retu_no;
     }
 
     public String getItem_cd() {

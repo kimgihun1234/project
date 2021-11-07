@@ -15,7 +15,7 @@ public class StoringListDTO {
     String item_nm; // 품목명
     Double qty; // 수량
 
-    String plord_no; // 발주 번호
+    String purc_in_no; // 입고 번호
     String cust_cd; // 거래처 번호
     String cust_nm; // 거래처명
     String stor_cd; // 창고 번호
@@ -49,8 +49,8 @@ public class StoringListDTO {
         this.loca_nm = loca_nm;
     }
 
-    public String getPlord_no() {
-        return plord_no;
+    public String getPurc_in_no() {
+        return purc_in_no;
     }
 
     public String getItem_cd() {

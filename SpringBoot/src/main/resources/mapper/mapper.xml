@@ -85,7 +85,7 @@
     </select>
 
     <select id="storingDetailSpecList" parameterType="HashMap" resultType="StoringList">
-        select purc_in_dt, cust_cd, t_mesbuyma06.item_cd, t_mesbuyma06.qty, t_mesbuyma06.plord_no, t_mesbuyma06.stor_cd, t_mesbuyma06.loca_cd from t_mesbuyma05 inner join t_mesbuyma06 on t_mesbuyma05.purc_in_no=t_mesbuyma06.purc_in_no where cust_cd=#{cust_cd} and date_format(purc_in_dt, '%Y%m%d') between #{purc_in_dt_1} and #{purc_in_dt_2} and t_mesbuyma06.item_cd=#{item_cd};
+        select purc_in_dt, cust_cd, t_mesbuyma06.item_cd, t_mesbuyma06.qty, t_mesbuyma06.purc_in_no, t_mesbuyma06.stor_cd, t_mesbuyma06.loca_cd from t_mesbuyma05 inner join t_mesbuyma06 on t_mesbuyma05.purc_in_no=t_mesbuyma06.purc_in_no where cust_cd=#{cust_cd} and date_format(purc_in_dt, '%Y%m%d') between #{purc_in_dt_1} and #{purc_in_dt_2} and t_mesbuyma06.item_cd=#{item_cd};
     </select>
 
     <insert id="storingDetailInsert" parameterType="StoringDetail">
@@ -162,7 +162,7 @@
     </select>
 
     <select id="storingReturnDetailSpecList" parameterType="HashMap" resultType="StoringReturnList">
-        select purc_retu_dt, cust_cd, t_mesbuyma08.item_cd, t_mesbuyma08.qty, t_mesbuyma08.plord_no, t_mesbuyma08.stor_cd, t_mesbuyma08.loca_cd from t_mesbuyma07 inner join t_mesbuyma08 on t_mesbuyma07.purc_retu_no=t_mesbuyma08.purc_retu_no where cust_cd=#{cust_cd} and date_format(purc_retu_dt, '%Y%m%d') between #{purc_retu_dt_1} and #{purc_retu_dt_2} and t_mesbuyma08.item_cd=#{item_cd};
+        select purc_retu_dt, cust_cd, t_mesbuyma08.item_cd, t_mesbuyma08.qty, t_mesbuyma08.purc_retu_no, t_mesbuyma08.stor_cd, t_mesbuyma08.loca_cd from t_mesbuyma07 inner join t_mesbuyma08 on t_mesbuyma07.purc_retu_no=t_mesbuyma08.purc_retu_no where cust_cd=#{cust_cd} and date_format(purc_retu_dt, '%Y%m%d') between #{purc_retu_dt_1} and #{purc_retu_dt_2} and t_mesbuyma08.item_cd=#{item_cd};
     </select>
 
     <insert id="storingReturnDetailInsert" parameterType="StoringReturnDetail">
@@ -238,7 +238,7 @@
     </select>
 
     <select id="unstoringDetailSpecList" parameterType="HashMap" resultType="UnstoringList">
-        select ex_dt, cust_cd, t_messalma08.item_cd, t_messalma08.qty, t_messalma08.plord_no, t_messalma08.stor_cd, t_messalma08.loca_cd from t_messalma07 inner join t_messalma08 on t_messalma07.ex_no=t_messalma08.ex_no where cust_cd=#{cust_cd} and date_format(ex_dt, '%Y%m%d') between #{ex_dt_1} and #{ex_dt_2} and t_messalma08.item_cd=#{item_cd};
+        select ex_dt, cust_cd, t_messalma08.item_cd, t_messalma08.qty, t_messalma08.ex_no, t_messalma08.stor_cd, t_messalma08.loca_cd from t_messalma07 inner join t_messalma08 on t_messalma07.ex_no=t_messalma08.ex_no where cust_cd=#{cust_cd} and date_format(ex_dt, '%Y%m%d') between #{ex_dt_1} and #{ex_dt_2} and t_messalma08.item_cd=#{item_cd};
     </select>
 
     <insert id="unstoringDetailInsert" parameterType="UnstoringDetail">
@@ -315,7 +315,7 @@
     </select>
 
     <select id="unstoringReturnDetailSpecList" parameterType="HashMap" resultType="UnstoringReturnList">
-        select ex_retu_dt, cust_cd, t_messalma10.item_cd, t_messalma10.qty, t_messalma10.plord_no, t_messalma10.stor_cd, t_messalma10.loca_cd from t_messalma09 inner join t_messalma10 on t_messalma09.ex_retu_no=t_messalma10.ex_retu_no where cust_cd=#{cust_cd} and date_format(ex_retu_dt, '%Y%m%d') between #{ex_retu_dt_1} and #{ex_retu_dt_2} and t_messalma10.item_cd=#{item_cd};
+        select ex_retu_dt, cust_cd, t_messalma10.item_cd, t_messalma10.qty, t_messalma10.ex_retu_no, t_messalma10.stor_cd, t_messalma10.loca_cd from t_messalma09 inner join t_messalma10 on t_messalma09.ex_retu_no=t_messalma10.ex_retu_no where cust_cd=#{cust_cd} and date_format(ex_retu_dt, '%Y%m%d') between #{ex_retu_dt_1} and #{ex_retu_dt_2} and t_messalma10.item_cd=#{item_cd};
     </select>
 
     <insert id="unstoringReturnDetailInsert" parameterType="UnstoringReturnDetail">
