@@ -12,7 +12,7 @@ import java.util.*
 class InRecyclerAdapter() : RecyclerView.Adapter<InRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_search, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_number, parent, false)
 
         return MyViewHolder(itemView)
     }

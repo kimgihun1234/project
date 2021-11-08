@@ -219,6 +219,18 @@
                     android:textStyle="bold" />
 
                 <Button
+                    android:id="@+id/putBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/deleteBtn"
+                    android:backgroundTint="@color/green"
+                    android:text="반품"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <Button
                     android:id="@+id/deleteBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

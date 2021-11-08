@@ -4,27 +4,28 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.R
-import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.StorageRecyclerAdapter
+import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.ItemRecyclerAdapter
 import com.google.android.material.tabs.TabItem
 
 
-class SearchStorage : AppCompatActivity() {
+class SearchItem : AppCompatActivity() {
     private lateinit var refreshBtn : TabItem
     private lateinit var searchText : TextView
 
     private lateinit var orderBasic : Button
 
-    private lateinit var storageRecyclerAdapter: StorageRecyclerAdapter
+    private lateinit var itemRecyclerView: ItemRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_storage)
+        setContentView(R.layout.activity_search_item)
 
         searchText = findViewById(R.id.searchText)
         refreshBtn = findViewById(R.id.refreshBtn)
@@ -49,14 +50,12 @@ class SearchStorage : AppCompatActivity() {
             Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
         }
 
-        storageRecyclerAdapter = StorageRecyclerAdapter()
+        itemRecyclerView = ItemRecyclerAdapter()
 
         this.findViewById<RecyclerView>(R.id.in_num_list).apply {
             layoutManager =
-                LinearLayoutManager(this@SearchStorage, LinearLayoutManager.VERTICAL,false)
-            adapter = storageRecyclerAdapter
+                LinearLayoutManager(this@SearchItem, LinearLayoutManager.VERTICAL,false)
+            adapter = itemRecyclerView
         }
-
-
     }
 }

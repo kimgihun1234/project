@@ -2,21 +2,21 @@ package com.example.materialmanagement.InOutActivity
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.SearchInOrder
+import com.example.materialmanagement.SearchActivity.SearchItem
 import com.example.materialmanagement.SearchActivity.SearchOutOrder
 import com.example.materialmanagement.SearchActivity.SearchStorage
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -50,14 +50,26 @@ class FragmentIO : Fragment() {
     private lateinit var searchBarCode : SearchView
     private lateinit var searchItemName : SearchView
 
-    private lateinit var searchResult : TextView
+    //private lateinit var searchResult : TextView
 
     private var buttonState : Boolean = true // 입고는 true, 출고는 false
+    private lateinit var tableDate : TextView
+
     private lateinit var intent : Intent
 
     private lateinit var dialogView : View
     private lateinit var setDate : TextView
     private lateinit var deleteBtn : Button
+
+    private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명
+
+    //dialog
+    private var itemNameString : String = "0"
+    private var storNameString : String = "0"
+    private lateinit var itemName : TextView
+    private lateinit var emp_name : TextView
+    private lateinit var storName : TextView
+    private lateinit var itemSize : EditText
 
     private lateinit var refreshBtn : Button
 
@@ -91,6 +103,7 @@ class FragmentIO : Fragment() {
         putBtn = view.findViewById(R.id.putBtn)
         deleteBtn = view.findViewById(R.id.deleteBtn)
         barCodeScanBtn = view.findViewById(R.id.barCodeScanBtn)
+        tableDate = view.findViewById(R.id.tableDate)
         refreshBtn = view.findViewById(R.id.refreshBtn)
 
         toggleButton.addOnButtonCheckedListener{ toggleButton, checkedId, isChecked ->
@@ -102,6 +115,8 @@ class FragmentIO : Fragment() {
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
                         searchOrder.setQueryHint("발주 번호")
+                        putBtn.text = "입고"
+                        tableDate.text = "입고일자"
                         buttonState = true
                     }
                     R.id.btnOut -> {
@@ -110,6 +125,8 @@ class FragmentIO : Fragment() {
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
                         searchOrder.setQueryHint("수주 번호")
+                        putBtn.text = "출고"
+                        tableDate.text = "출고일자"
                         buttonState = false
                     }
                 }
@@ -131,7 +148,7 @@ class FragmentIO : Fragment() {
         searchBarCode = view.findViewById(R.id.searchBarCode)
         searchItemName = view.findViewById(R.id.searchItemName)
 
-        searchResult = view.findViewById(R.id.searchResult)
+        //searchResult = view.findViewById(R.id.searchResult)
 
         searchOrder.isSubmitButtonEnabled = true
         searchStorage.isSubmitButtonEnabled = true
@@ -142,9 +159,10 @@ class FragmentIO : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if(buttonState){
                     intent = Intent(getActivity(), SearchInOrder::class.java)
-
+                    searchCategory = 1
                 } else {
                     intent = Intent(getActivity(), SearchOutOrder::class.java)
+                    searchCategory = 2
                 }
                 intent.putExtra("query", query) // 전달하는 인수 이름, 값
                 //getActivity()?.startActivity(intent)
@@ -169,6 +187,7 @@ class FragmentIO : Fragment() {
                 intent = Intent(getActivity(), SearchStorage::class.java)
                 intent.putExtra("query", query)
                 //getActivity()?.startActivity(intent)
+                searchCategory = 3 // 창고검색
                 startActivityForResult(intent, 100);// 검색 버튼 누를 때 호출
 
                 return true
@@ -184,7 +203,11 @@ class FragmentIO : Fragment() {
 
         searchItemName.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
+                intent = Intent(getActivity(), SearchItem::class.java)
+                intent.putExtra("query", query)
+                //getActivity()?.startActivity(intent)
+                searchCategory = 4 // 품목명검색
+                startActivityForResult(intent, 100);// 검색 버튼 누를 때 호출
                 // 검색 버튼 누를 때 호출
 
                 return true
@@ -223,23 +246,56 @@ class FragmentIO : Fragment() {
             scanIntegrator.initiateScan()
         }
 
+        val positiveInButtonClick = { dialogInterface: DialogInterface, i: Int ->
+            if(itemSize.getText().toString().equals("") || itemSize.getText().toString() == null){
+                Toast.makeText(activity, "수량을 입력해주세요", Toast.LENGTH_SHORT).show()
+                dialogInterface.dismiss()
+            } else {
+                Toast.makeText(activity, "입고되었습니다", Toast.LENGTH_SHORT).show()
+                itemNameString = "0"
+                storNameString = "0"
+            }
+        }
+        val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
+            Toast.makeText(activity, "출고되었습니다", Toast.LENGTH_SHORT).show()
+        }
+        val negativeButtonClick = { dialogInterface: DialogInterface, i: Int ->
+
+        }
+
         //입고 dialog // 현재 시간
         putBtn.setOnClickListener {
             dialogView = View.inflate(view.context, R.layout.in_dialog, null)
+
+            itemName = dialogView.findViewById(R.id.itemName)
             setDate = dialogView.findViewById(R.id.setDate)
+            storName = dialogView.findViewById(R.id.storName)
+            itemSize = dialogView.findViewById(R.id.itemSize)
 
             val now = System.currentTimeMillis()
             var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
-            setDate.setText(simpleDateFormat)
+            if(itemNameString != "0" && storNameString != "0"){
+                setDate.setText(simpleDateFormat)
+                itemName.text = itemNameString
+                storName.text = storNameString
 
+                var dlg = AlertDialog.Builder(view.context)
+                if (buttonState){
+                    dlg.setTitle("입고 등록")
+                    dlg.setView(dialogView)
+                    dlg.setPositiveButton("입고", positiveInButtonClick)
+                } else {
+                    dlg.setTitle("출고 등록")
+                    dlg.setView(dialogView)
+                    dlg.setPositiveButton("출고", positiveOutButtonClick)
+                }
 
-            var dlg = AlertDialog.Builder(view.context)
-            dlg.setTitle("입고 등록")
-            dlg.setView(dialogView)
-            dlg.setPositiveButton("입고", null)
-            dlg.setNegativeButton("취소", null)
-            dlg.show()
+                dlg.setNegativeButton("취소", negativeButtonClick)
+                dlg.show()
+            } else {
+                Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
+            }
         }
 
         deleteBtn.setOnClickListener {
@@ -247,6 +303,7 @@ class FragmentIO : Fragment() {
         }
     }
 
+    //이벤트 handler
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data) //결과 파싱
@@ -264,7 +321,11 @@ class FragmentIO : Fragment() {
                     //tv_title.visibility = View.VISIBLE
                     //tv_contents.visibility = View.VISIBLE
 
-                    searchResult.text = data!!.getStringExtra("searchResult").toString()
+                    when(searchCategory){
+                        3 -> storNameString = data!!.getStringExtra("searchResult").toString()
+                        4 -> itemNameString = data!!.getStringExtra("searchResult").toString()
+                    }
+                    //itemName.text = data!!.getStringExtra("searchResult").toString()
                 }
             }
         } else {

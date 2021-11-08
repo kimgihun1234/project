@@ -21,7 +21,7 @@ class SearchInOrder : AppCompatActivity() {
 
     private lateinit var orderBasic : Button
 
-    private lateinit var inNumRecyclerAdapter: InRecyclerAdapter
+    private lateinit var inRecyclerAdapter: InRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,12 +50,12 @@ class SearchInOrder : AppCompatActivity() {
             Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
         }
 
-        inNumRecyclerAdapter = InRecyclerAdapter()
+        inRecyclerAdapter = InRecyclerAdapter()
 
         this.findViewById<RecyclerView>(R.id.in_num_list).apply {
             layoutManager =
                 LinearLayoutManager(this@SearchInOrder, LinearLayoutManager.VERTICAL,false)
-            adapter = inNumRecyclerAdapter
+            adapter = inRecyclerAdapter
         }
     }
 }

@@ -23,6 +23,13 @@
             android:name=".SearchActivity.SearchStorage"
             android:exported="true" />
         <activity
+            android:name=".SearchActivity.SearchItem"
+            android:exported="true" />
+        <activity
+            android:name=".SearchActivity.SearchCustomer"
+            android:exported="true" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
 

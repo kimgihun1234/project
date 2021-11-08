@@ -1,5 +1,6 @@
 package com.example.materialmanagement.StateActivity.TabFragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.R
+import com.example.materialmanagement.SearchActivity.SearchCustomer
+import com.example.materialmanagement.SearchActivity.SearchItem
 import com.example.materialmanagement.StateActivity.TabRecyclerAdapter.InStateRecyclerAdapter
 import com.google.android.material.datepicker.MaterialDatePicker
 
@@ -32,6 +35,8 @@ class FragmentInState : Fragment() {
     private lateinit var searchCustomer : SearchView
     private lateinit var dateText : TextView
     private lateinit var searchDate : ImageButton
+
+    private lateinit var intent : Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +73,9 @@ class FragmentInState : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
                 // 검색 버튼 누를 때 호출
-
+                intent = Intent(getActivity(), SearchCustomer::class.java)
+                intent.putExtra("query", query)
+                getActivity()?.startActivity(intent)
                 return true
             }
 

@@ -1,5 +1,7 @@
 package com.example.materialmanagement.ReturnActivity
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.SearchActivity.SearchInOrder
 import com.example.materialmanagement.SearchActivity.SearchOutOrder
 import com.example.materialmanagement.R
+import com.example.materialmanagement.SearchActivity.SearchItem
 import com.example.materialmanagement.SearchActivity.SearchStorage
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
+import java.text.SimpleDateFormat
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -39,6 +43,7 @@ class FragmentReturn : Fragment() {
     private lateinit var toggleButton : MaterialButtonToggleGroup
     private lateinit var btnIn : Button
     private lateinit var btnOut : Button
+    private lateinit var putBtn : Button
     private lateinit var barCodeScanBtn : ImageButton
     private lateinit var searchOrder : SearchView
     private lateinit var searchCustomer : TextView
@@ -49,6 +54,9 @@ class FragmentReturn : Fragment() {
     private var buttonState : Boolean = true // 입고는 true, 출고는 false
     private lateinit var intent : Intent
 
+    private lateinit var dialogView : View
+    private lateinit var setDate : TextView
+    private lateinit var putDate : TextView
     private lateinit var deleteBtn : Button
 
     private lateinit var refreshBtn : Button
@@ -81,6 +89,7 @@ class FragmentReturn : Fragment() {
         btnIn = view.findViewById(R.id.btnIn)
         btnOut = view.findViewById(R.id.btnOut)
         barCodeScanBtn = view.findViewById(R.id.barCodeScanBtn)
+        putBtn = view.findViewById(R.id.putBtn)
         deleteBtn = view.findViewById(R.id.deleteBtn)
         refreshBtn = view.findViewById(R.id.refreshBtn)
 
@@ -171,7 +180,9 @@ class FragmentReturn : Fragment() {
 
         searchItemName.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
+                intent = Intent(getActivity(), SearchItem::class.java)
+                intent.putExtra("query", query)
+                getActivity()?.startActivity(intent)
                 // 검색 버튼 누를 때 호출
 
                 return true
@@ -200,6 +211,33 @@ class FragmentReturn : Fragment() {
                 return true
             }
         })
+
+        val positiveButtonClick = { dialogInterface: DialogInterface, i: Int ->
+            Toast.makeText(activity, "반품되었습니다", Toast.LENGTH_SHORT).show()
+        }
+        val negativeButtonClick = { dialogInterface: DialogInterface, i: Int ->
+
+        }
+
+        //입고 dialog // 현재 시간
+        putBtn.setOnClickListener {
+            dialogView = View.inflate(view.context, R.layout.in_dialog, null)
+            setDate = dialogView.findViewById(R.id.setDate)
+            putDate = dialogView.findViewById(R.id.putDate)
+
+            val now = System.currentTimeMillis()
+            var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
+
+            setDate.setText(simpleDateFormat)
+            putDate.setText("반품일자")
+
+            var dlg = AlertDialog.Builder(view.context)
+            dlg.setTitle("반품 등록")
+            dlg.setView(dialogView)
+            dlg.setPositiveButton("반품", positiveButtonClick)
+            dlg.setNegativeButton("취소", negativeButtonClick)
+            dlg.show()
+        }
 
         //바코드 스캔
         barCodeScanBtn.setOnClickListener {

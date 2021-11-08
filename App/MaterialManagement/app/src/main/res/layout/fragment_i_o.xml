@@ -194,13 +194,13 @@
                         android:src="@drawable/ic_baseline_qr_code_scanner_24" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/searchResult"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="검색결과"
-                    />
+<!--                <TextView-->
+<!--                    android:id="@+id/searchResult"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="검색결과"-->
+<!--                    />-->
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -273,6 +273,7 @@
                             android:textColor="@color/black"
                             />
                         <TextView
+                            android:id="@+id/tableDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
