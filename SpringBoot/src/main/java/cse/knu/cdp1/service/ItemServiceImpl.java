@@ -3,6 +3,7 @@ package cse.knu.cdp1.service;
 import cse.knu.cdp1.dao.BarcodeDAO;
 import cse.knu.cdp1.dao.ItemDAO;
 import cse.knu.cdp1.dto.ItemDTO;
+import cse.knu.cdp1.dto.ItemListDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDTO> itemList() {
         return dao.itemList(session);
+    }
+
+    @Override
+    public List<ItemListDTO> curItemList() {
+        return dao.curItemList(session);
     }
 }

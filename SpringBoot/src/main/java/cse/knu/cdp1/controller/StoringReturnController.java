@@ -96,22 +96,39 @@ public class StoringReturnController {
 
     /* cust_cd, stor_cd, loca_cd, item_cd, qty, corp_cd, busi_cd, emp_no */
     /*    0        1        2        3      4      5         6       7   */
-    @Alias("storingreturninputresult")
+    @Alias("storingreturninsertinfo")
     @Getter
     @Setter
     @ToString
-    public class InputResultClass {
+    public class InsertInfo {
+        String cust_cd;
+        String stor_cd;
+        String loca_cd;
+        String item_cd;
+        Double qty;
+        String corp_cd;
+        String busi_cd;
+        String emp_no;
+
+        public InsertInfo() {}
+    }
+
+    @Alias("storingreturninsertresult")
+    @Getter
+    @Setter
+    @ToString
+    public class InsertResult {
         String purc_retu_no;
         // Double qty;
 
-        public InputResultClass() {}
+        public InsertResult() {}
     }
 
     @GetMapping("/storingReturnInsert")
-    public InputResultClass insertStoringReturn(@RequestBody String input) {
+    public InsertResult insertStoringReturn(@RequestBody String input) {
         StoringReturnDTO storedData; StoringReturnDetailDTO storedDetailData;
         String purc_retu_no = null; // 입고 반품 번호 저장용
-        InputResultClass result = new InputResultClass(); // 오류 등이 발생했을 경우에는 result에 오류 내용을 담아서 전송
+        InsertResult result = new InsertResult(); // 오류 등이 발생했을 경우에는 result에 오류 내용을 담아서 전송
         List<StoringReturnDTO> searchResult; List<StoringReturnDetailDTO> searchDetailResult;
 
         // System.out.println(input);
@@ -158,6 +175,18 @@ public class StoringReturnController {
 
         // result.qty = info.get(4); // 갯수 반환 => delete에서 사용
         return result; // 오류가 없었으면 return
+    }
+
+    @Alias("storingreturndeleteinfo")
+    @Getter
+    @Setter
+    @ToString
+    public class DeleteInfo {
+        String purc_retu_no;
+        String item_cd;
+        Double qty;
+
+        public DeleteInfo() {}
     }
 
     /* 입고반품번호/품목코드/수량 */

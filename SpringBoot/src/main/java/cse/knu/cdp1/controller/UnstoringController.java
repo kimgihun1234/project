@@ -96,22 +96,39 @@ public class UnstoringController {
 
     /* cust_cd, stor_cd, loca_cd, item_cd, qty, corp_cd, busi_cd, emp_no */
     /*    0        1        2        3      4      5         6       7   */
-    @Alias("unstoringinputresult")
+    @Alias("unstoringinsertinfo")
     @Getter
     @Setter
     @ToString
-    public class InputResultClass {
+    public class InsertInfo {
+        String cust_cd;
+        String stor_cd;
+        String loca_cd;
+        String item_cd;
+        Double qty;
+        String corp_cd;
+        String busi_cd;
+        String emp_no;
+
+        public InsertInfo() {}
+    }
+    
+    @Alias("unstoringinsertresult")
+    @Getter
+    @Setter
+    @ToString
+    public class InsertResult {
         String ex_no;
         // Double qty;
 
-        public InputResultClass() {}
+        public InsertResult() {}
     }
 
     @GetMapping("/unstoringInsert")
-    public UnstoringController.InputResultClass insertUnstoring(@RequestBody String input) {
+    public InsertResult insertUnstoring(@RequestBody String input) {
         UnstoringDTO storedData; UnstoringDetailDTO storedDetailData;
         String ex_no = null; // 출고 번호 저장용
-        InputResultClass result = new InputResultClass(); // 오류 등이 발생했을 경우에는 result에 오류 내용을 담아서 전송
+        InsertResult result = new InsertResult(); // 오류 등이 발생했을 경우에는 result에 오류 내용을 담아서 전송
         List<UnstoringDTO> searchResult; List<UnstoringDetailDTO> searchDetailResult;
 
         // System.out.println(input);
@@ -160,6 +177,18 @@ public class UnstoringController {
         return result; // 오류가 없었으면 return
     }
 
+    @Alias("unstoringdeleteinfo")
+    @Getter
+    @Setter
+    @ToString
+    public class DeleteInfo {
+        String ex_no;
+        String item_cd;
+        Double qty;
+
+        public DeleteInfo() {}
+    }
+    
     /* 출고번호/품목코드/수량 */
     @GetMapping("/unstoringDelete")
     public boolean deleteUnstoring(@RequestBody String input) {

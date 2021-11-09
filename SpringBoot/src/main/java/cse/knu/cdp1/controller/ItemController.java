@@ -1,6 +1,7 @@
 package cse.knu.cdp1.controller;
 
 import cse.knu.cdp1.dto.ItemDTO;
+import cse.knu.cdp1.dto.ItemListDTO;
 import cse.knu.cdp1.service.ItemService;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class ItemController {
         String item_nm;
     }
 
+
     @GetMapping("/itemList")
     public List<ResultClass> itemListReturn() {
         ArrayList<ResultClass> result = new ArrayList<>();
@@ -39,7 +41,12 @@ public class ItemController {
             result.add(temp);
         }
 
-        /* 품목코드/품목이름 */
+        /* item_cd/item_nm */
         return result;
+    }
+
+    @GetMapping("/curItemList")
+    public List<ItemListDTO> curItemListReturn() {
+        return itemService.curItemList();
     }
 }

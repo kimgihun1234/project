@@ -95,21 +95,38 @@ public class StoringController {
 
     /* cust_cd, stor_cd, loca_cd, item_cd, qty, corp_cd, busi_cd, emp_no */
     /*    0        1        2        3      4      5         6       7   */
-    @Alias("storinginputresult")
+    @Alias("storinginsertinfo")
     @Getter
     @Setter
     @ToString
-    public class InputResultClass {
+    public class InsertInfo {
+        String cust_cd;
+        String stor_cd;
+        String loca_cd;
+        String item_cd;
+        Double qty;
+        String corp_cd;
+        String busi_cd;
+        String emp_no;
+        
+        public InsertInfo() {}
+    }
+    
+    @Alias("storinginsertresult")
+    @Getter
+    @Setter
+    @ToString
+    public class InsertResult {
         String purc_in_no;
         // String qty;
-        public InputResultClass() {}
+        public InsertResult() {}
     }
 
     @GetMapping("/storingInsert")
-    public InputResultClass insertStoring(@RequestBody String input) {
+    public InsertResult insertStoring(@RequestBody String input) {
         StoringDTO storedData; StoringDetailDTO storedDetailData;
         String purc_in_no = null; // 입고 번호 저장용
-        InputResultClass result = new InputResultClass(); // 오류 등이 발생했을 경우에는 result에 오류 내용을 담아서 전송
+        InsertResult result = new InsertResult(); // 오류 등이 발생했을 경우에는 result에 오류 내용을 담아서 전송
         List<StoringDTO> searchResult; List<StoringDetailDTO> searchDetailResult;
 
         // System.out.println(input);
@@ -158,6 +175,18 @@ public class StoringController {
         return result; // 오류가 없었으면 return
     }
 
+    @Alias("storingdeleteinfo")
+    @Getter
+    @Setter
+    @ToString
+    public class DeleteInfo {
+        String purc_in_no;
+        String item_cd;
+        Double qty;
+
+        public DeleteInfo() {}
+    }
+    
     /* 입고번호/품목코드/수량 */
     @GetMapping("/storingDelete")
     public boolean deleteStoring(@RequestBody String input) {
