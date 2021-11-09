@@ -203,7 +203,7 @@
     </select>
 
     <select id="unstoringSpecList" parameterType="HashMap" resultType="UnstoringList">
-        select t_messalma08.item_cd, max(ex_dt) as ex_dt, sum(t_messalma18.qty) as qty from t_messalma07 inner join t_messalma08 on t_messalma07.ex_no=t_messalma08.ex_no where cust_cd=#{cust_cd} and date_format(ex_dt, '%Y%m%d') between #{ex_dt_1} and #{ex_dt_2} group by item_cd;
+        select t_messalma08.item_cd, max(ex_dt) as ex_dt, sum(t_messalma08.qty) as qty from t_messalma07 inner join t_messalma08 on t_messalma07.ex_no=t_messalma08.ex_no where cust_cd=#{cust_cd} and date_format(ex_dt, '%Y%m%d') between #{ex_dt_1} and #{ex_dt_2} group by item_cd;
     </select>
 
     <select id="unstoringNo" parameterType="String" resultType="String">
