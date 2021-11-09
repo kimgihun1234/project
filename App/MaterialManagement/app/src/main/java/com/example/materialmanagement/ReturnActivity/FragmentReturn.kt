@@ -1,5 +1,6 @@
 package com.example.materialmanagement.ReturnActivity
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -8,10 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +20,7 @@ import com.example.materialmanagement.SearchActivity.SearchItem
 import com.example.materialmanagement.SearchActivity.SearchStorage
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,12 +51,27 @@ class FragmentReturn : Fragment() {
     private lateinit var searchItemName : SearchView
 
     private var buttonState : Boolean = true // 입고는 true, 출고는 false
+    private lateinit var tableDate : TextView
+
     private lateinit var intent : Intent
 
     private lateinit var dialogView : View
     private lateinit var setDate : TextView
     private lateinit var putDate : TextView
     private lateinit var deleteBtn : Button
+
+    private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명
+
+    //dialog
+    private var itemInNumString : String = "0"
+    private var itemOutNumString : String = "0"
+    private var itemNameString : String = "0"
+    private var storNameString : String = "0"
+    private var itemSizeString : String = "0"
+    private lateinit var itemName : TextView
+    private lateinit var emp_name : TextView
+    private lateinit var storName : TextView
+    private lateinit var itemSize : EditText
 
     private lateinit var refreshBtn : Button
 
@@ -90,6 +104,7 @@ class FragmentReturn : Fragment() {
         btnOut = view.findViewById(R.id.btnOut)
         barCodeScanBtn = view.findViewById(R.id.barCodeScanBtn)
         putBtn = view.findViewById(R.id.putBtn)
+        tableDate = view.findViewById(R.id.tableDate)
         deleteBtn = view.findViewById(R.id.deleteBtn)
         refreshBtn = view.findViewById(R.id.refreshBtn)
 
@@ -102,6 +117,7 @@ class FragmentReturn : Fragment() {
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
                         searchOrder.setQueryHint("발주 번호")
+                        tableDate.text = "입고일자"
                         buttonState = true
                     }
                     R.id.btnOut -> {
@@ -110,6 +126,7 @@ class FragmentReturn : Fragment() {
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
                         searchOrder.setQueryHint("수주 번호")
+                        tableDate.text = "출고일자"
                         buttonState = false
                     }
                 }
@@ -140,14 +157,13 @@ class FragmentReturn : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if(buttonState){
                     intent = Intent(getActivity(), SearchInOrder::class.java)
-
+                    searchCategory = 1 // 발주번호검색
                 } else {
                     intent = Intent(getActivity(), SearchOutOrder::class.java)
+                    searchCategory = 2 //수주번호검색
                 }
                 intent.putExtra("query", query)
-                getActivity()?.startActivity(intent)
-
-                // 검색 버튼 누를 때 호출
+                startActivityForResult(intent, 100);
 
                 return true
             }
@@ -164,9 +180,9 @@ class FragmentReturn : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 intent = Intent(getActivity(), SearchStorage::class.java)
                 intent.putExtra("query", query)
-                getActivity()?.startActivity(intent)
-                // 검색 버튼 누를 때 호출
-
+                //getActivity()?.startActivity(intent)
+                searchCategory = 3 // 창고검색
+                startActivityForResult(intent, 100);
                 return true
             }
 
@@ -182,7 +198,8 @@ class FragmentReturn : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 intent = Intent(getActivity(), SearchItem::class.java)
                 intent.putExtra("query", query)
-                getActivity()?.startActivity(intent)
+                searchCategory = 4 //품목명검색
+                startActivityForResult(intent, 100);
                 // 검색 버튼 누를 때 호출
 
                 return true
@@ -212,8 +229,18 @@ class FragmentReturn : Fragment() {
             }
         })
 
-        val positiveButtonClick = { dialogInterface: DialogInterface, i: Int ->
-            Toast.makeText(activity, "반품되었습니다", Toast.LENGTH_SHORT).show()
+        val positiveInButtonClick = { dialogInterface: DialogInterface, i: Int ->
+            if(itemSize.getText().toString().equals("") || itemSize.getText().toString() == null){
+                Toast.makeText(activity, "수량을 입력해주세요", Toast.LENGTH_SHORT).show()
+                dialogInterface.dismiss()
+            } else {
+                Toast.makeText(activity, "입고반품되었습니다", Toast.LENGTH_SHORT).show()
+                itemNameString = "0"
+                storNameString = "0"
+            }
+        }
+        val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
+            Toast.makeText(activity, "출고반품되었습니다", Toast.LENGTH_SHORT).show()
         }
         val negativeButtonClick = { dialogInterface: DialogInterface, i: Int ->
 
@@ -222,6 +249,12 @@ class FragmentReturn : Fragment() {
         //입고 dialog // 현재 시간
         putBtn.setOnClickListener {
             dialogView = View.inflate(view.context, R.layout.in_dialog, null)
+
+            itemName = dialogView.findViewById(R.id.itemName)
+            setDate = dialogView.findViewById(R.id.setDate)
+            storName = dialogView.findViewById(R.id.storName)
+            itemSize = dialogView.findViewById(R.id.itemSize)
+
             setDate = dialogView.findViewById(R.id.setDate)
             putDate = dialogView.findViewById(R.id.putDate)
 
@@ -231,12 +264,32 @@ class FragmentReturn : Fragment() {
             setDate.setText(simpleDateFormat)
             putDate.setText("반품일자")
 
-            var dlg = AlertDialog.Builder(view.context)
-            dlg.setTitle("반품 등록")
-            dlg.setView(dialogView)
-            dlg.setPositiveButton("반품", positiveButtonClick)
-            dlg.setNegativeButton("취소", negativeButtonClick)
-            dlg.show()
+            if(itemNameString != "0" && storNameString != "0" &&
+                (itemInNumString != "0" || itemOutNumString != "0")){
+                setDate.setText(simpleDateFormat)
+                itemName.text = itemNameString
+                storName.text = storNameString
+
+                if(itemSizeString != "0"){
+                    itemSize.setText(itemSizeString)
+                }
+
+                var dlg = AlertDialog.Builder(view.context)
+                dlg.setTitle("반품 등록")
+                if (buttonState){
+
+                    dlg.setView(dialogView)
+                    dlg.setPositiveButton("입고반품", positiveInButtonClick)
+                } else {
+                    dlg.setView(dialogView)
+                    dlg.setPositiveButton("출고반품", positiveOutButtonClick)
+                }
+
+                dlg.setNegativeButton("취소", negativeButtonClick)
+                dlg.show()
+            } else {
+                Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
+            }
         }
 
         //바코드 스캔
@@ -255,14 +308,49 @@ class FragmentReturn : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data) //결과 파
+        val scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data) //결과 파싱
         if (scanningResult != null) { //정상적으로 전달
             if (scanningResult.contents != null) { //result 값
-                Toast.makeText(activity,"Scanned : ${scanningResult.contents} format : ${scanningResult.formatName}",
-                    Toast.LENGTH_SHORT).show()
+
+                //수정 필요 - 미들웨어에서 받은 값 파싱으로
+                val jsonObject = JSONObject(scanningResult.contents)
+                //val jsonArray = jsonObject.getJSONArray("person")
+
+                val item_nm = jsonObject.getString("item_nm") //품목이름
+                val item_cd = jsonObject.getString("item_cd")//품목번호
+                val qty = jsonObject.getString("qty") //품목수
+
+                itemNameString = item_nm
+                if(buttonState){
+                    itemInNumString = item_cd
+                } else {
+                    itemOutNumString = item_cd
+                }
+                itemSizeString = qty
+
+                //Toast.makeText(activity,"Scanned : ${scanningResult.contents} format : ${scanningResult.formatName}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, itemNameString, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                100 -> {
+                    Toast.makeText(activity, "검색결과반환", Toast.LENGTH_SHORT).show()
+                    //tv_title.visibility = View.VISIBLE
+                    //tv_contents.visibility = View.VISIBLE
+
+                    when(searchCategory){
+                        1 -> itemInNumString = data!!.getStringExtra("searchResult").toString()
+                        2 -> itemOutNumString = data!!.getStringExtra("searchResult").toString()
+                        3 -> storNameString = data!!.getStringExtra("searchResult").toString()
+                        4 -> itemNameString = data!!.getStringExtra("searchResult").toString()
+                    }
+                    //itemName.text = data!!.getStringExtra("searchResult").toString()
+                }
             }
         } else {
-            Toast.makeText(activity, "Nothing scanned", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "검색결과없음", Toast.LENGTH_SHORT).show()
         }
     }
 

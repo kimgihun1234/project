@@ -50,8 +50,6 @@ class FragmentIO : Fragment() {
     private lateinit var searchBarCode : SearchView
     private lateinit var searchItemName : SearchView
 
-    //private lateinit var searchResult : TextView
-
     private var buttonState : Boolean = true // 입고는 true, 출고는 false
     private lateinit var tableDate : TextView
 
@@ -148,8 +146,6 @@ class FragmentIO : Fragment() {
         searchBarCode = view.findViewById(R.id.searchBarCode)
         searchItemName = view.findViewById(R.id.searchItemName)
 
-        //searchResult = view.findViewById(R.id.searchResult)
-
         searchOrder.isSubmitButtonEnabled = true
         searchStorage.isSubmitButtonEnabled = true
         searchBarCode.isSubmitButtonEnabled = true
@@ -159,10 +155,10 @@ class FragmentIO : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if(buttonState){
                     intent = Intent(getActivity(), SearchInOrder::class.java)
-                    searchCategory = 1
+                    searchCategory = 1 // 발주번호검색
                 } else {
                     intent = Intent(getActivity(), SearchOutOrder::class.java)
-                    searchCategory = 2
+                    searchCategory = 2 // 수주번호검색
                 }
                 intent.putExtra("query", query) // 전달하는 인수 이름, 값
                 //getActivity()?.startActivity(intent)
@@ -207,7 +203,7 @@ class FragmentIO : Fragment() {
                 intent.putExtra("query", query)
                 //getActivity()?.startActivity(intent)
                 searchCategory = 4 // 품목명검색
-                startActivityForResult(intent, 100);// 검색 버튼 누를 때 호출
+                startActivityForResult(intent, 100);
                 // 검색 버튼 누를 때 호출
 
                 return true
