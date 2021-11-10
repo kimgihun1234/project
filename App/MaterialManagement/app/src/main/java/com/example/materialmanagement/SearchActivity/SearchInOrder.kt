@@ -39,18 +39,25 @@ class SearchInOrder : AppCompatActivity() {
             searchText.setText(itemNumber)
         }
 
-        orderBasic.setOnClickListener { // 반환값 테스트
-            val intent = Intent()
-            intent.putExtra("searchResult", itemNumber.toString())
-            setResult(Activity.RESULT_OK, intent)
-            finish()
+        orderBasic.setOnClickListener {
+            Toast.makeText(this, "기본순", Toast.LENGTH_SHORT).show()
         }
+
+        inRecyclerAdapter = InRecyclerAdapter()
+
+        inRecyclerAdapter.setItemClickListener(object: InRecyclerAdapter.OnItemClickListener{
+            override fun onClick(v: View, position: Int) {
+                // 클릭 시 이벤트 작성
+                val intent = Intent()
+                intent.putExtra("searchResult", itemNumber.toString()) //번호 넘겨주기
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
+        })
 
         refreshBtn.setOnClickListener {
             Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
         }
-
-        inRecyclerAdapter = InRecyclerAdapter()
 
         this.findViewById<RecyclerView>(R.id.in_num_list).apply {
             layoutManager =

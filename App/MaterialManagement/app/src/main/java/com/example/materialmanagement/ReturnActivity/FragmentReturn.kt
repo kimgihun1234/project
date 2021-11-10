@@ -60,14 +60,16 @@ class FragmentReturn : Fragment() {
     private lateinit var putDate : TextView
     private lateinit var deleteBtn : Button
 
+    private val NO_SEARCH : String = "null"
     private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명
 
     //dialog
-    private var itemInNumString : String = "0"
-    private var itemOutNumString : String = "0"
-    private var itemNameString : String = "0"
-    private var storNameString : String = "0"
-    private var itemSizeString : String = "0"
+
+    private var itemInNumString : String = NO_SEARCH
+    private var itemOutNumString : String = NO_SEARCH
+    private var itemNameString : String = NO_SEARCH
+    private var storNameString : String = NO_SEARCH
+    private var itemSizeString : String = NO_SEARCH
     private lateinit var itemName : TextView
     private lateinit var emp_name : TextView
     private lateinit var storName : TextView
@@ -235,8 +237,8 @@ class FragmentReturn : Fragment() {
                 dialogInterface.dismiss()
             } else {
                 Toast.makeText(activity, "입고반품되었습니다", Toast.LENGTH_SHORT).show()
-                itemNameString = "0"
-                storNameString = "0"
+                itemNameString = NO_SEARCH
+                storNameString = NO_SEARCH
             }
         }
         val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
@@ -264,13 +266,12 @@ class FragmentReturn : Fragment() {
             setDate.setText(simpleDateFormat)
             putDate.setText("반품일자")
 
-            if(itemNameString != "0" && storNameString != "0" &&
-                (itemInNumString != "0" || itemOutNumString != "0")){
+            if(itemNameString != NO_SEARCH && storNameString != NO_SEARCH){ //itemInNumString != NO_SEARCH || itemOutNumString != NO_SEARCH)
                 setDate.setText(simpleDateFormat)
                 itemName.text = itemNameString
                 storName.text = storNameString
 
-                if(itemSizeString != "0"){
+                if(itemSizeString != NO_SEARCH){
                     itemSize.setText(itemSizeString)
                 }
 
@@ -329,14 +330,14 @@ class FragmentReturn : Fragment() {
                 itemSizeString = qty
 
                 //Toast.makeText(activity,"Scanned : ${scanningResult.contents} format : ${scanningResult.formatName}", Toast.LENGTH_SHORT).show()
-                Toast.makeText(activity, itemNameString, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(activity, itemNameString, Toast.LENGTH_SHORT).show()
             }
         }
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 100 -> {
-                    Toast.makeText(activity, "검색결과반환", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(activity, "검색결과반환", Toast.LENGTH_SHORT).show()
                     //tv_title.visibility = View.VISIBLE
                     //tv_contents.visibility = View.VISIBLE
 

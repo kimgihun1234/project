@@ -22,6 +22,11 @@ class ItemRecyclerAdapter() : RecyclerView.Adapter<ItemRecyclerAdapter.MyViewHol
 
         holder.item_num.text = position.toString()
         holder.item_name.text = "품목명"
+
+        // (1) 리스트 내 항목 클릭 시 onClick() 호출
+        holder.itemView.setOnClickListener {
+            itemClickListener.onClick(it, position)
+        }
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
@@ -32,8 +37,16 @@ class ItemRecyclerAdapter() : RecyclerView.Adapter<ItemRecyclerAdapter.MyViewHol
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         val item_num = itemView.findViewById<TextView>(R.id.item_num)
         val item_name = itemView.findViewById<TextView>(R.id.item_name)
-
-
-        //val root = itemView.findViewById<TableLayout>(R.id.root)
     }
+
+    // (2) 리스너 인터페이스
+    interface OnItemClickListener {
+        fun onClick(v: View, position: Int)
+    }
+    // (3) 외부에서 클릭 시 이벤트 설정
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.itemClickListener = onItemClickListener
+    }
+    // (4) setItemClickListener로 설정한 함수 실행
+    private lateinit var itemClickListener : OnItemClickListener
 }

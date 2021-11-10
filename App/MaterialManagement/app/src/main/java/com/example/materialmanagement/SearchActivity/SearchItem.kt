@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.ItemRecyclerAdapter
+import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.StorageRecyclerAdapter
 import com.google.android.material.tabs.TabItem
 
 
@@ -40,10 +41,7 @@ class SearchItem : AppCompatActivity() {
         }
 
         orderBasic.setOnClickListener { // 반환값 테스트
-            val intent = Intent()
-            intent.putExtra("searchResult", itemNumber.toString())
-            setResult(Activity.RESULT_OK, intent)
-            finish()
+            Toast.makeText(this, "기본순", Toast.LENGTH_SHORT).show()
         }
 
         refreshBtn.setOnClickListener {
@@ -51,6 +49,16 @@ class SearchItem : AppCompatActivity() {
         }
 
         itemRecyclerView = ItemRecyclerAdapter()
+
+        itemRecyclerView.setItemClickListener(object: ItemRecyclerAdapter.OnItemClickListener{
+            override fun onClick(v: View, position: Int) {
+                // 클릭 시 이벤트 작성
+                val intent = Intent()
+                intent.putExtra("searchResult", itemNumber.toString())
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
+        })
 
         this.findViewById<RecyclerView>(R.id.in_num_list).apply {
             layoutManager =
