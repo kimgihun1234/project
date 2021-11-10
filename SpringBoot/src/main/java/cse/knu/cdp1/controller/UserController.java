@@ -1,9 +1,15 @@
 package cse.knu.cdp1.controller;
 
+import cse.knu.cdp1.LoginInfo;
 import cse.knu.cdp1.dto.UserDTO;
+import cse.knu.cdp1.service.SecurityService;
 import cse.knu.cdp1.service.UserService;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.apache.ibatis.type.Alias;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,21 +20,37 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/login")
-    public String checkLoginInfo(@RequestBody String idpw) {
-        String[] info = idpw.split("/");
+    @Autowired
+    SecurityService securityService;
 
-        UserDTO loginInfo = new UserDTO(info[0], info[1]);
+    @Alias("loginresult")
+    @Getter
+    @Setter
+    @ToString
+    public class ResultClass {
+        String data;
+    }
 
-        System.out.println(info[0] + " | " + info[1]);
+    @PostMapping("/login")
+    public ResultClass checkLoginInfo(@RequestBody LoginInfo idpw) {
+        ResultClass result = new ResultClass();
 
-        List<UserDTO> result = userService.getLoginInfo(loginInfo);
+        UserDTO loginInfo = new UserDTO(idpw.getId(), idpw.getPw());
 
-        if(result.isEmpty() || result.size() > 1) return "false";
+        List<UserDTO> searchResult = userService.getLoginInfo(loginInfo);
 
-        loginInfo = result.get(0);
+        if(searchResult.isEmpty() || searchResult.size() > 1) {
+            result.data = "fail";
+            return result;
+        }
 
-        /* 사원번호/비밀번호 */
-        return loginInfo.getInfo();
+        UserDTO searchTemp = searchResult.get(0);
+
+        result.data = securityService.createTime(searchTemp.getEmp_no() + "/"
+                + searchTemp.getCorp_cd() + "/"
+                + searchTemp.getBusi_cd(), 60 * 600 * 1000); // 시간 * 분 * 밀리초
+
+        /* 사원번호 + 회사번호 + 사업장번호에 대한 JWT String */
+        return result;
     }
 }

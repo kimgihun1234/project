@@ -53,20 +53,20 @@ public class StoringReturnDetailDTO {
     public StoringReturnDetailDTO() {}
 
     // Delete용 생성자
-    public StoringReturnDetailDTO(String purc_retu_no, String item_cd, String qty) {
+    public StoringReturnDetailDTO(String purc_retu_no, String item_cd, Double qty) {
         this.purc_retu_no = purc_retu_no;
         this.item_cd = item_cd;
-        this.qty = -Double.parseDouble(qty);
+        this.qty = -qty;
     }
 
     // Insert용 생성자
-    public StoringReturnDetailDTO(String corp_cd, String purc_retu_no, String item_cd, String qty, String stor_cd, String loca_cd, String emp_no) {
+    public StoringReturnDetailDTO(String corp_cd, String purc_retu_no, String item_cd, Double qty, String stor_cd, String loca_cd, String emp_no) {
         this.corp_cd = corp_cd;
         this.purc_retu_no = purc_retu_no;
         // seq는 sql 코드로 생성
         this.item_cd = item_cd;
 
-        this.qty = Double.parseDouble(qty);
+        this.qty = qty;
 
         this.stor_cd = stor_cd;
         this.loca_cd = loca_cd;

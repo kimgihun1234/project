@@ -26,6 +26,8 @@ public class UserDTO {
     String nati_cd; // 국적 코드
     String fore_divi_cd; // 외국인 구분 코드
     String email; // 이메일
+    String corp_cd; // 회사 번호
+    String busi_cd; // 사업장 코드
     String resp_divi; // 직책 구분
     String posi_divi; // 직위 구분
     String acc_divi; // 접속구분
@@ -45,7 +47,15 @@ public class UserDTO {
         this.pwd = pwd;
     }
 
-    public String getInfo(){
-        return emp_no + "/" + emp_id;
+    public String getEmp_no() {
+        return emp_no;
+    }
+
+    public String getCorp_cd() {
+        return corp_cd;
+    }
+
+    public String getBusi_cd() {
+        return busi_cd;
     }
 }

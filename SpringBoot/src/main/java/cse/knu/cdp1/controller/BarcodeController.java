@@ -1,5 +1,6 @@
 package cse.knu.cdp1.controller;
 
+import cse.knu.cdp1.BarcodeInfo;
 import cse.knu.cdp1.dto.BarcodeDTO;
 import cse.knu.cdp1.dto.ItemDTO;
 import cse.knu.cdp1.service.BarcodeService;
@@ -9,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,9 +34,9 @@ public class BarcodeController {
     @Autowired
     ItemService itemService;
 
-    @GetMapping("/barcode")
-    public ResultClass itemInfo(@RequestBody String barcode) {
-        BarcodeDTO result = barcodeService.getBarcodeInfo(barcode);
+    @PostMapping("/barcode")
+    public ResultClass itemInfo(@RequestBody BarcodeInfo input) {
+        BarcodeDTO result = barcodeService.getBarcodeInfo(input.getBarcode());
         ItemDTO item;
 
         if(result == null) return null;
