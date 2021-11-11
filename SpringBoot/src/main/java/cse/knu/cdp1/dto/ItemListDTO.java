@@ -14,7 +14,5 @@ public class ItemListDTO {
     String item_nm;
     String stan;
     String comm_cd_nm;
-    String corp_cd;
-    String busi_cd;
     Double qty;
 }

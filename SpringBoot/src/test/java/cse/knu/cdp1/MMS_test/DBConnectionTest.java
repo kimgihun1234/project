@@ -9,9 +9,9 @@ import java.sql.DriverManager;
 public class DBConnectionTest {
     /* Please change values if your environment is different. */
     private static final String DRIVER = "org.mariadb.jdbc.Driver";
-    private static final String url = "jdbc:mariadb://localhost:4306/mms";
-    private static final String user = "root";
-    private static final String password = "root";
+    private static final String url = "jdbc:mariadb://49.247.36.65:3306/vineinc";
+    private static final String user = "vineinc";
+    private static final String password = "vineinc!@#";
 
     @Test
     public void testConnection() {

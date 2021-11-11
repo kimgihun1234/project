@@ -28,7 +28,6 @@ public class ItemController {
         String item_nm;
     }
 
-
     @GetMapping("/itemList")
     public List<ResultClass> itemListReturn() {
         ArrayList<ResultClass> result = new ArrayList<>();
