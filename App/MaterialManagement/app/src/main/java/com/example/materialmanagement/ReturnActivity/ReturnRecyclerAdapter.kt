@@ -18,21 +18,12 @@ class ReturnRecyclerAdapter() : RecyclerView.Adapter<ReturnRecyclerAdapter.MyVie
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        // val memo = list[position]
-
         val now = System.currentTimeMillis()
         var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
         holder.in_date.text = simpleDateFormat
         holder.item_name.text = position.toString() + 1
         holder.item_num.text = position.toString() + 1
-//        holder.root.setOnClickListener(object : View.OnClickListener{
-//            override fun onClick(p0: View?) {
-//                holder.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
-//                    Toast.makeText(this,isChecked.toString(),Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴

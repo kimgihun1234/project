@@ -18,8 +18,6 @@ class InRecyclerAdapter() : RecyclerView.Adapter<InRecyclerAdapter.MyViewHolder>
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        // val memo = list[position]
-
         val now = System.currentTimeMillis()
         var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
@@ -35,7 +33,6 @@ class InRecyclerAdapter() : RecyclerView.Adapter<InRecyclerAdapter.MyViewHolder>
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
-        //return list.size
         return 20
     }
 

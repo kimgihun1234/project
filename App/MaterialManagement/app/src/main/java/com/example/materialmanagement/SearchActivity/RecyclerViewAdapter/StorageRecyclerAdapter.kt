@@ -16,7 +16,6 @@ class StorageRecyclerAdapter() : RecyclerView.Adapter<StorageRecyclerAdapter.MyV
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        // val memo = list[position]
         holder.item_storage_num.text = "    " + "123124"
         holder.item_storage_name.text = "서울 아산 창고 / A구역"
 
@@ -27,7 +26,6 @@ class StorageRecyclerAdapter() : RecyclerView.Adapter<StorageRecyclerAdapter.MyV
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
-        //return list.size
         return 20
     }
 

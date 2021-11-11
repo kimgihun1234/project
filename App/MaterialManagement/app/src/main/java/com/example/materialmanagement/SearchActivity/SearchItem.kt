@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.ItemRecyclerAdapter
-import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.StorageRecyclerAdapter
 import com.google.android.material.tabs.TabItem
 
 

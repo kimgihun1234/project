@@ -87,9 +87,6 @@ class FragmentReturn : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-
-        //recycler view
         val view = inflater.inflate(R.layout.fragment_return, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -114,7 +111,6 @@ class FragmentReturn : Fragment() {
             if(isChecked) {
                 when (checkedId) {
                     R.id.btnIn -> {
-                        //Toast.makeText(activity,"입고", Toast.LENGTH_SHORT).show()
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.white));
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
@@ -123,7 +119,6 @@ class FragmentReturn : Fragment() {
                         buttonState = true
                     }
                     R.id.btnOut -> {
-                        //Toast.makeText(activity,"출고", Toast.LENGTH_SHORT).show()
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.white));
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
@@ -263,7 +258,6 @@ class FragmentReturn : Fragment() {
             val now = System.currentTimeMillis()
             var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
-            setDate.setText(simpleDateFormat)
             putDate.setText("반품일자")
 
             if(itemNameString != NO_SEARCH && storNameString != NO_SEARCH){ //itemInNumString != NO_SEARCH || itemOutNumString != NO_SEARCH)
@@ -278,7 +272,6 @@ class FragmentReturn : Fragment() {
                 var dlg = AlertDialog.Builder(view.context)
                 dlg.setTitle("반품 등록")
                 if (buttonState){
-
                     dlg.setView(dialogView)
                     dlg.setPositiveButton("입고반품", positiveInButtonClick)
                 } else {
@@ -329,25 +322,28 @@ class FragmentReturn : Fragment() {
                 }
                 itemSizeString = qty
 
+                if(storNameString != NO_SEARCH){
+                    Toast.makeText(activity, "반품되었습니다", Toast.LENGTH_SHORT).show()
+                    storNameString = NO_SEARCH
+                    itemNameString = NO_SEARCH
+                    itemSizeString = NO_SEARCH
+                } else {
+                    Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
+                }
+
                 //Toast.makeText(activity,"Scanned : ${scanningResult.contents} format : ${scanningResult.formatName}", Toast.LENGTH_SHORT).show()
-                //Toast.makeText(activity, itemNameString, Toast.LENGTH_SHORT).show()
             }
         }
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 100 -> {
-                    //Toast.makeText(activity, "검색결과반환", Toast.LENGTH_SHORT).show()
-                    //tv_title.visibility = View.VISIBLE
-                    //tv_contents.visibility = View.VISIBLE
-
                     when(searchCategory){
                         1 -> itemInNumString = data!!.getStringExtra("searchResult").toString()
                         2 -> itemOutNumString = data!!.getStringExtra("searchResult").toString()
                         3 -> storNameString = data!!.getStringExtra("searchResult").toString()
                         4 -> itemNameString = data!!.getStringExtra("searchResult").toString()
                     }
-                    //itemName.text = data!!.getStringExtra("searchResult").toString()
                 }
             }
         } else {

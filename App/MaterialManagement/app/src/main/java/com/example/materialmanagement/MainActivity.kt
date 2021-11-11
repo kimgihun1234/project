@@ -21,10 +21,6 @@ import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity(){
     private lateinit var binding: ActivityMainBinding
-//    private val tabIcon = listOf(
-//        R.drawable ~~어쩌고,
-//        R.drawable ~~어쩌고
-//    )
 
     private val tabName = listOf(
         "입출고", "반품", "현황보기", "설정"
@@ -44,8 +40,6 @@ class MainActivity : AppCompatActivity(){
 
         TabLayoutMediator(binding.tabs, binding.viewpager) { tab, position ->
             tab.setText(tabName[position])
-            //tab.text = "Title $position"
-            //tab.setIcon(tabIcon[position]) // 배열 순서대로
         }.attach()
 
         //onButtonClick(view = null)

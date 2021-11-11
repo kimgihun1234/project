@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.materialmanagement.R
@@ -21,6 +20,8 @@ import com.example.materialmanagement.SearchActivity.SearchOutOrder
 import com.example.materialmanagement.SearchActivity.SearchStorage
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlinx.android.synthetic.main.in_dialog.*
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,13 +58,18 @@ class FragmentIO : Fragment() {
 
     private lateinit var dialogView : View
     private lateinit var setDate : TextView
+    private lateinit var putDate : TextView
     private lateinit var deleteBtn : Button
 
+    private val NO_SEARCH : String = "null"
     private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명
 
     //dialog
-    private var itemNameString : String = "0"
-    private var storNameString : String = "0"
+    private var itemInNumString : String = NO_SEARCH
+    private var itemOutNumString : String = NO_SEARCH
+    private var itemNameString : String = NO_SEARCH
+    private var storNameString : String = NO_SEARCH
+    private var itemSizeString : String = NO_SEARCH
     private lateinit var itemName : TextView
     private lateinit var emp_name : TextView
     private lateinit var storName : TextView
@@ -108,7 +114,6 @@ class FragmentIO : Fragment() {
             if(isChecked) {
                 when (checkedId) {
                     R.id.btnIn -> {
-                        //Toast.makeText(activity,"입고", Toast.LENGTH_SHORT).show()
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.white));
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
@@ -118,7 +123,6 @@ class FragmentIO : Fragment() {
                         buttonState = true
                     }
                     R.id.btnOut -> {
-                        //Toast.makeText(activity,"출고", Toast.LENGTH_SHORT).show()
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.white));
                         btnIn.getBackground().setTint(view.getResources().getColor(R.color.darkGray));
 
@@ -161,7 +165,6 @@ class FragmentIO : Fragment() {
                     searchCategory = 2 // 수주번호검색
                 }
                 intent.putExtra("query", query) // 전달하는 인수 이름, 값
-                //getActivity()?.startActivity(intent)
                 startActivityForResult(intent, 100) //호출한 화면으로 값 돌려주기
 
                 // 검색 버튼 누를 때 호출
@@ -182,7 +185,6 @@ class FragmentIO : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 intent = Intent(getActivity(), SearchStorage::class.java)
                 intent.putExtra("query", query)
-                //getActivity()?.startActivity(intent)
                 searchCategory = 3 // 창고검색
                 startActivityForResult(intent, 100);// 검색 버튼 누를 때 호출
 
@@ -201,7 +203,6 @@ class FragmentIO : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 intent = Intent(getActivity(), SearchItem::class.java)
                 intent.putExtra("query", query)
-                //getActivity()?.startActivity(intent)
                 searchCategory = 4 // 품목명검색
                 startActivityForResult(intent, 100);
                 // 검색 버튼 누를 때 호출
@@ -233,23 +234,14 @@ class FragmentIO : Fragment() {
             }
         })
 
-        //바코드 스캔
-        barCodeScanBtn.setOnClickListener {
-            val scanIntegrator = IntentIntegrator.forSupportFragment(this@FragmentIO)
-            scanIntegrator.setPrompt("Scan")
-            scanIntegrator.setBeepEnabled(true)
-            scanIntegrator.setBarcodeImageEnabled(true)
-            scanIntegrator.initiateScan()
-        }
-
         val positiveInButtonClick = { dialogInterface: DialogInterface, i: Int ->
             if(itemSize.getText().toString().equals("") || itemSize.getText().toString() == null){
                 Toast.makeText(activity, "수량을 입력해주세요", Toast.LENGTH_SHORT).show()
                 dialogInterface.dismiss()
             } else {
                 Toast.makeText(activity, "입고되었습니다", Toast.LENGTH_SHORT).show()
-                itemNameString = "0"
-                storNameString = "0"
+                itemNameString = NO_SEARCH
+                storNameString = NO_SEARCH
             }
         }
         val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
@@ -268,21 +260,30 @@ class FragmentIO : Fragment() {
             storName = dialogView.findViewById(R.id.storName)
             itemSize = dialogView.findViewById(R.id.itemSize)
 
+            setDate = dialogView.findViewById(R.id.setDate)
+            putDate = dialogView.findViewById(R.id.putDate)
+
             val now = System.currentTimeMillis()
             var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
-            if(itemNameString != "0" && storNameString != "0"){
+            if(itemNameString != NO_SEARCH && storNameString != NO_SEARCH){
                 setDate.setText(simpleDateFormat)
                 itemName.text = itemNameString
                 storName.text = storNameString
 
+                if(itemSizeString != NO_SEARCH){
+                    itemSize.setText(itemSizeString)
+                }
+
                 var dlg = AlertDialog.Builder(view.context)
                 if (buttonState){
                     dlg.setTitle("입고 등록")
+                    putDate.setText("입고일자")
                     dlg.setView(dialogView)
                     dlg.setPositiveButton("입고", positiveInButtonClick)
                 } else {
                     dlg.setTitle("출고 등록")
+                    putDate.setText("출고일자")
                     dlg.setView(dialogView)
                     dlg.setPositiveButton("출고", positiveOutButtonClick)
                 }
@@ -293,6 +294,16 @@ class FragmentIO : Fragment() {
                 Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
             }
         }
+
+        //바코드 스캔
+        barCodeScanBtn.setOnClickListener {
+            val scanIntegrator = IntentIntegrator.forSupportFragment(this@FragmentIO)
+            scanIntegrator.setPrompt("Scan")
+            scanIntegrator.setBeepEnabled(true)
+            scanIntegrator.setBarcodeImageEnabled(true)
+            scanIntegrator.initiateScan()
+        }
+
 
         deleteBtn.setOnClickListener {
             Toast.makeText(activity, "삭제되었습니다", Toast.LENGTH_SHORT).show()
@@ -305,23 +316,46 @@ class FragmentIO : Fragment() {
         val scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data) //결과 파싱
         if (scanningResult != null) { //정상적으로 전달
             if (scanningResult.contents != null) { //result 값
-                Toast.makeText(activity,"Scanned : ${scanningResult.contents} format : ${scanningResult.formatName}",
-                    Toast.LENGTH_SHORT).show()
+                //수정 필요 - 미들웨어에서 받은 값 파싱으로
+                val jsonObject = JSONObject(scanningResult.contents)
+                //val jsonArray = jsonObject.getJSONArray("person")
+
+                val item_nm = jsonObject.getString("item_nm") //품목이름
+                val item_cd = jsonObject.getString("item_cd")//품목번호
+                val qty = jsonObject.getString("qty") //품목수
+
+                itemNameString = item_nm
+                if(buttonState){
+                    itemInNumString = item_cd
+                } else {
+                    itemOutNumString = item_cd
+                }
+                itemSizeString = qty
+
+                if(storNameString != NO_SEARCH){
+                    if(buttonState){
+                        Toast.makeText(activity, "입고되었습니다", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(activity, "출고되었습니다", Toast.LENGTH_SHORT).show()
+                    }
+                    storNameString = NO_SEARCH
+                    itemNameString = NO_SEARCH
+                    itemSizeString = NO_SEARCH
+                } else {
+                    Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 100 -> {
-                    Toast.makeText(activity, "검색결과반환", Toast.LENGTH_SHORT).show()
-                    //tv_title.visibility = View.VISIBLE
-                    //tv_contents.visibility = View.VISIBLE
-
                     when(searchCategory){
+                        1 -> itemInNumString = data!!.getStringExtra("searchResult").toString()
+                        2 -> itemOutNumString = data!!.getStringExtra("searchResult").toString()
                         3 -> storNameString = data!!.getStringExtra("searchResult").toString()
                         4 -> itemNameString = data!!.getStringExtra("searchResult").toString()
                     }
-                    //itemName.text = data!!.getStringExtra("searchResult").toString()
                 }
             }
         } else {

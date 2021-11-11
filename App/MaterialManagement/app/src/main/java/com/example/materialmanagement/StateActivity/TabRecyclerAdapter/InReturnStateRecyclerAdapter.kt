@@ -11,15 +11,11 @@ import java.util.*
 
 class InReturnStateRecyclerAdapter() : RecyclerView.Adapter<InReturnStateRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_state, parent, false)
-
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        // val memo = list[position]
-
         val now = System.currentTimeMillis()
         var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
@@ -27,17 +23,9 @@ class InReturnStateRecyclerAdapter() : RecyclerView.Adapter<InReturnStateRecycle
         holder.in_date.text = simpleDateFormat
         holder.item_name.text = position.toString() + 4
         holder.item_amount.text = position.toString() + 4
-//        holder.root.setOnClickListener(object : View.OnClickListener{
-//            override fun onClick(p0: View?) {
-//                holder.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
-//                    Toast.makeText(this,isChecked.toString(),Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
-        //return list.size
         return 20
     }
 
@@ -46,7 +34,5 @@ class InReturnStateRecyclerAdapter() : RecyclerView.Adapter<InReturnStateRecycle
         val in_date = itemView.findViewById<TextView>(R.id.in_date)
         val item_name = itemView.findViewById<TextView>(R.id.item_name)
         val item_amount = itemView.findViewById<TextView>(R.id.item_amount)
-
-        //val root = itemView.findViewById<TableLayout>(R.id.root)
     }
 }

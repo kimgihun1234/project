@@ -13,15 +13,15 @@ class StatePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
     override fun getItemCount(): Int = NUM_PAGES
 
-    fun addFragment(fragment: Fragment) {
-        fragments.add(fragment)
-        notifyItemInserted(fragments.size-1)
-    }
+//    fun addFragment(fragment: Fragment) {
+//        fragments.add(fragment)
+//        notifyItemInserted(fragments.size-1)
+//    }
 
-    fun removeFragment() {
-        fragments.removeLast()
-        notifyItemRemoved(fragments.size)
-    }
+//    fun removeFragment() {
+//        fragments.removeLast()
+//        notifyItemRemoved(fragments.size)
+//    }
 
     override fun createFragment(position: Int): Fragment {
         return when (position){

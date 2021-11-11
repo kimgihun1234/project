@@ -1,28 +1,14 @@
 package com.example.materialmanagement.StateActivity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
-import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.materialmanagement.MainPagerAdapter
 import com.example.materialmanagement.R
-import com.example.materialmanagement.StateActivity.TabFragments.FragmentInState
-import com.example.materialmanagement.ZoomOutPageTransformer
-import com.example.materialmanagement.databinding.ActivityMainBinding
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,7 +65,6 @@ class FragmentState : Fragment() {
         viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                //Log.e("ViewPagerFragment", "Page ${position+1}")
             }
         })
 

@@ -18,22 +18,16 @@ class CustomerRecyclerAdapter() : RecyclerView.Adapter<CustomerRecyclerAdapter.M
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        // val memo = list[position]
-
         holder.item_num.text = position.toString()
         holder.item_name.text = "거래처명"
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
-        //return list.size
         return 20
     }
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         val item_num = itemView.findViewById<TextView>(R.id.item_num)
         val item_name = itemView.findViewById<TextView>(R.id.item_name)
-
-
-        //val root = itemView.findViewById<TableLayout>(R.id.root)
     }
 }
