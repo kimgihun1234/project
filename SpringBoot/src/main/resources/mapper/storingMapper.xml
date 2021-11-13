@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="storingMapper">
+
+    <!-- Storing -->
+    <select id="storingTotalList" resultType="Storing">
+        SELECT * from t_mesbuyma05;
+    </select>
+
+    <select id="storingOne" parameterType="String" resultType="Storing">
+        select * from t_mesbuyma05 where purc_in_no=#{purc_in_no};
+    </select>
+
+    <select id="storingSpecList" parameterType="HashMap" resultType="StoringList">
+        select t_mesbuyma06.item_cd, max(purc_in_dt) as purc_in_dt, sum(t_mesbuyma06.qty) as qty from t_mesbuyma05 inner join t_mesbuyma06 on t_mesbuyma05.purc_in_no=t_mesbuyma06.purc_in_no where cust_cd=#{cust_cd} and date_format(purc_in_dt, '%Y%m%d') between #{purc_in_dt_1} and #{purc_in_dt_2} group by item_cd;
+    </select>
+
+    <select id="storingNo" parameterType="String" resultType="String">
+        SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(purc_in_no,7,12)),0)+1,5,'0')) FROM t_mesbuyma05 WHERE corp_cd = #{corp_cd};
+    </select>
+
+    <select id="checkFormerStoringList" parameterType="String" resultType="Storing">
+        SELECT * from t_mesbuyma05 where purc_in_dt=#{purc_in_dt};
+    </select>
+
+    <insert id="storingInsert" parameterType="Storing">
+        insert into t_mesbuyma05(corp_cd, busi_cd, purc_in_no, purc_in_dt, cust_cd, inp_id, inp_dttm, upd_id, upd_dttm) values(
+        #{corp_cd},
+        #{busi_cd},
+        #{purc_in_no},
+        #{purc_in_dt},
+        #{cust_cd},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        ) on duplicate key update purc_in_dt=#{purc_in_dt}, upd_id=#{upd_id}, upd_dttm=now();
+    </insert>
+
+    <delete id="storingDelete" parameterType="Storing">
+        delete from t_mesbuyma05 where purc_in_no=#{purc_in_no};
+    </delete>
+
+    <!-- StoringDetail -->
+    <select id="storingDetailList" resultType="StoringDetail">
+        SELECT * from t_mesbuyma06;
+    </select>
+
+    <select id="storingDetailSpecList" parameterType="HashMap" resultType="StoringList">
+        select purc_in_dt, cust_cd, t_mesbuyma06.item_cd, t_mesbuyma06.qty, t_mesbuyma06.plord_no, t_mesbuyma06.stor_cd, t_mesbuyma06.loca_cd from t_mesbuyma05 inner join t_mesbuyma06 on t_mesbuyma05.purc_in_no=t_mesbuyma06.purc_in_no where cust_cd=#{cust_cd} and date_format(purc_in_dt, '%Y%m%d') between #{purc_in_dt_1} and #{purc_in_dt_2} and t_mesbuyma06.item_cd=#{item_cd};
+    </select>
+
+    <insert id="storingDetailInsert" parameterType="StoringDetail">
+        insert into t_mesbuyma06(corp_cd, purc_in_no, seq, item_cd, qty, stor_cd, loca_cd, inp_id, inp_dttm, upd_id, upd_dttm) values(
+        #{corp_cd},
+        #{purc_in_no},
+        (select count(*) + 1 from t_mesbuyma06 a where a.purc_in_no=#{purc_in_no}),
+        #{item_cd},
+        #{qty},
+        #{stor_cd},
+        #{loca_cd},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        ) on duplicate key update qty=(select qty from t_mesbuyma06 a where a.purc_in_no=#{purc_in_no}) + #{qty};
+    </insert>
+
+    <delete id="storingDetailDelete" parameterType="StoringDetail">
+        delete from t_mesbuyma06 where purc_in_no=#{purc_in_no} and item_cd=#{item_cd} and qty = 0;
+    </delete>
+
+    <select id="checkStoringDetailList" parameterType="String" resultType="StoringDetail">
+        SELECT * from t_mesbuyma06 where purc_in_no=#{purc_in_no};
+    </select>
+
+    <update id="storingDetailUpdate" parameterType="StoringDetail">
+        update t_mesbuyma06 set qty = (select qty from t_mesbuyma06 a where a.purc_in_no = #{purc_in_no} and a.item_cd = #{item_cd}) + #{qty}, upd_id = #{upd_id}, upd_dttm = NOW() where purc_in_no = #{purc_in_no} and item_cd = #{item_cd};
+    </update>
+
+</mapper>

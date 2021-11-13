@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="offerMapper">
+
+    <!-- Offer -->
+    <select id="offerList" resultType="Offer">
+        SELECT * from t_messalma05;
+    </select>
+
+    <select id="getOfferInfo" parameterType="String" resultType="Offer">
+        SELECT * from t_messalma05 where ex_requ_no=#{ex_requ_no};
+    </select>
+
+    <!-- OfferDetail -->
+    <select id="offerDetailList" resultType="OfferDetail">
+        SELECT * from t_messalma06;
+    </select>
+
+</mapper>

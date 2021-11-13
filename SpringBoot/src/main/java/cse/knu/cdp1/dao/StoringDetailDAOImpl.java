@@ -12,31 +12,31 @@ import java.util.List;
 public class StoringDetailDAOImpl implements StoringDetailDAO {
     @Override
     public List<StoringDetailDTO> storingDetailList(SqlSessionTemplate session) {
-        return session.selectList("mapper.storingDetailList");
+        return session.selectList("storingMapper.storingDetailList");
     }
 
     @Override
     public List<StoringListDTO> storingDetailSpecList(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectList("mapper.storingDetailSpecList", searchInfo);
+        return session.selectList("storingMapper.storingDetailSpecList", searchInfo);
     }
 
     @Override
     public void storingDetailInsert(SqlSessionTemplate session, StoringDetailDTO insertData) {
-        session.insert("mapper.storingDetailInsert", insertData);
+        session.insert("storingMapper.storingDetailInsert", insertData);
     }
 
     @Override
     public void storingDetailDelete(SqlSessionTemplate session, StoringDetailDTO deleteData) {
-        session.delete("mapper.storingDetailDelete", deleteData);
+        session.delete("storingMapper.storingDetailDelete", deleteData);
     }
 
     @Override
     public List<StoringDetailDTO> checkStoringDetailList(SqlSessionTemplate session, String purc_in_no) {
-        return session.selectList("mapper.checkStoringDetailList", purc_in_no);
+        return session.selectList("storingMapper.checkStoringDetailList", purc_in_no);
     }
 
     @Override
     public void storingDetailUpdate(SqlSessionTemplate session, StoringDetailDTO updateData) {
-        session.update("mapper.storingDetailUpdate", updateData);
+        session.update("storingMapper.storingDetailUpdate", updateData);
     }
 }

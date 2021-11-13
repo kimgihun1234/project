@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="unstoringMapper">
+
+    <!-- Unstoring -->
+    <select id="unstoringTotalList" resultType="Unstoring">
+        SELECT * from t_messalma07;
+    </select>
+
+    <select id="unstoringOne" parameterType="String" resultType="Unstoring">
+        select * from t_messalma07 where ex_no=#{ex_no};
+    </select>
+
+    <select id="unstoringSpecList" parameterType="HashMap" resultType="UnstoringList">
+        select t_messalma08.item_cd, max(ex_dt) as ex_dt, sum(t_messalma08.qty) as qty from t_messalma07 inner join t_messalma08 on t_messalma07.ex_no=t_messalma08.ex_no where cust_cd=#{cust_cd} and date_format(ex_dt, '%Y%m%d') between #{ex_dt_1} and #{ex_dt_2} group by item_cd;
+    </select>
+
+    <select id="unstoringNo" parameterType="String" resultType="String">
+        SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(ex_no,7,12)),0)+1,5,'0')) FROM t_messalma07 WHERE corp_cd = #{corp_cd};
+    </select>
+
+    <select id="checkFormerUnstoringList" parameterType="String" resultType="Unstoring">
+        SELECT * from t_messalma07 where ex_dt=#{ex_dt};
+    </select>
+
+    <insert id="unstoringInsert" parameterType="Unstoring">
+        insert into t_messalma07(corp_cd, busi_cd, ex_no, ex_dt, cust_cd, inp_id, inp_dttm, upd_id, upd_dttm) values(
+        #{corp_cd},
+        #{busi_cd},
+        #{ex_no},
+        #{ex_dt},
+        #{cust_cd},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        ) on duplicate key update ex_dt=#{ex_dt}, upd_id=#{upd_id}, upd_dttm=now();
+    </insert>
+
+    <delete id="unstoringDelete" parameterType="Unstoring">
+        delete from t_messalma07 where ex_no=#{ex_no};
+    </delete>
+
+    <!-- UnstoringDetail -->
+    <select id="unstoringDetailList" resultType="UnstoringDetail">
+        SELECT * from t_messalma08;
+    </select>
+
+    <select id="unstoringDetailSpecList" parameterType="HashMap" resultType="UnstoringList">
+        select ex_dt, cust_cd, t_messalma08.item_cd, t_messalma08.qty, t_messalma08.ex_requ_no, t_messalma08.stor_cd, t_messalma08.loca_cd from t_messalma07 inner join t_messalma08 on t_messalma07.ex_no=t_messalma08.ex_no where cust_cd=#{cust_cd} and date_format(ex_dt, '%Y%m%d') between #{ex_dt_1} and #{ex_dt_2} and t_messalma08.item_cd=#{item_cd};
+    </select>
+
+    <insert id="unstoringDetailInsert" parameterType="UnstoringDetail">
+        insert into t_messalma08(corp_cd, ex_no, seq, item_cd, qty, stor_cd, loca_cd, inp_id, inp_dttm, upd_id, upd_dttm) values(
+        #{corp_cd},
+        #{ex_no},
+        (select count(*) + 1 from t_messalma08 a where a.ex_no=#{ex_no}),
+        #{item_cd},
+        #{qty},
+        #{stor_cd},
+        #{loca_cd},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        ) on duplicate key update qty=(select qty from t_messalma08 a where a.ex_no=#{ex_no}) + #{qty};
+    </insert>
+
+    <delete id="unstoringDetailDelete" parameterType="UnstoringDetail">
+        delete from t_messalma08 where ex_no=#{ex_no} and item_cd=#{item_cd} and qty = 0;
+    </delete>
+
+    <select id="checkUnstoringDetailList" parameterType="String" resultType="UnstoringDetail">
+        SELECT * from t_messalma08 where ex_no=#{ex_no};
+    </select>
+
+    <update id="unstoringDetailUpdate" parameterType="UnstoringDetail">
+        update t_messalma08 set qty = (select qty from t_messalma08 a where a.ex_no = #{ex_no} and a.item_cd = #{item_cd}) + #{qty}, upd_id = #{upd_id}, upd_dttm = NOW() where ex_no = #{ex_no} and item_cd = #{item_cd};
+    </update>
+
+</mapper>

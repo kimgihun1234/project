@@ -12,31 +12,31 @@ import java.util.List;
 public class StoringReturnDetailDAOImpl implements StoringReturnDetailDAO{
     @Override
     public List<StoringReturnDetailDTO> storingReturnDetailList(SqlSessionTemplate session) {
-        return session.selectList("mapper.storingReturnDetailList");
+        return session.selectList("storingReturnMapper.storingReturnDetailList");
     }
 
     @Override
     public List<StoringReturnListDTO> storingReturnDetailSpecList(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectList("mapper.storingReturnDetailSpecList", searchInfo);
+        return session.selectList("storingReturnMapper.storingReturnDetailSpecList", searchInfo);
     }
 
     @Override
     public void storingReturnDetailInsert(SqlSessionTemplate session, StoringReturnDetailDTO insertData) {
-        session.insert("mapper.storingReturnDetailInsert", insertData);
+        session.insert("storingReturnMapper.storingReturnDetailInsert", insertData);
     }
 
     @Override
     public void storingReturnDetailDelete(SqlSessionTemplate session, StoringReturnDetailDTO deleteData) {
-        session.delete("mapper.storingReturnDetailDelete", deleteData);
+        session.delete("storingReturnMapper.storingReturnDetailDelete", deleteData);
     }
 
     @Override
     public List<StoringReturnDetailDTO> checkStoringReturnDetailList(SqlSessionTemplate session, String purc_retu_no) {
-        return session.selectList("mapper.checkStoringReturnDetailList", purc_retu_no);
+        return session.selectList("storingReturnMapper.checkStoringReturnDetailList", purc_retu_no);
     }
 
     @Override
     public void storingReturnDetailUpdate(SqlSessionTemplate session, StoringReturnDetailDTO updateData) {
-        session.update("mapper.storingReturnDetailUpdate", updateData);
+        session.update("storingReturnMapper.storingReturnDetailUpdate", updateData);
     }
 }

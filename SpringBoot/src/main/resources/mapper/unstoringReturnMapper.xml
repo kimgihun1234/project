@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="unstoringReturnMapper">
+
+    <!-- UnstoringReturn -->
+    <select id="unstoringReturnTotalList" resultType="UnstoringReturn">
+        SELECT * from t_messalma09;
+    </select>
+
+    <select id="unstoringReturnOne" parameterType="String" resultType="UnstoringReturn">
+        select * from t_messalma09 where ex_retu_no=#{ex_retu_no};
+    </select>
+
+    <select id="unstoringReturnSpecList" parameterType="HashMap" resultType="UnstoringReturnList">
+        select t_messalma10.item_cd, max(ex_retu_dt) as ex_retu_dt, sum(t_messalma10.qty) as qty from t_messalma09 inner join t_messalma10 on t_messalma09.ex_retu_no=t_messalma10.ex_retu_no where cust_cd=#{cust_cd} and date_format(ex_retu_dt, '%Y%m%d') between #{ex_retu_dt_1} and #{ex_retu_dt_2} group by item_cd;
+    </select>
+
+    <select id="unstoringReturnNo" parameterType="String" resultType="String">
+        (SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(ex_retu_no,7,12)),0)+1,5,'0')) FROM t_messalma09 WHERE corp_cd = #{corpCd})
+    </select>
+
+    <select id="checkFormerUnstoringReturnList" parameterType="String" resultType="UnstoringReturn">
+        SELECT * from t_messalma09 where ex_retu_dt=#{ex_retu_dt};
+    </select>
+
+    <insert id="unstoringReturnInsert" parameterType="UnstoringReturn">
+        insert into t_messalma09(corp_cd, busi_cd, ex_retu_no, ex_retu_dt, cust_cd, inp_id, inp_dttm, upd_id, upd_dttm) values(
+        #{corp_cd},
+        #{busi_cd},
+        #{ex_retu_no},
+        #{ex_retu_dt},
+        #{cust_cd},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        ) on duplicate key update ex_retu_dt=#{ex_retu_dt}, upd_id=#{upd_id}, upd_dttm=now();
+    </insert>
+
+    <delete id="unstoringReturnDelete" parameterType="UnstoringReturn">
+        delete from t_messalma09 where ex_retu_no=#{ex_retu_no};
+    </delete>
+
+    <!-- UnstoringReturnDetail -->
+    <select id="unstoringReturnDetailList" resultType="UnstoringReturnDetail">
+        SELECT * from t_messalma10;
+    </select>
+
+    <select id="unstoringReturnDetailSpecList" parameterType="HashMap" resultType="UnstoringReturnList">
+        select ex_retu_dt, cust_cd, t_messalma10.item_cd, t_messalma10.qty, t_messalma10.ex_requ_no, t_messalma10.stor_cd, t_messalma10.loca_cd from t_messalma09 inner join t_messalma10 on t_messalma09.ex_retu_no=t_messalma10.ex_retu_no where cust_cd=#{cust_cd} and date_format(ex_retu_dt, '%Y%m%d') between #{ex_retu_dt_1} and #{ex_retu_dt_2} and t_messalma10.item_cd=#{item_cd};
+    </select>
+
+    <insert id="unstoringReturnDetailInsert" parameterType="UnstoringReturnDetail">
+        insert into t_messalma10(corp_cd, ex_retu_no, seq, item_cd, qty, stor_cd, loca_cd, inp_id, inp_dttm, upd_id, upd_dttm) values(
+        #{corp_cd},
+        #{ex_retu_no},
+        (select count(*) + 1 from t_messalma10 a where a.ex_retu_no=#{ex_retu_no}),
+        #{item_cd},
+        #{qty},
+        #{stor_cd},
+        #{loca_cd},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        ) on duplicate key update qty=(select qty from t_messalma10 a where a.ex_retu_no=#{ex_retu_no}) + #{qty};
+    </insert>
+
+    <delete id="unstoringReturnDetailDelete" parameterType="UnstoringReturnDetail">
+        delete from t_messalma10 where ex_retu_no=#{ex_retu_no} and item_cd=#{item_cd} and qty = 0;
+    </delete>
+
+    <select id="checkUnstoringReturnDetailList" parameterType="String" resultType="UnstoringReturnDetail">
+        SELECT * from t_messalma10 where ex_retu_no=#{ex_retu_no};
+    </select>
+
+    <update id="unstoringReturnDetailUpdate" parameterType="UnstoringReturnDetail">
+        update t_messalma10 set qty = (select qty from t_messalma10 a where a.ex_retu_no = #{ex_retu_no} and a.item_cd = #{item_cd}) + #{qty}, upd_id = #{upd_id}, upd_dttm = NOW() where ex_retu_no = #{ex_retu_no} and item_cd = #{item_cd};
+    </update>
+
+</mapper>

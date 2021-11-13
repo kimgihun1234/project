@@ -12,36 +12,36 @@ import java.util.List;
 public class StoringReturnDAOImpl implements StoringReturnDAO{
     @Override
     public List<StoringReturnDTO> storingReturnTotalList(SqlSessionTemplate session) {
-        return session.selectList("mapper.storingReturnTotalList");
+        return session.selectList("storingReturnMapper.storingReturnTotalList");
     }
 
     @Override
     public List<StoringReturnListDTO> storingReturnSpecList(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectList("mapper.storingReturnSpecList", searchInfo);
+        return session.selectList("storingReturnMapper.storingReturnSpecList", searchInfo);
     }
 
     @Override
     public StoringReturnDTO storingReturnOne(SqlSessionTemplate session, String purc_retu_no) {
-        return session.selectOne("mapper.storingReturnOne", purc_retu_no);
+        return session.selectOne("storingReturnMapper.storingReturnOne", purc_retu_no);
     }
 
     @Override
     public List<StoringReturnDTO> checkFormerStoringReturnList(SqlSessionTemplate session, String purc_retu_dt) {
-        return session.selectList("mapper.checkFormerStoringReturnList", purc_retu_dt);
+        return session.selectList("storingReturnMapper.checkFormerStoringReturnList", purc_retu_dt);
     }
 
     @Override
     public void storingReturnInsert(SqlSessionTemplate session, StoringReturnDTO insertData) {
-        session.insert("mapper.storingReturnInsert", insertData);
+        session.insert("storingReturnMapper.storingReturnInsert", insertData);
     }
 
     @Override
     public void storingReturnDelete(SqlSessionTemplate session, StoringReturnDTO deleteData) {
-        session.delete("mapper.storingReturnDelete", deleteData);
+        session.delete("storingReturnMapper.storingReturnDelete", deleteData);
     }
 
     @Override
     public String purc_retu_no_Cal(SqlSessionTemplate session, String corp_cd) {
-        return session.selectOne("mapper.storingReturnNo", corp_cd);
+        return session.selectOne("storingReturnMapper.storingReturnNo", corp_cd);
     }
 }

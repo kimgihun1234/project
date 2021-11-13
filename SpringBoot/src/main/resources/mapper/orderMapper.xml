@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="orderMapper">
+
+    <!-- Order -->
+    <select id="orderList" resultType="Order">
+        SELECT * from t_mesbuyma03;
+    </select>
+
+    <select id="getOrderInfo" parameterType="String" resultType="Order">
+        SELECT * from t_mesbuyma03 where plord_no=#{plord_no};
+    </select>
+
+    <!-- OrderDetail -->
+    <select id="orderDetailList" resultType="OrderDetail">
+        SELECT * from t_mesbuyma04;
+    </select>
+
+</mapper>

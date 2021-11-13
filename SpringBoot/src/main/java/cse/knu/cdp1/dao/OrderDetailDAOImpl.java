@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public class OrderDetailDAOImpl implements OrderDetailDAO{
     @Override
-    public List<OrderDetailDTO> orderDetailList(SqlSessionTemplate session) { return session.selectList("mapper.orderDetailList"); }
+    public List<OrderDetailDTO> orderDetailList(SqlSessionTemplate session) { return session.selectList("orderMapper.orderDetailList"); }
 }

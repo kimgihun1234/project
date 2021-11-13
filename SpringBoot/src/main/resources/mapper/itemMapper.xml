@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="itemMapper">
+
+    <!-- Item -->
+    <select id="itemList" resultType="Item">
+        SELECT * from t_mesbasma10;
+    </select>
+
+    <select id="getItemInfo" parameterType="String" resultType="Item">
+        SELECT * from t_mesbasma10 where item_cd=#{item_cd};
+    </select>
+
+    <select id="curItemList" resultType="ItemList">
+        select
+        item_cd, item_nm, stan, t_messysma09.comm_cd_nm,
+        SUM((SELECT `f_totalQty_v2`(t_mesbasma02.corp_cd, t_mesbasma02.busi_cd, item_cd))) AS qty
+        from t_mesbasma10 inner join t_messysma09
+        on t_mesbasma10.ac_divi_cd = t_messysma09.comm_cd CROSS JOIN t_mesbasma02
+        where t_messysma09.group_no = (select group_no from t_messysma08 where group_cd = 'COM004')
+        group by item_cd;
+    </select>
+
+</mapper>

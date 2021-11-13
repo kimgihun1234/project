@@ -10,10 +10,10 @@ import java.util.List;
 public class CustomerDAOImpl implements CustomerDAO{
     @Override
     public List<CustomerDTO> customerList(SqlSessionTemplate session) {
-        return session.selectList("mapper.customerList");
+        return session.selectList("customerMapper.customerList");
     }
     @Override
     public CustomerDTO getCustomerInfo(SqlSessionTemplate session, String cust_cd) {
-        return session.selectOne("mapper.getCustomerInfo", cust_cd);
+        return session.selectOne("customerMapper.getCustomerInfo", cust_cd);
     }
 }

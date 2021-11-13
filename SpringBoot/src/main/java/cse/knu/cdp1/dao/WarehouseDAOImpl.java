@@ -10,11 +10,11 @@ import java.util.List;
 public class WarehouseDAOImpl implements WarehouseDAO{
     @Override
     public List<WarehouseDTO> warehouseList(SqlSessionTemplate session) {
-        return session.selectList("mapper.warehouseList");
+        return session.selectList("locationMapper.warehouseList");
     }
 
     @Override
     public WarehouseDTO getWarehouseInfo(SqlSessionTemplate session, String stor_cd) {
-        return session.selectOne("mapper.getWarehouseInfo", stor_cd);
+        return session.selectOne("locationMapper.getWarehouseInfo", stor_cd);
     }
 }

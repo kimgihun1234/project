@@ -14,31 +14,31 @@ import java.util.List;
 public class UnstoringReturnDetailDAOImpl implements UnstoringReturnDetailDAO{
     @Override
     public List<UnstoringReturnDetailDTO> unstoringReturnDetailList(SqlSessionTemplate session) {
-        return session.selectList("mapper.unstoringReturnDetailList");
+        return session.selectList("unstoringReturnMapper.unstoringReturnDetailList");
     }
 
     @Override
     public List<UnstoringReturnListDTO> unstoringReturnDetailSpecList(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectList("mapper.unstoringReturnDetailSpecList", searchInfo);
+        return session.selectList("unstoringReturnMapper.unstoringReturnDetailSpecList", searchInfo);
     }
 
     @Override
     public void unstoringReturnDetailInsert(SqlSessionTemplate session, UnstoringReturnDetailDTO insertData) {
-        session.insert("mapper.unstoringReturnDetailInsert", insertData);
+        session.insert("unstoringReturnMapper.unstoringReturnDetailInsert", insertData);
     }
 
     @Override
     public void unstoringReturnDetailDelete(SqlSessionTemplate session, UnstoringReturnDetailDTO deleteData) {
-        session.delete("mapper.unstoringReturnDetailDelete", deleteData);
+        session.delete("unstoringReturnMapper.unstoringReturnDetailDelete", deleteData);
     }
 
     @Override
     public List<UnstoringReturnDetailDTO> checkUnstoringReturnDetailList(SqlSessionTemplate session, String ex_retu_no) {
-        return session.selectList("mapper.checkUnstoringReturnDetailList", ex_retu_no);
+        return session.selectList("unstoringReturnMapper.checkUnstoringReturnDetailList", ex_retu_no);
     }
 
     @Override
     public void unstoringReturnDetailUpdate(SqlSessionTemplate session, UnstoringReturnDetailDTO updateData) {
-        session.update("mapper.unstoringReturnDetailUpdate", updateData);
+        session.update("unstoringReturnMapper.unstoringReturnDetailUpdate", updateData);
     }
 }

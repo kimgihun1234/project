@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="storingReturnMapper">
+
+    <!-- StoringReturn -->
+    <select id="storingReturnTotalList" resultType="StoringReturn">
+        SELECT * from t_mesbuyma07;
+    </select>
+
+    <select id="storingReturnOne" parameterType="String" resultType="StoringReturn">
+        select * from t_mesbuyma07 where purc_retu_no=#{purc_retu_no};
+    </select>
+
+    <select id="storingReturnSpecList" parameterType="HashMap" resultType="StoringReturnList">
+        select t_mesbuyma08.item_cd, max(purc_retu_dt) as purc_retu_dt, sum(t_mesbuyma08.qty) as qty from t_mesbuyma07 inner join t_mesbuyma08 on t_mesbuyma07.purc_retu_no=t_mesbuyma08.purc_retu_no where cust_cd=#{cust_cd} and date_format(purc_retu_dt, '%Y%m%d') between #{purc_retu_dt_1} and #{purc_retu_dt_2} group by item_cd;
+    </select>
+
+    <select id="storingReturnNo" parameterType="String" resultType="String">
+        (SELECT CONCAT(DATE_FORMAT(NOW(),'%Y%m'),LPAD(IFNULL(MAX(SUBSTR(purc_retu_no,7,12)),0)+1,5,'0')) FROM t_mesbuyma07 WHERE corp_cd = #{corpCd})
+    </select>
+
+    <select id="checkFormerStoringReturnList" parameterType="String" resultType="StoringReturn">
+        SELECT * from t_mesbuyma07 where purc_retu_dt=#{purc_retu_dt};
+    </select>
+
+    <insert id="storingReturnInsert" parameterType="StoringReturn">
+        insert into t_mesbuyma07(corp_cd, busi_cd, purc_retu_no, purc_retu_dt, cust_cd, inp_id, inp_dttm, upd_id, upd_dttm) values(
+        #{corp_cd},
+        #{busi_cd},
+        #{purc_retu_no},
+        #{purc_retu_dt},
+        #{cust_cd},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        ) on duplicate key update purc_retu_dt=#{purc_retu_dt}, upd_id=#{upd_id}, upd_dttm=now();
+    </insert>
+
+    <delete id="storingReturnDelete" parameterType="StoringReturn">
+        delete from t_mesbuyma07 where purc_retu_no=#{purc_retu_no};
+    </delete>
+
+    <!-- StoringReturnDetail -->
+    <select id="storingReturnDetailList" resultType="StoringReturnDetail">
+        SELECT * from t_mesbuyma08;
+    </select>
+
+    <select id="storingReturnDetailSpecList" parameterType="HashMap" resultType="StoringReturnList">
+        select purc_retu_dt, cust_cd, t_mesbuyma08.item_cd, t_mesbuyma08.qty, t_mesbuyma08.plord_no, t_mesbuyma08.stor_cd, t_mesbuyma08.loca_cd from t_mesbuyma07 inner join t_mesbuyma08 on t_mesbuyma07.purc_retu_no=t_mesbuyma08.purc_retu_no where cust_cd=#{cust_cd} and date_format(purc_retu_dt, '%Y%m%d') between #{purc_retu_dt_1} and #{purc_retu_dt_2} and t_mesbuyma08.item_cd=#{item_cd};
+    </select>
+
+    <insert id="storingReturnDetailInsert" parameterType="StoringReturnDetail">
+        insert into t_mesbuyma08(corp_cd, purc_retu_no, seq, item_cd, qty, stor_cd, loca_cd, inp_id, inp_dttm, upd_id, upd_dttm) values(
+        #{corp_cd},
+        #{purc_retu_no},
+        (select count(*) + 1 from t_mesbuyma08 a where a.purc_retu_no=#{purc_retu_no}),
+        #{item_cd},
+        #{qty},
+        #{stor_cd},
+        #{loca_cd},
+        #{inp_id},
+        NOW(),
+        #{upd_id},
+        NOW()
+        ) on duplicate key update qty=(select qty from t_mesbuyma08 a where a.purc_retu_no=#{purc_retu_no}) + #{qty};
+    </insert>
+
+    <delete id="storingReturnDetailDelete" parameterType="StoringReturnDetail">
+        delete from t_mesbuyma08 where purc_retu_no=#{purc_retu_no} and item_cd=#{item_cd} and qty = 0;
+    </delete>
+
+    <select id="checkStoringReturnDetailList" parameterType="String" resultType="StoringReturnDetail">
+        SELECT * from t_mesbuyma08 where purc_retu_no=#{purc_retu_no};
+    </select>
+
+    <update id="storingReturnDetailUpdate" parameterType="StoringReturnDetail">
+        update t_mesbuyma08 set qty = (select qty from t_mesbuyma08 a where a.purc_retu_no = #{purc_retu_no} and a.item_cd = #{item_cd}) + #{qty}, upd_id = #{upd_id}, upd_dttm = NOW() where purc_retu_no = #{purc_retu_no} and item_cd = #{item_cd};
+    </update>
+
+</mapper>

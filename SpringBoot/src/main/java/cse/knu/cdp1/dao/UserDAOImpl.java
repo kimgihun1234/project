@@ -10,6 +10,6 @@ import java.util.List;
 public class UserDAOImpl implements UserDAO{
     @Override
     public List<UserDTO> getLoginInfo(SqlSessionTemplate session, UserDTO searchData) {
-        return session.selectList("mapper.userInfo", searchData);
+        return session.selectList("userMapper.userInfo", searchData);
     }
 }

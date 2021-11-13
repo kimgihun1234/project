@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 public class BarcodeDAOImpl implements BarcodeDAO{
     @Override
     public BarcodeDTO getBarcodeInfo(SqlSessionTemplate session, String barcode) {
-        return session.selectOne("mapper.getBarcodeInfo", barcode);
+        return session.selectOne("barcodeMapper.getBarcodeInfo", barcode);
     }
 }

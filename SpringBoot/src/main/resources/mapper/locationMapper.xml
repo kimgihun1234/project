@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="locationMapper">
+
+    <!-- Warehouse -->
+    <select id="getWarehouseInfo" parameterType="String" resultType="Warehouse">
+        SELECT * from t_mesbasma11 where stor_cd=#{stor_cd};
+    </select>
+
+    <select id="warehouseList" resultType="Warehouse">
+        SELECT * from t_mesbasma11;
+    </select>
+
+    <!-- Location -->
+    <select id="getLocationInfo" parameterType="HashMap" resultType="Location">
+        SELECT * from t_mesbasma12 where stor_cd=#{stor_cd} and loca_cd=#{loca_cd};
+    </select>
+
+    <select id="locationList" resultType="Location">
+        SELECT * from t_mesbasma12;
+    </select>
+
+</mapper>

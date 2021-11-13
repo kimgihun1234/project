@@ -9,10 +9,10 @@ import java.util.List;
 @Repository
 public class OfferDAOImpl implements OfferDAO{
     @Override
-    public List<OfferDTO> offerList(SqlSessionTemplate session) { return session.selectList("mapper.offerList"); }
+    public List<OfferDTO> offerList(SqlSessionTemplate session) { return session.selectList("offerMapper.offerList"); }
 
     @Override
     public OfferDTO getOfferInfo(SqlSessionTemplate session, String ex_requ_no) {
-        return session.selectOne("mapper.getOfferInfo", ex_requ_no);
+        return session.selectOne("offerMapper.getOfferInfo", ex_requ_no);
     }
 }

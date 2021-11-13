@@ -11,16 +11,16 @@ import java.util.List;
 public class ItemDAOImpl implements ItemDAO {
     @Override
     public ItemDTO getItemInfo(SqlSessionTemplate session, String item_cd) {
-        return session.selectOne("mapper.getItemInfo", item_cd);
+        return session.selectOne("itemMapper.getItemInfo", item_cd);
     }
 
     @Override
     public List<ItemDTO> itemList(SqlSessionTemplate session) {
-        return session.selectList("mapper.itemList");
+        return session.selectList("itemMapper.itemList");
     }
 
     @Override
     public List<ItemListDTO> curItemList(SqlSessionTemplate session) {
-        return session.selectList("mapper.curItemList");
+        return session.selectList("itemMapper.curItemList");
     }
 }

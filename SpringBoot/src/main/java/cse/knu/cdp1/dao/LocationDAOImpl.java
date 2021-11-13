@@ -11,11 +11,11 @@ import java.util.List;
 public class LocationDAOImpl implements LocationDAO{
     @Override
     public List<LocationDTO> locationList(SqlSessionTemplate session) {
-        return session.selectList("mapper.locationList");
+        return session.selectList("locationMapper.locationList");
     }
 
     @Override
     public LocationDTO getLocationInfo(SqlSessionTemplate session, HashMap<String, String> searchInfo) {
-        return session.selectOne("mapper.getLocationInfo", searchInfo);
+        return session.selectOne("locationMapper.getLocationInfo", searchInfo);
     }
 }

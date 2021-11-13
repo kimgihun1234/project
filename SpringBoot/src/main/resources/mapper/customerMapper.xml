@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="customerMapper">
+
+    <!-- Customer -->
+    <select id="getCustomerInfo" parameterType="String" resultType="Customer">
+        SELECT * from t_mesbasma05 where cust_cd=#{cust_cd};
+    </select>
+
+    <select id="customerList" resultType="Customer">
+        SELECT * from t_mesbasma05;
+    </select>
+
+</mapper>
