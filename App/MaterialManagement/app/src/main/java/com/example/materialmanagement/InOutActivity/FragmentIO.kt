@@ -14,10 +14,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.materialmanagement.R
-import com.example.materialmanagement.SearchActivity.SearchInOrder
-import com.example.materialmanagement.SearchActivity.SearchItem
-import com.example.materialmanagement.SearchActivity.SearchOutOrder
-import com.example.materialmanagement.SearchActivity.SearchStorage
+import com.example.materialmanagement.SearchActivity.*
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.in_dialog.*
@@ -62,7 +59,7 @@ class FragmentIO : Fragment() {
     private lateinit var deleteBtn : Button
 
     private val NO_SEARCH : String = "null"
-    private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명
+    private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명, 5 : 바코드
 
     //dialog
     private var itemInNumString : String = NO_SEARCH
@@ -220,7 +217,10 @@ class FragmentIO : Fragment() {
 
         searchBarCode.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
+                intent = Intent(getActivity(), SearchBarcode::class.java)
+                intent.putExtra("query", query)
+                searchCategory = 5 // 품목명검색
+                startActivityForResult(intent, 100);
                 // 검색 버튼 누를 때 호출
 
                 return true
@@ -355,6 +355,16 @@ class FragmentIO : Fragment() {
                         2 -> itemOutNumString = data!!.getStringExtra("searchResult").toString()
                         3 -> storNameString = data!!.getStringExtra("searchResult").toString()
                         4 -> itemNameString = data!!.getStringExtra("searchResult").toString()
+                        5 -> {
+                            itemNameString = data!!.getStringExtra("searchResult").toString()
+                            if(buttonState){
+                                itemInNumString = data!!.getStringExtra("searchResult").toString()
+                            } else {
+                                itemOutNumString = data!!.getStringExtra("searchResult").toString()
+                            }
+                            itemSizeString = data!!.getStringExtra("searchResult").toString()
+
+                        }
                     }
                 }
             }

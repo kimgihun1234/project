@@ -15,8 +15,7 @@ import java.util.*
 import com.google.gson.GsonBuilder
 
 import com.google.gson.Gson
-
-
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class MainActivity : AppCompatActivity(){
@@ -35,7 +34,8 @@ class MainActivity : AppCompatActivity(){
 
         binding.viewpager.apply {
             adapter = MainPagerAdapter(context as FragmentActivity)
-            setPageTransformer(ZoomOutPageTransformer())
+            viewpager.isUserInputEnabled = false
+            //setPageTransformer(ZoomOutPageTransformer())
         }
 
         TabLayoutMediator(binding.tabs, binding.viewpager) { tab, position ->

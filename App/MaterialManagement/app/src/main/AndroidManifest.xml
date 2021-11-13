@@ -32,6 +32,10 @@
         <activity
             android:name=".SearchActivity.SearchCustomer"
             android:exported="true" />
+        <activity
+            android:name=".SearchActivity.SearchBarcode"
+            android:exported="true" />
+
 
         <activity
             android:name=".MainActivity"

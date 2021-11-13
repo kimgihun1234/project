@@ -12,21 +12,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.BarcodeRecyclerAdapter
-import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.CustomerRecyclerAdapter
+import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.InRecyclerAdapter
 import com.google.android.material.tabs.TabItem
 
 
-class SearchCustomer : AppCompatActivity() {
+class SearchBarcode : AppCompatActivity() {
     private lateinit var refreshBtn : TabItem
     private lateinit var searchText : TextView
 
     private lateinit var orderBasic : Button
 
-    private lateinit var customerRecyclerAdapter: CustomerRecyclerAdapter
+    private lateinit var barcodeRecyclerAdapter: BarcodeRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_customer)
+        setContentView(R.layout.activity_search_barcode)
 
         searchText = findViewById(R.id.searchText)
         refreshBtn = findViewById(R.id.refreshBtn)
@@ -51,9 +51,9 @@ class SearchCustomer : AppCompatActivity() {
             Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
         }
 
-        customerRecyclerAdapter = CustomerRecyclerAdapter()
+        barcodeRecyclerAdapter = BarcodeRecyclerAdapter()
 
-        customerRecyclerAdapter.setItemClickListener(object: CustomerRecyclerAdapter.OnItemClickListener{
+        barcodeRecyclerAdapter.setItemClickListener(object: BarcodeRecyclerAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
                 // 클릭 시 이벤트 작성
                 val intent = Intent()
@@ -65,8 +65,8 @@ class SearchCustomer : AppCompatActivity() {
 
         this.findViewById<RecyclerView>(R.id.in_num_list).apply {
             layoutManager =
-                LinearLayoutManager(this@SearchCustomer, LinearLayoutManager.VERTICAL,false)
-            adapter = customerRecyclerAdapter
+                LinearLayoutManager(this@SearchBarcode, LinearLayoutManager.VERTICAL,false)
+            adapter = barcodeRecyclerAdapter
         }
     }
 }
