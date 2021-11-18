@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(){
             tab.setText(tabName[position])
         }.attach()
 
-        //onButtonClick(view = null)
+        onButtonClick(view = null)
     }
 
     fun onButtonClick(view: View?) {
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(){
         //-> String data = token
 
         //2. orderList get
-        //val url = "http://172.30.1.30:8080/orderList"
+        val url = "http://101.101.208.223:8080/orderList"
         //-> String 3개 plord_no, cust_nm, cust_cd
 
         //3. barcode post
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity(){
 
 
         //6. storingDelete post
-        val url = "http://172.30.1.30:8080/storingDelete"
+        //val url = "http://172.30.1.30:8080/storingDelete"
         //-> true만 올 것이다 성공하면 true 실패하면 false
         //<- String no String item_cd Double qty
 
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity(){
 
         val request: Request = Request.Builder()
             .url(url)
-            .post(formBody)
+            .get()
             .build();
 
         client.newCall(request).enqueue(object : Callback {

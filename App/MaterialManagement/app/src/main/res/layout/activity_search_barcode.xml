@@ -74,22 +74,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="10dp"
         >
-        <Button
-            android:id="@+id/orderBasic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:padding="10dp"
-            android:textSize="17sp"
-            android:text="기본순"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textSize="17sp"
-            android:text="날짜순"
-            />
     </LinearLayout>
 
     <TableLayout
