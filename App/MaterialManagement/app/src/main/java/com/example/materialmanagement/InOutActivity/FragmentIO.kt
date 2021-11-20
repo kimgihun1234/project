@@ -18,6 +18,7 @@ import com.example.materialmanagement.SearchActivity.*
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.in_dialog.*
+import kotlinx.android.synthetic.main.item_number.*
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -67,6 +68,7 @@ class FragmentIO : Fragment() {
     private var itemNameString : String = NO_SEARCH
     private var storNameString : String = NO_SEARCH
     private var itemSizeString : String = NO_SEARCH
+    private var customerNameString : String = NO_SEARCH
     private lateinit var itemName : TextView
     private lateinit var emp_name : TextView
     private lateinit var storName : TextView
@@ -351,10 +353,26 @@ class FragmentIO : Fragment() {
             when (requestCode) {
                 100 -> {
                     when(searchCategory){
-                        1 -> itemInNumString = data!!.getStringExtra("searchResult").toString()
-                        2 -> itemOutNumString = data!!.getStringExtra("searchResult").toString()
-                        3 -> storNameString = data!!.getStringExtra("searchResult").toString()
-                        4 -> itemNameString = data!!.getStringExtra("searchResult").toString()
+                        1 -> {
+                            // cust_cd
+                            itemInNumString = data!!.getStringExtra("plord_no").toString()
+                            customerNameString = data!!.getStringExtra("cust_nm").toString()
+                            searchCustomer.setText(customerNameString)
+                        }
+                        2 -> {
+                            // cust_cd
+                            itemOutNumString = data!!.getStringExtra("ex_requ_no").toString()
+                            customerNameString = data!!.getStringExtra("cust_nm").toString()
+                            searchCustomer.setText(customerNameString)
+                        }
+                        3 -> {
+                            //stor_cd loca_cd
+                            storNameString = data!!.getStringExtra("stor_nm").toString()
+                        }
+                        4 -> {
+                            //item_cd
+                            itemNameString = data!!.getStringExtra("item_nm").toString()
+                        }
                         5 -> {
                             itemNameString = data!!.getStringExtra("searchResult").toString()
                             if(buttonState){

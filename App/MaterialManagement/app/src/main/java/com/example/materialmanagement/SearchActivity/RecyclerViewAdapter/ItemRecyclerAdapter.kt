@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.DTO.ItemInfo
+import com.example.materialmanagement.DTO.StorageInfo
 import com.example.materialmanagement.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ItemRecyclerAdapter() : RecyclerView.Adapter<ItemRecyclerAdapter.MyViewHolder>() {
+class ItemRecyclerAdapter(private var myRequest: List<ItemInfo>) : RecyclerView.Adapter<ItemRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_name, parent, false)
@@ -18,8 +20,8 @@ class ItemRecyclerAdapter() : RecyclerView.Adapter<ItemRecyclerAdapter.MyViewHol
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        holder.item_num.text = position.toString()
-        holder.item_name.text = "품목명"
+        holder.item_num.text = myRequest[position].item_cd
+        holder.item_name.text = myRequest[position].item_nm
 
         // (1) 리스트 내 항목 클릭 시 onClick() 호출
         holder.itemView.setOnClickListener {
@@ -28,7 +30,7 @@ class ItemRecyclerAdapter() : RecyclerView.Adapter<ItemRecyclerAdapter.MyViewHol
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
-        return 20
+        return myRequest.size
     }
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){

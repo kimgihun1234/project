@@ -36,7 +36,7 @@
             android:layout_marginLeft="1dp"
             android:layout_marginBottom="1dp"
             android:padding="3dp"
-            android:text="창고이름"
+            android:text="창고/위치명"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
