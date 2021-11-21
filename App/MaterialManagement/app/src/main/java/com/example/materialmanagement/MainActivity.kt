@@ -53,11 +53,6 @@ class MainActivity : AppCompatActivity(){
         //<- String id String pw
         //-> String data = token
 
-        //3. barcode post
-        //val url = "http://101.101.208.223:8080/barcode"
-        //<- String barcode
-        //-> String item_nm String item_cd Double qty
-
         //5. storingInsert post 입고시에만 jwt
         //val url = "http://101.101.208.223:8080/storingInsert?jwt=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMzMzMzMzMy8xMDAxLzEwMDEiLCJleHAiOjE2MzY1NzkxMTV9.dWYyCtUDfxQcUYaNOcXWD5G4GqK1HkIhh58bzgF4rO4"
         //<- String cust_cd, stor_cd loca_cd item_cd Double qty

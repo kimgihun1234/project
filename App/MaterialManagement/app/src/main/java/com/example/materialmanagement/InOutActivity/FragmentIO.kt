@@ -5,21 +5,31 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.materialmanagement.DTO.BarcodeInfo
+import com.example.materialmanagement.DTO.BarcodePostInfo
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.*
+import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.BarcodeRecyclerAdapter
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.in_dialog.*
 import kotlinx.android.synthetic.main.item_number.*
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -73,6 +83,8 @@ class FragmentIO : Fragment() {
     private lateinit var emp_name : TextView
     private lateinit var storName : TextView
     private lateinit var itemSize : EditText
+
+    private lateinit var myRequest : String
 
     private lateinit var refreshBtn : Button
 
@@ -318,21 +330,47 @@ class FragmentIO : Fragment() {
         val scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data) //결과 파싱
         if (scanningResult != null) { //정상적으로 전달
             if (scanningResult.contents != null) { //result 값
-                //수정 필요 - 미들웨어에서 받은 값 파싱으로
-                val jsonObject = JSONObject(scanningResult.contents)
-                //val jsonArray = jsonObject.getJSONArray("person")
+                Log.d("Barcode", scanningResult.contents)
+                val client = OkHttpClient()
 
-                val item_nm = jsonObject.getString("item_nm") //품목이름
-                val item_cd = jsonObject.getString("item_cd")//품목번호
-                val qty = jsonObject.getString("qty") //품목수
+                val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val data = BarcodePostInfo(scanningResult.contents.toString())
+                val jsonString = gson.toJson(data)
+                val formBody: RequestBody = RequestBody.create(JSON, jsonString)
 
-                itemNameString = item_nm
-                if(buttonState){
-                    itemInNumString = item_cd
-                } else {
-                    itemOutNumString = item_cd
-                }
-                itemSizeString = qty
+                val url = "http://101.101.208.223:8080/barcode"
+                val request: Request = Request.Builder()
+                    .url(url)
+                    .post(formBody)
+                    .build();
+
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        activity!!.runOnUiThread { Log.d("test", "failt") }
+                    }
+
+                    @Throws(IOException::class)
+                    override fun onResponse(call: Call, response: Response) {
+                        if (response.isSuccessful) {
+                            myRequest = response.body!!.string()
+                            System.out.println(myRequest)
+                            var data : BarcodeInfo = Gson().fromJson(myRequest, BarcodeInfo::class.java)
+                            activity!!.runOnUiThread {
+                                itemNameString = data.item_nm
+                                if(buttonState){
+                                    itemInNumString = data.item_cd
+                                } else {
+                                    itemOutNumString = data.item_cd
+                                }
+                                itemSizeString = data.qty.toString()
+
+                                Log.d("Barcode", data.item_nm + " "
+                                + data.item_cd + " " + data.qty.toString())
+                            }
+                        }
+                    }
+                })
 
                 if(storNameString != NO_SEARCH){
                     if(buttonState){
@@ -352,6 +390,7 @@ class FragmentIO : Fragment() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 100 -> {
+                    // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명, 5 : 바코드
                     when(searchCategory){
                         1 -> {
                             // cust_cd
@@ -374,14 +413,26 @@ class FragmentIO : Fragment() {
                             itemNameString = data!!.getStringExtra("item_nm").toString()
                         }
                         5 -> {
-                            itemNameString = data!!.getStringExtra("searchResult").toString()
+                            itemNameString = data!!.getStringExtra("item_nm").toString()
                             if(buttonState){
-                                itemInNumString = data!!.getStringExtra("searchResult").toString()
+                                itemInNumString = data!!.getStringExtra("item_cd").toString()
                             } else {
-                                itemOutNumString = data!!.getStringExtra("searchResult").toString()
+                                itemOutNumString = data!!.getStringExtra("item_cd").toString()
                             }
-                            itemSizeString = data!!.getStringExtra("searchResult").toString()
+                            itemSizeString = data!!.getStringExtra("qty").toString()
 
+                            if(storNameString != NO_SEARCH){
+                                if(buttonState){
+                                    Toast.makeText(activity, "입고되었습니다", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(activity, "출고되었습니다", Toast.LENGTH_SHORT).show()
+                                }
+                                storNameString = NO_SEARCH
+                                itemNameString = NO_SEARCH
+                                itemSizeString = NO_SEARCH
+                            } else {
+                                Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
