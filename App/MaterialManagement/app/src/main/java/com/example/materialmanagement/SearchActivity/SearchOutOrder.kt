@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.DTO.InInfo
 import com.example.materialmanagement.DTO.OutInfo
 import com.example.materialmanagement.DTO.StorageInfo
 import com.example.materialmanagement.R
@@ -28,6 +29,7 @@ class SearchOutOrder : AppCompatActivity() {
 
     private lateinit var myRequest : String
     private var data : List<OutInfo> = emptyList()
+    private var searchData : MutableList<OutInfo> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +40,7 @@ class SearchOutOrder : AppCompatActivity() {
         refreshBtn = findViewById(R.id.refreshBtn)
 
         val extras = intent.extras
-        val itemNumber: String?
+        var itemNumber: String? = "검색결과없음"
 
         if (extras != null) {
             itemNumber = extras.getString("query")
@@ -69,16 +71,19 @@ class SearchOutOrder : AppCompatActivity() {
                         for(i in 0..data.size-1){
                             System.out.println(data[i].ex_requ_no + ", " +  data[i].cust_cd + ", "
                                     + data[i].cust_nm);
+                            if(data[i].ex_requ_no == itemNumber.toString()){
+                                searchData.add(data[i])
+                            }
                         }
-                        outNumRecyclerAdapter = OutRecyclerAdapter(data)
+                        outNumRecyclerAdapter = OutRecyclerAdapter(searchData)
 
                         outNumRecyclerAdapter.setItemClickListener(object: OutRecyclerAdapter.OnItemClickListener{
                             override fun onClick(v: View, position: Int) {
                                 // 클릭 시 이벤트 작성
                                 val intent = Intent()
-                                intent.putExtra("ex_requ_no", data[position].ex_requ_no)
-                                intent.putExtra("cust_cd", data[position].cust_cd)
-                                intent.putExtra("cust_nm", data[position].cust_nm)
+                                intent.putExtra("ex_requ_no", searchData[position].ex_requ_no)
+                                intent.putExtra("cust_cd", searchData[position].cust_cd)
+                                intent.putExtra("cust_nm", searchData[position].cust_nm)
 
                                 setResult(RESULT_OK, intent)
                                 finish()

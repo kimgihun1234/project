@@ -95,7 +95,7 @@ class SearchBarcode : AppCompatActivity() {
                                 val intent = Intent()
                                 intent.putExtra("item_cd", data[position].item_cd)
                                 intent.putExtra("item_nm", data[position].item_nm)
-                                intent.putExtra("qty", data[position].qty)
+                                intent.putExtra("qty", data[position].qty.toString())
 
                                 setResult(RESULT_OK, intent)
                                 finish()

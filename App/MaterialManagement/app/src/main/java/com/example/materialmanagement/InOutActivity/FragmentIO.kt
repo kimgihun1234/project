@@ -15,11 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.materialmanagement.DTO.BarcodeInfo
-import com.example.materialmanagement.DTO.BarcodePostInfo
+import com.example.materialmanagement.DTO.*
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.*
-import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.BarcodeRecyclerAdapter
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -28,10 +26,13 @@ import kotlinx.android.synthetic.main.in_dialog.*
 import kotlinx.android.synthetic.main.item_number.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.materialmanagement.MainActivity
+import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.InRecyclerAdapter
+import kotlinx.android.synthetic.main.item_input.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,20 +74,38 @@ class FragmentIO : Fragment() {
     private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명, 5 : 바코드
 
     //dialog
-    private var itemInNumString : String = NO_SEARCH
-    private var itemOutNumString : String = NO_SEARCH
-    private var itemNameString : String = NO_SEARCH
-    private var storNameString : String = NO_SEARCH
-    private var itemSizeString : String = NO_SEARCH
-    private var customerNameString : String = NO_SEARCH
+    private var itemInNumString : String = NO_SEARCH // 발주번호
+    private var itemOutNumString : String = NO_SEARCH // 수주번호
+    private var itemNumString : String = NO_SEARCH // 품목번호
+    private var itemNameString : String = NO_SEARCH // 품목명
+    private var storeNumString : String = NO_SEARCH // 창고번호
+    private var storNameString : String = NO_SEARCH // 창고명
+    private var locationNumString : String = NO_SEARCH // 위치번호
+    private var locationNameString : String = NO_SEARCH // 위치명
+    private var itemSizeString : String = NO_SEARCH // 수량
+    private var customerNumString : String = NO_SEARCH // 거래처번호
+    private var customerNameString : String = NO_SEARCH // 거래처명
+
+    private var purc_in_no : String = NO_SEARCH // 입고번호
+    private var ex_no : String = NO_SEARCH // 출고번호
+
     private lateinit var itemName : TextView
     private lateinit var emp_name : TextView
     private lateinit var storName : TextView
     private lateinit var itemSize : EditText
 
     private lateinit var myRequest : String
+    private lateinit var inoutRecyclerAdapter: InoutRecyclerAdapter
+    private lateinit var recyclerView: RecyclerView
+
+    private var jwt : String = "null"
 
     private lateinit var refreshBtn : Button
+
+    val client = OkHttpClient()
+
+    val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+    val gson = GsonBuilder().setPrettyPrinting().create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,18 +118,35 @@ class FragmentIO : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-
-        //recycler view
         val view = inflater.inflate(R.layout.fragment_i_o, container, false)
-        val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
+        recyclerView = view.findViewById(R.id.item_list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = InoutRecyclerAdapter()
+        inoutRecyclerAdapter = InoutRecyclerAdapter()
+
+        inoutRecyclerAdapter.setItemClickListener(object :
+            InoutRecyclerAdapter.OnItemClickListener {
+            override fun onClick(v: View, position: Int) {
+                // 클릭 시 이벤트 작성
+
+            }
+        })
+        recyclerView.apply {
+            layoutManager =
+                LinearLayoutManager(
+                    activity,
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
+            adapter = inoutRecyclerAdapter
+        }
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        jwt = (activity as MainActivity?)?.getJwt().toString()
 
         toggleButton = view.findViewById(R.id.toggleButton)
         btnIn = view.findViewById(R.id.btnIn)
@@ -249,17 +285,20 @@ class FragmentIO : Fragment() {
         })
 
         val positiveInButtonClick = { dialogInterface: DialogInterface, i: Int ->
-            if(itemSize.getText().toString().equals("") || itemSize.getText().toString() == null){
+            itemSizeString = itemSize.text.toString()
+            Log.d("Item Size", itemSizeString)
+            if(itemSizeString.equals("") || itemSizeString == null){
                 Toast.makeText(activity, "수량을 입력해주세요", Toast.LENGTH_SHORT).show()
                 dialogInterface.dismiss()
             } else {
-                Toast.makeText(activity, "입고되었습니다", Toast.LENGTH_SHORT).show()
+                storageInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+
                 itemNameString = NO_SEARCH
                 storNameString = NO_SEARCH
             }
         }
         val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
-            Toast.makeText(activity, "출고되었습니다", Toast.LENGTH_SHORT).show()
+            unstoringInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
         }
         val negativeButtonClick = { dialogInterface: DialogInterface, i: Int ->
 
@@ -283,7 +322,7 @@ class FragmentIO : Fragment() {
             if(itemNameString != NO_SEARCH && storNameString != NO_SEARCH){
                 setDate.setText(simpleDateFormat)
                 itemName.text = itemNameString
-                storName.text = storNameString
+                storName.text = storNameString + " / " + locationNameString
 
                 if(itemSizeString != NO_SEARCH){
                     itemSize.setText(itemSizeString)
@@ -331,10 +370,7 @@ class FragmentIO : Fragment() {
         if (scanningResult != null) { //정상적으로 전달
             if (scanningResult.contents != null) { //result 값
                 Log.d("Barcode", scanningResult.contents)
-                val client = OkHttpClient()
 
-                val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
-                val gson = GsonBuilder().setPrettyPrinting().create()
                 val data = BarcodePostInfo(scanningResult.contents.toString())
                 val jsonString = gson.toJson(data)
                 val formBody: RequestBody = RequestBody.create(JSON, jsonString)
@@ -358,32 +394,28 @@ class FragmentIO : Fragment() {
                             var data : BarcodeInfo = Gson().fromJson(myRequest, BarcodeInfo::class.java)
                             activity!!.runOnUiThread {
                                 itemNameString = data.item_nm
-                                if(buttonState){
-                                    itemInNumString = data.item_cd
-                                } else {
-                                    itemOutNumString = data.item_cd
-                                }
+                                itemNumString = data.item_cd
                                 itemSizeString = data.qty.toString()
 
                                 Log.d("Barcode", data.item_nm + " "
                                 + data.item_cd + " " + data.qty.toString())
+
+                                if(storNameString != NO_SEARCH){
+                                    if(buttonState){
+                                        storageInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+                                    } else {
+                                        unstoringInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+                                    }
+                                    storNameString = NO_SEARCH
+                                    itemNameString = NO_SEARCH
+                                    itemSizeString = NO_SEARCH
+                                } else {
+                                    Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }
                 })
-
-                if(storNameString != NO_SEARCH){
-                    if(buttonState){
-                        Toast.makeText(activity, "입고되었습니다", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(activity, "출고되었습니다", Toast.LENGTH_SHORT).show()
-                    }
-                    storNameString = NO_SEARCH
-                    itemNameString = NO_SEARCH
-                    itemSizeString = NO_SEARCH
-                } else {
-                    Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
-                }
             }
         }
 
@@ -393,39 +425,38 @@ class FragmentIO : Fragment() {
                     // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명, 5 : 바코드
                     when(searchCategory){
                         1 -> {
-                            // cust_cd
                             itemInNumString = data!!.getStringExtra("plord_no").toString()
                             customerNameString = data!!.getStringExtra("cust_nm").toString()
+                            customerNumString = data!!.getStringExtra("cust_cd").toString()
                             searchCustomer.setText(customerNameString)
                         }
                         2 -> {
-                            // cust_cd
                             itemOutNumString = data!!.getStringExtra("ex_requ_no").toString()
                             customerNameString = data!!.getStringExtra("cust_nm").toString()
+                            customerNumString = data!!.getStringExtra("cust_cd").toString()
                             searchCustomer.setText(customerNameString)
                         }
                         3 -> {
-                            //stor_cd loca_cd
                             storNameString = data!!.getStringExtra("stor_nm").toString()
+                            storeNumString = data!!.getStringExtra("stor_cd").toString()
+                            locationNameString = data!!.getStringExtra("loca_nm").toString()
+                            locationNumString = data!!.getStringExtra("loca_cd").toString()
                         }
                         4 -> {
-                            //item_cd
                             itemNameString = data!!.getStringExtra("item_nm").toString()
+                            itemNumString = data!!.getStringExtra("item_cd").toString()
                         }
                         5 -> {
+                            Log.d("getTest", "barcode Get")
                             itemNameString = data!!.getStringExtra("item_nm").toString()
-                            if(buttonState){
-                                itemInNumString = data!!.getStringExtra("item_cd").toString()
-                            } else {
-                                itemOutNumString = data!!.getStringExtra("item_cd").toString()
-                            }
+                            itemNumString = data!!.getStringExtra("item_cd").toString()
                             itemSizeString = data!!.getStringExtra("qty").toString()
 
                             if(storNameString != NO_SEARCH){
                                 if(buttonState){
-                                    Toast.makeText(activity, "입고되었습니다", Toast.LENGTH_SHORT).show()
+                                    storageInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
                                 } else {
-                                    Toast.makeText(activity, "출고되었습니다", Toast.LENGTH_SHORT).show()
+                                    unstoringInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
                                 }
                                 storNameString = NO_SEARCH
                                 itemNameString = NO_SEARCH
@@ -440,6 +471,80 @@ class FragmentIO : Fragment() {
         } else {
             Toast.makeText(activity, "검색결과없음", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun storageInsert(customerNumString : String, storeNumString: String, locationNumString: String,
+                      itemNumString: String, itemSizeString: String, jwt: String) {
+        val data = InPostInfo(customerNumString, storeNumString, locationNumString, itemNumString,
+            itemSizeString.toDouble())
+        val jsonString = gson.toJson(data)
+        System.out.println(jsonString)
+        val formBody: RequestBody = RequestBody.create(JSON, jsonString)
+
+        val url = "http://101.101.208.223:8080/storingInsert?jwt=$jwt"
+        val request: Request = Request.Builder()
+            .url(url)
+            .post(formBody)
+            .build();
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                activity!!.runOnUiThread { Log.d("test", "failt") }
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    myRequest = response.body!!.string()
+                    System.out.println(myRequest)
+                    var data : StoringInsertInfo = Gson().fromJson(myRequest, StoringInsertInfo::class.java)
+                    activity!!.runOnUiThread {
+                        purc_in_no = data.purc_in_no
+
+                        Log.d("Storing Insert", data.purc_in_no)
+
+                        Toast.makeText(activity, "$purc_in_no 입고되었습니다", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun unstoringInsert(customerNumString : String, storeNumString: String, locationNumString: String,
+                      itemNumString: String, itemSizeString: String, jwt: String) {
+        val data = InPostInfo(customerNumString, storeNumString, locationNumString, itemNumString,
+            itemSizeString.toDouble())
+        val jsonString = gson.toJson(data)
+        System.out.println(jsonString)
+        val formBody: RequestBody = RequestBody.create(JSON, jsonString)
+
+        val url = "http://101.101.208.223:8080/unstoringInsert?jwt=$jwt"
+        val request: Request = Request.Builder()
+            .url(url)
+            .post(formBody)
+            .build();
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                activity!!.runOnUiThread { Log.d("test", "failt") }
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    myRequest = response.body!!.string()
+                    System.out.println(myRequest)
+                    var data : UnstoringInsertInfo = Gson().fromJson(myRequest, UnstoringInsertInfo::class.java)
+                    activity!!.runOnUiThread {
+                        ex_no = data.ex_no
+
+                        Log.d("Unstoring Insert", data.ex_no)
+
+                        Toast.makeText(activity, "$ex_no 출고되었습니다", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
     }
 
     companion object {

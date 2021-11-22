@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.DTO.InInfo
 import com.example.materialmanagement.DTO.StorageInfo
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.StorageRecyclerAdapter
@@ -30,6 +31,7 @@ class SearchStorage : AppCompatActivity() {
 
     private lateinit var myRequest : String
     private var data : List<StorageInfo> = emptyList()
+    private var searchData : MutableList<StorageInfo> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,17 +77,22 @@ class SearchStorage : AppCompatActivity() {
                     runOnUiThread {
                         for(i in 0..data.size-1){
                             System.out.println(data[i].stor_cd + ", " +  data[i].stor_nm + ", "
-                                    + data[i].loca_cd+ ", " +  data[i].loca_nm);
+                                    + data[i].loca_cd+ ", " +  data[i].loca_nm)
+                            if(data[i].stor_nm == itemNumber.toString()
+                                || data[i].loca_nm == itemNumber.toString()){
+                                searchData.add(data[i])
+                            }
                         }
-                        storageRecyclerAdapter = StorageRecyclerAdapter(data)
+                        storageRecyclerAdapter = StorageRecyclerAdapter(searchData)
 
                         storageRecyclerAdapter.setItemClickListener(object: StorageRecyclerAdapter.OnItemClickListener{
                             override fun onClick(v: View, position: Int) {
                                 // 클릭 시 이벤트 작성
                                 val intent = Intent()
-                                intent.putExtra("stor_cd", data[position].stor_cd)
-                                intent.putExtra("stor_nm", data[position].stor_nm)
-                                intent.putExtra("loca_cd", data[position].loca_cd)
+                                intent.putExtra("stor_cd", searchData[position].stor_cd)
+                                intent.putExtra("stor_nm", searchData[position].stor_nm)
+                                intent.putExtra("loca_cd", searchData[position].loca_cd)
+                                intent.putExtra("loca_nm", searchData[position].loca_nm)
 
                                 setResult(RESULT_OK, intent)
                                 finish()

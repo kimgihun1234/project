@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.DTO.InInfo
 import com.example.materialmanagement.DTO.ItemInfo
 import com.example.materialmanagement.DTO.StorageInfo
 import com.example.materialmanagement.R
@@ -32,6 +33,7 @@ class SearchItem : AppCompatActivity() {
 
     private lateinit var myRequest : String
     private var data : List<ItemInfo> = emptyList()
+    private var searchData : MutableList<ItemInfo> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,15 +79,18 @@ class SearchItem : AppCompatActivity() {
                     runOnUiThread {
                         for(i in 0..data.size-1){
                             System.out.println(data[i].item_cd + ", " +  data[i].item_nm);
+                            if(data[i].item_nm == itemNumber.toString()){
+                                searchData.add(data[i])
+                            }
                         }
-                        itemRecyclerView = ItemRecyclerAdapter(data)
+                        itemRecyclerView = ItemRecyclerAdapter(searchData)
 
                         itemRecyclerView.setItemClickListener(object: ItemRecyclerAdapter.OnItemClickListener{
                             override fun onClick(v: View, position: Int) {
                                 // 클릭 시 이벤트 작성
                                 val intent = Intent()
-                                intent.putExtra("item_cd", data[position].item_cd)
-                                intent.putExtra("item_nm", data[position].item_nm)
+                                intent.putExtra("item_cd", searchData[position].item_cd)
+                                intent.putExtra("item_nm", searchData[position].item_nm)
 
                                 setResult(RESULT_OK, intent)
                                 finish()

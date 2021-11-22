@@ -32,6 +32,7 @@ class SearchInOrder : AppCompatActivity() {
 
     private lateinit var myRequest : String
     private var data : List<InInfo> = emptyList()
+    private var searchData : MutableList<InInfo> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,18 +79,21 @@ class SearchInOrder : AppCompatActivity() {
                             System.out.println(
                                 data[i].plord_no + ", " + data[i].cust_nm + ", "
                                         + data[i].cust_cd
-                            );
+                            )
+                            if(data[i].plord_no == itemNumber.toString()){
+                                searchData.add(data[i])
+                            }
                         }
-                        inRecyclerAdapter = InRecyclerAdapter(data)
+                        inRecyclerAdapter = InRecyclerAdapter(searchData)
 
                         inRecyclerAdapter.setItemClickListener(object :
                             InRecyclerAdapter.OnItemClickListener {
                             override fun onClick(v: View, position: Int) {
                                 // 클릭 시 이벤트 작성
                                 val intent = Intent()
-                                intent.putExtra("plord_no", data[position].plord_no)
-                                intent.putExtra("cust_nm", data[position].cust_nm)
-                                intent.putExtra("cust_cd", data[position].cust_cd)
+                                intent.putExtra("plord_no", searchData[position].plord_no)
+                                intent.putExtra("cust_nm", searchData[position].cust_nm)
+                                intent.putExtra("cust_cd", searchData[position].cust_cd)
 
                                 setResult(RESULT_OK, intent)
                                 finish()
