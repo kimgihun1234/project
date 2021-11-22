@@ -11,6 +11,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -119,7 +121,7 @@ public class UnstoringReturnController {
         List<String> jwtInfo = InfoTokenizer.getInfo(securityService.getSubject(jwt));
 
         for(String temp : jwtInfo) {
-            System.out.println(temp);
+            // System.out.println(temp);
         }
 
         searchResult = unstoringReturnService.checkFormerUnstoringReturnList(); // 오늘 날짜 기준으로 이미 출고 반품된 적이 있는지 확인
@@ -160,20 +162,35 @@ public class UnstoringReturnController {
         return result; // 오류가 없었으면 return
     }
 
+    @Alias("unstoringreturndeleteresult")
+    @Getter
+    @Setter
+    @ToString
+    public class DeleteResult {
+        int result;
+        // String qty;
+
+        public DeleteResult() {}
+    }
     /* 출고반품번호/품목코드 * n */
     @PostMapping("/unstoringReturnDelete")
-    public boolean deleteUnstoringReturn(@RequestBody List<DeleteInfo> input) {
-        boolean result = false;
-        UnstoringReturnDTO storedData; UnstoringReturnDetailDTO storedDetailData;
+    public ResponseEntity<DeleteResult> deleteUnstoringReturn(@RequestBody List<DeleteInfo> input) {
+        DeleteResult result = new DeleteResult();
+        UnstoringReturnDTO storedData; UnstoringReturnDetailDTO storedDetailData; UnstoringReturnDetailDTO checkingData = null;
         List<UnstoringReturnDetailDTO> searchResult;
 
+        int check = 0;
         for(DeleteInfo info : input) { // 들어온 String의 갯수만큼 반복해서 처리
             searchResult = unstoringReturnDetailService.checkUnstoringReturnDetailList(info.getNo()); // 해당 출고 반품 번호에 대한 상세 리스트를 먼저 불러옴
+            if(searchResult.isEmpty()) { // 검색 결과가 아예 없으면
+                result.result = check + 1; // 순서 중에 몇 번째까지만 진행되었음을 return
+                return new ResponseEntity(result, HttpStatus.SERVICE_UNAVAILABLE); // 503으로 반환
+            }
 
             storedDetailData = new UnstoringReturnDetailDTO(info.getNo(), info.getItem_cd(), info.getQty()); // delete를 위한 class 생성
-            unstoringReturnDetailService.unstoringReturnDetailDelete(storedDetailData);
 
             for(UnstoringReturnDetailDTO listTemp : searchResult) { // 같은 물품 번호가 있는 상세 정보에 대해 먼저 찾음
+                checkingData = new UnstoringReturnDetailDTO(listTemp.getEx_retu_no(), listTemp.getItem_cd(), -listTemp.getQty());
                 if(info.getItem_cd().equals(listTemp.getItem_cd())) { // 만약 같은 물품 번호가 있으면
                     unstoringReturnDetailService.unstoringReturnDetailUpdate(storedDetailData);// 갯수 업데이트를 먼저 실시
                     break;
@@ -184,14 +201,23 @@ public class UnstoringReturnController {
 
             searchResult = unstoringReturnDetailService.checkUnstoringReturnDetailList(info.getNo()); // Delete 이후 List를 확인
 
+            for(UnstoringReturnDetailDTO listTemp : searchResult) { // delete 결과 확인
+                if((checkingData.getQty() - info.getQty()) != (listTemp.getQty())) { // 예상한대로 Delete되지 않았으면(갯수가 맞지 않음, 삭제하려는 데이터가 없었음)
+                    result.result = check + 1; // 순서 중에 몇 번째까지만 진행되었음을 return
+                    return new ResponseEntity(result, HttpStatus.SERVICE_UNAVAILABLE); // 503으로 반환
+                }
+            }
+
             if(searchResult.isEmpty()) { // 더이상 해당 출고 반품 번호에 대한 출고 반품 상세 정보가 없으면
                 storedData = unstoringReturnService.unstoringReturnOne(info.getNo()); // 출고 반품 정보 삭제를 위해 해당 출고 반품 정보를 갖고 오고
                 unstoringReturnService.unstoringReturnDelete(storedData); // 그 출고 반품 정보를 삭제
             }
+
+            check++;
         }
 
-        result = true;
+        result.result = 0;
 
-        return result;
+        return new ResponseEntity(result, HttpStatus.OK);
     }
 }
