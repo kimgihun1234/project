@@ -28,6 +28,7 @@ public class UserController {
     @Setter
     @ToString
     public class ResultClass {
+        String emp_nm;
         String data;
     }
 
@@ -46,6 +47,7 @@ public class UserController {
 
         UserDTO searchTemp = searchResult.get(0);
 
+        result.emp_nm = searchTemp.getEmp_nm();
         result.data = securityService.createTime(searchTemp.getEmp_no() + "/"
                 + searchTemp.getCorp_cd() + "/"
                 + searchTemp.getBusi_cd(), 60 * 600 * 1000); // 시간 * 분 * 밀리초

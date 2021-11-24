@@ -51,6 +51,10 @@ public class UserDTO {
         return emp_no;
     }
 
+    public String getEmp_nm() {
+        return emp_nm;
+    }
+
     public String getCorp_cd() {
         return corp_cd;
     }
