@@ -1,19 +1,22 @@
 package com.example.materialmanagement.SearchActivity
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.DTO.CustomerInfo
 import com.example.materialmanagement.R
-import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.BarcodeRecyclerAdapter
 import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.CustomerRecyclerAdapter
 import com.google.android.material.tabs.TabItem
+import com.google.gson.Gson
+import okhttp3.*
+import java.io.IOException
 
 
 class SearchCustomer : AppCompatActivity() {
@@ -23,6 +26,13 @@ class SearchCustomer : AppCompatActivity() {
     private lateinit var orderBasic : Button
 
     private lateinit var customerRecyclerAdapter: CustomerRecyclerAdapter
+
+    private lateinit var myRequest : String
+    private var data : List<CustomerInfo> = emptyList()
+    private var searchData : MutableList<CustomerInfo> = mutableListOf()
+    private lateinit var recyclerView: RecyclerView
+
+    private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,32 +51,74 @@ class SearchCustomer : AppCompatActivity() {
         }
 
         orderBasic.setOnClickListener { // 반환값 테스트
-            val intent = Intent()
-            intent.putExtra("searchResult", itemNumber.toString())
-            setResult(Activity.RESULT_OK, intent)
-            finish()
+            Toast.makeText(this, "기본순", Toast.LENGTH_SHORT).show()
         }
+
+        if (itemNumber != null) {
+            getCustomer(itemNumber)
+        }
+
+        recyclerView = this.findViewById(R.id.in_num_list)
 
         refreshBtn.setOnClickListener {
+            if (itemNumber != null) {
+                getCustomer(itemNumber)
+            }
             Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        customerRecyclerAdapter = CustomerRecyclerAdapter()
+    fun getCustomer(itemNumber : String){
+        val url = "http://101.101.208.223:8080/customerList"
+        val request: Request = Request.Builder()
+            .url(url)
+            .get()
+            .build();
 
-        customerRecyclerAdapter.setItemClickListener(object: CustomerRecyclerAdapter.OnItemClickListener{
-            override fun onClick(v: View, position: Int) {
-                // 클릭 시 이벤트 작성
-                val intent = Intent()
-                intent.putExtra("searchResult", itemNumber.toString()) //번호 넘겨주기
-                setResult(Activity.RESULT_OK, intent)
-                finish()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread{ Log.d("test","fail")}
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    myRequest = response.body!!.string()
+                    data = Gson().fromJson(myRequest, Array<CustomerInfo>::class.java).toList()
+                    runOnUiThread {
+                        for (i in 0..data.size - 1) {
+                            System.out.println(
+                                data[i].cust_cd + ", " + data[i].cust_nm
+                            )
+                            if(data[i].cust_nm == itemNumber){
+                                searchData.add(data[i])
+                            }
+                        }
+                        customerRecyclerAdapter = CustomerRecyclerAdapter(searchData)
+
+                        customerRecyclerAdapter.setItemClickListener(object :
+                            CustomerRecyclerAdapter.OnItemClickListener {
+                            override fun onClick(v: View, position: Int) {
+                                val intent = Intent()
+                                intent.putExtra("cust_nm", searchData[position].cust_nm)
+                                intent.putExtra("cust_cd", searchData[position].cust_cd)
+
+                                setResult(RESULT_OK, intent)
+                                finish()
+                            }
+                        })
+                        recyclerView.apply {
+                            layoutManager =
+                                LinearLayoutManager(
+                                    this@SearchCustomer,
+                                    LinearLayoutManager.VERTICAL,
+                                    false
+                                )
+                            adapter = customerRecyclerAdapter
+                        }
+                    }
+                }
             }
         })
-
-        this.findViewById<RecyclerView>(R.id.in_num_list).apply {
-            layoutManager =
-                LinearLayoutManager(this@SearchCustomer, LinearLayoutManager.VERTICAL,false)
-            adapter = customerRecyclerAdapter
-        }
     }
 }

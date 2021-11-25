@@ -70,8 +70,6 @@ class FragmentReturn : Fragment() {
     private val NO_SEARCH : String = "null"
     private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명, 5 : 바코드
 
-    //dialog
-
     private var itemInNumString : String = NO_SEARCH // 발주번호
     private var itemOutNumString : String = NO_SEARCH // 수주번호
     private var itemNumString : String = NO_SEARCH // 품목번호
@@ -136,7 +134,6 @@ class FragmentReturn : Fragment() {
                 adapter = outReturnRecyclerAdapter
             }
         }
-
         return view
     }
 
@@ -220,7 +217,6 @@ class FragmentReturn : Fragment() {
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
                 return true
             }
         })
@@ -234,7 +230,6 @@ class FragmentReturn : Fragment() {
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
                 return true
             }
         })
@@ -248,7 +243,6 @@ class FragmentReturn : Fragment() {
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
                 return true
             }
         })
@@ -262,7 +256,6 @@ class FragmentReturn : Fragment() {
                 return true
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
                 return true
             }
         })
@@ -624,8 +617,8 @@ class FragmentReturn : Fragment() {
             })
         } else {
             val url = "http://101.101.208.223:8080/unstoringReturnDelete"
-            var jsonString: String = ""
-            var deleteQty : Int = 0
+            var jsonString = ""
+            var deleteQty = 0
 
             for (i in 0..outDataPositionList.size - 1) {
                 val no = outData[outDataPositionList[i]].no

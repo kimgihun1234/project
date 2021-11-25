@@ -191,7 +191,6 @@ class FragmentIO : Fragment() {
             }
         }
 
-        //새로 고침 버튼
         refreshBtn.setOnClickListener{
             Toast.makeText(activity, "refresh", Toast.LENGTH_SHORT).show()
         }
@@ -291,7 +290,7 @@ class FragmentIO : Fragment() {
 
         }
 
-        //입고 dialog // 현재 시간
+        //입고 dialog
         putBtn.setOnClickListener {
             dialogView = View.inflate(view.context, R.layout.in_dialog, null)
 
@@ -502,7 +501,7 @@ class FragmentIO : Fragment() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                activity!!.runOnUiThread { Log.d("test", "failt") }
+                activity!!.runOnUiThread { Log.d("test", "fail") }
             }
 
             @Throws(IOException::class)
@@ -596,7 +595,7 @@ class FragmentIO : Fragment() {
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    activity!!.runOnUiThread { Log.d("test", "failt") }
+                    activity!!.runOnUiThread { Log.d("test", "fail") }
                 }
 
                 @Throws(IOException::class)
@@ -633,8 +632,8 @@ class FragmentIO : Fragment() {
             })
         } else {
             val url = "http://101.101.208.223:8080/unstoringDelete"
-            var jsonString: String = ""
-            var deleteQty : Int = 0
+            var jsonString = ""
+            var deleteQty = 0
 
             for (i in 0..outDataPositionList.size - 1) {
                 val no = outData[outDataPositionList[i]].no
@@ -657,7 +656,7 @@ class FragmentIO : Fragment() {
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    activity!!.runOnUiThread { Log.d("test", "failt") }
+                    activity!!.runOnUiThread { Log.d("test", "fail") }
                 }
 
                 @Throws(IOException::class)

@@ -19,7 +19,9 @@ import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.ItemRec
 import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.StorageRecyclerAdapter
 import com.google.android.material.tabs.TabItem
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.IOException
 
 //품목 검색
@@ -35,6 +37,8 @@ class SearchItem : AppCompatActivity() {
     private var data : List<ItemInfo> = emptyList()
     private var searchData : MutableList<ItemInfo> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
+
+    private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,10 +61,20 @@ class SearchItem : AppCompatActivity() {
         }
 
         recyclerView = this.findViewById(R.id.in_num_list)
+        if (itemNumber != null) {
+            getItem(itemNumber)
+        }
 
-        val client = OkHttpClient()
+        refreshBtn.setOnClickListener {
+            if (itemNumber != null) {
+                getItem(itemNumber)
+            }
+            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun getItem(itemNumber:String){
         val url = "http://101.101.208.223:8080/itemList"
-        //-> String item_cd item_nm
         val request: Request = Request.Builder()
             .url(url)
             .get()
@@ -106,9 +120,5 @@ class SearchItem : AppCompatActivity() {
                 }
             }
         })
-
-        refreshBtn.setOnClickListener {
-            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
-        }
     }
 }

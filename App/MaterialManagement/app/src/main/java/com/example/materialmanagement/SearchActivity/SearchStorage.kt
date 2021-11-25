@@ -34,6 +34,8 @@ class SearchStorage : AppCompatActivity() {
     private var searchData : MutableList<StorageInfo> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
 
+    private val client = OkHttpClient()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_storage)
@@ -56,9 +58,20 @@ class SearchStorage : AppCompatActivity() {
 
         recyclerView = this.findViewById(R.id.in_num_list)
 
-        val client = OkHttpClient()
+        if (itemNumber != null) {
+            getStorage(itemNumber)
+        }
+
+        refreshBtn.setOnClickListener {
+            if (itemNumber != null) {
+                getStorage(itemNumber)
+            }
+            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun getStorage(itemNumber : String){
         val url = "http://101.101.208.223:8080/locationList"
-        //-> String stor_cd stor_nm loca_cd loca_nm
         val request: Request = Request.Builder()
             .url(url)
             .get()
@@ -108,9 +121,5 @@ class SearchStorage : AppCompatActivity() {
                 }
             }
         })
-
-        refreshBtn.setOnClickListener {
-            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
-        }
     }
 }

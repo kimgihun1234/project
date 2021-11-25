@@ -17,7 +17,9 @@ import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.OutRecy
 import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.StorageRecyclerAdapter
 import com.google.android.material.tabs.TabItem
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.IOException
 
 //수주번호검색
@@ -31,6 +33,10 @@ class SearchOutOrder : AppCompatActivity() {
     private var data : List<OutInfo> = emptyList()
     private var searchData : MutableList<OutInfo> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
+
+    private val client = OkHttpClient()
+    private val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+    private val gson = GsonBuilder().setPrettyPrinting().create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +55,20 @@ class SearchOutOrder : AppCompatActivity() {
 
         recyclerView = this.findViewById(R.id.in_num_list)
 
-        val client = OkHttpClient()
+        if (itemNumber != null) {
+            getOutOrder(itemNumber)
+        }
+
+        refreshBtn.setOnClickListener {
+            if (itemNumber != null) {
+                getOutOrder(itemNumber)
+            }
+            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun getOutOrder(itemNumber: String){
         val url = "http://101.101.208.223:8080/offerList"
-        //-> String stor_cd stor_nm loca_cd loca_nm
         val request: Request = Request.Builder()
             .url(url)
             .get()
@@ -79,7 +96,6 @@ class SearchOutOrder : AppCompatActivity() {
 
                         outNumRecyclerAdapter.setItemClickListener(object: OutRecyclerAdapter.OnItemClickListener{
                             override fun onClick(v: View, position: Int) {
-                                // 클릭 시 이벤트 작성
                                 val intent = Intent()
                                 intent.putExtra("ex_requ_no", searchData[position].ex_requ_no)
                                 intent.putExtra("cust_cd", searchData[position].cust_cd)
@@ -99,9 +115,5 @@ class SearchOutOrder : AppCompatActivity() {
                 }
             }
         })
-
-        refreshBtn.setOnClickListener {
-            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
-        }
     }
 }

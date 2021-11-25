@@ -18,7 +18,9 @@ import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.InRecyc
 import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.StorageRecyclerAdapter
 import com.google.android.material.tabs.TabItem
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.IOException
 
 //발주번호검색
@@ -34,6 +36,8 @@ class SearchInOrder : AppCompatActivity() {
     private var data : List<InInfo> = emptyList()
     private var searchData : MutableList<InInfo> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
+
+    private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,9 +59,21 @@ class SearchInOrder : AppCompatActivity() {
             Toast.makeText(this, "기본순", Toast.LENGTH_SHORT).show()
         }
 
+        if (itemNumber != null) {
+            getInOrder(itemNumber)
+        }
+
         recyclerView = this.findViewById(R.id.in_num_list)
 
-        val client = OkHttpClient()
+        refreshBtn.setOnClickListener {
+            if (itemNumber != null) {
+                getInOrder(itemNumber)
+            }
+            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun getInOrder(itemNumber : String){
         val url = "http://101.101.208.223:8080/orderList"
         val request: Request = Request.Builder()
             .url(url)
@@ -66,7 +82,7 @@ class SearchInOrder : AppCompatActivity() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread{ Log.d("test","failt")}
+                runOnUiThread{ Log.d("test","fail")}
             }
 
             @Throws(IOException::class)
@@ -80,7 +96,7 @@ class SearchInOrder : AppCompatActivity() {
                                 data[i].plord_no + ", " + data[i].cust_nm + ", "
                                         + data[i].cust_cd
                             )
-                            if(data[i].plord_no == itemNumber.toString()){
+                            if(data[i].plord_no == itemNumber){
                                 searchData.add(data[i])
                             }
                         }
@@ -112,9 +128,5 @@ class SearchInOrder : AppCompatActivity() {
                 }
             }
         })
-
-        refreshBtn.setOnClickListener {
-            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
-        }
     }
 }

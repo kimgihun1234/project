@@ -1,5 +1,6 @@
 package com.example.materialmanagement.StateActivity.TabFragments
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +40,10 @@ class FragmentInState : Fragment() {
 
     private lateinit var intent : Intent
 
+    private val NO_SEARCH : String = "null"
+    private var customerNameString : String = NO_SEARCH // 발주번호
+    private var customerNumString : String = NO_SEARCH // 수주번호
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -50,8 +56,6 @@ class FragmentInState : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        //recycler view
         val view = inflater.inflate(R.layout.fragment_in_state, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -75,7 +79,8 @@ class FragmentInState : Fragment() {
                 // 검색 버튼 누를 때 호출
                 intent = Intent(getActivity(), SearchCustomer::class.java)
                 intent.putExtra("query", query)
-                getActivity()?.startActivity(intent)
+                startActivityForResult(intent, 100)
+
                 return true
             }
 
@@ -103,6 +108,21 @@ class FragmentInState : Fragment() {
             dateRangePicker.addOnPositiveButtonClickListener {
                 dateText.setText(dateRangePicker.headerText)
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                100 -> {
+                    customerNameString = data!!.getStringExtra("cust_nm").toString()
+                    customerNumString = data!!.getStringExtra("cust_cd").toString()
+                    Toast.makeText(activity, "$customerNameString $customerNumString", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            Toast.makeText(activity, "검색결과없음", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -38,6 +38,10 @@ class SearchBarcode : AppCompatActivity() {
     private var data : List<BarcodeInfo> = emptyList()
     private lateinit var recyclerView: RecyclerView
 
+    private val client = OkHttpClient()
+    private val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+    private val gson = GsonBuilder().setPrettyPrinting().create()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_barcode)
@@ -55,11 +59,20 @@ class SearchBarcode : AppCompatActivity() {
 
         recyclerView = this.findViewById(R.id.in_num_list)
 
-        val client = OkHttpClient()
+        if (barcodeNumber != null) {
+            getBarcode(barcodeNumber)
+        }
 
-        val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
-        val gson = GsonBuilder().setPrettyPrinting().create()
-        val postData = BarcodePostInfo(barcodeNumber.toString())
+        refreshBtn.setOnClickListener {
+            if (barcodeNumber != null) {
+                getBarcode(barcodeNumber)
+            }
+            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun getBarcode(barcodeNumber : String){
+        val postData = BarcodePostInfo(barcodeNumber)
         val jsonString = gson.toJson(postData)
 
         val formBody: RequestBody = RequestBody.create(JSON, jsonString)
@@ -72,7 +85,7 @@ class SearchBarcode : AppCompatActivity() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread{ Log.d("test","failt")}
+                runOnUiThread{ Log.d("test","fail")}
             }
 
             @Throws(IOException::class)
@@ -91,7 +104,6 @@ class SearchBarcode : AppCompatActivity() {
 
                         barcodeRecyclerAdapter.setItemClickListener(object: BarcodeRecyclerAdapter.OnItemClickListener{
                             override fun onClick(v: View, position: Int) {
-                                // 클릭 시 이벤트 작성
                                 val intent = Intent()
                                 intent.putExtra("item_cd", data[position].item_cd)
                                 intent.putExtra("item_nm", data[position].item_nm)
@@ -111,9 +123,5 @@ class SearchBarcode : AppCompatActivity() {
                 }
             }
         })
-
-        refreshBtn.setOnClickListener {
-            Toast.makeText(this, "refresh", Toast.LENGTH_SHORT).show()
-        }
     }
 }

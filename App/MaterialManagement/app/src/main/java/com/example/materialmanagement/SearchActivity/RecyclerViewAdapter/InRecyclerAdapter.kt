@@ -16,7 +16,6 @@ import java.util.*
 
 class InRecyclerAdapter(private var myRequest: List<InInfo>) : RecyclerView.Adapter<InRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_number, parent, false)
 
         return MyViewHolder(itemView)
