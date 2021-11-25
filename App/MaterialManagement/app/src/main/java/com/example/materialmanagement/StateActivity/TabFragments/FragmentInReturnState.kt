@@ -1,20 +1,33 @@
 package com.example.materialmanagement.StateActivity.TabFragments
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.DTO.StoringReturnListGetData
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.SearchCustomer
 import com.example.materialmanagement.StateActivity.TabRecyclerAdapter.InReturnStateRecyclerAdapter
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
+import com.google.gson.Gson
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+import androidx.core.util.Pair
+import com.example.materialmanagement.DTO.StatePostData
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +39,8 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FragmentInReturn.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+//입고반품조회
 class FragmentInReturnState : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -35,7 +50,20 @@ class FragmentInReturnState : Fragment() {
     private lateinit var dateText : TextView
     private lateinit var searchDate : ImageButton
 
+    private val NO_SEARCH : String = ""
+
+    private var startDate : String = NO_SEARCH // 선택 날짜 1
+    private var endDate : String = NO_SEARCH // 선택 날짜 2
+    private var itemNumstring : String = NO_SEARCH // 품목번
+    private var customerNumString : String = NO_SEARCH // 거래처번호
+    private var customerNameString : String = NO_SEARCH // 거래처명
+
     private lateinit var intent : Intent
+
+    private lateinit var myRequest : String
+    private var data : List<InReturnStateRecyclerAdapter> = emptyList()
+    private var searchData : MutableList<InReturnStateRecyclerAdapter> = mutableListOf()
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +77,9 @@ class FragmentInReturnState : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //recycler view
         val view = inflater.inflate(R.layout.fragment_in_state, container, false)
-        val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
+        recyclerView = view.findViewById(R.id.item_list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = InReturnStateRecyclerAdapter()
 
         return view
     }
@@ -69,18 +95,13 @@ class FragmentInReturnState : Fragment() {
 
         searchCustomer.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
-                // 검색 버튼 누를 때 호출
                 intent = Intent(getActivity(), SearchCustomer::class.java)
                 intent.putExtra("query", query)
-                getActivity()?.startActivity(intent)
+                startActivityForResult(intent, 100)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
-
                 return true
             }
         })
@@ -98,10 +119,83 @@ class FragmentInReturnState : Fragment() {
                     .build()
 
             dateRangePicker.show(childFragmentManager, "date_picker")
-            dateRangePicker.addOnPositiveButtonClickListener {
-                dateText.setText(dateRangePicker.headerText)
-            }
+            dateRangePicker.addOnPositiveButtonClickListener(object :
+                MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>> {
+                override fun onPositiveButtonClick(selection: Pair<Long, Long>?) {
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = selection?.first ?: 0
+                    startDate = SimpleDateFormat("yyyyMMdd").format(calendar.time).toString()
+                    Log.d("start", startDate)
+
+                    calendar.timeInMillis = selection?.second ?: 0
+                    endDate = SimpleDateFormat("yyyyMMdd").format(calendar.time).toString()
+                    Log.d("end", endDate)
+
+                    dateText.setText(dateRangePicker.headerText)
+                    getInstance(customerNumString, startDate, endDate, itemNumstring)
+                }
+            })
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                100 -> {
+                    customerNameString = data!!.getStringExtra("cust_nm").toString()
+                    customerNumString = data!!.getStringExtra("cust_cd").toString()
+                    System.out.println(customerNameString + " " + customerNumString)
+                }
+            }
+        } else {
+            Toast.makeText(activity, "검색결과없음", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun getInstance(customerNumString : String, startDate : String, endDate : String, itemNumstring: String){
+        val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+
+        val postData = StatePostData(customerNumString, startDate, endDate, itemNumstring)
+        val jsonString = Gson().toJson(postData)
+        System.out.println(jsonString)
+
+        val formBody: RequestBody = RequestBody.create(JSON, jsonString)
+
+        val url = "http://101.101.208.223:8080/storingReturnList"
+        val request: Request = Request.Builder()
+            .url(url)
+            .post(formBody)
+            .build();
+
+        var client = OkHttpClient()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                activity!!.runOnUiThread{ Log.d("test","fail")}
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val myRequest = response.body!!.string()
+                    val data = Gson().fromJson(myRequest, Array<StoringReturnListGetData>::class.java).toList()
+
+                    activity!!.runOnUiThread{
+                        for(i in 0..data.size-1){
+                            System.out.println(data[i].item_cd + ", " +  data[i].item_nm);
+                        }
+
+                        val inReturnStateRecyclerAdapter = InReturnStateRecyclerAdapter(data)
+
+                        recyclerView.apply {
+                            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+                            adapter = inReturnStateRecyclerAdapter
+                        }
+                    }
+                }
+            }
+        })
     }
 
     companion object {

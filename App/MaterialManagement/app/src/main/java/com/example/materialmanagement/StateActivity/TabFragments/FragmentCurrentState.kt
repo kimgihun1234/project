@@ -12,13 +12,11 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.materialmanagement.DTO.BarcodeInfo
-import com.example.materialmanagement.DTO.BarcodePostInfo
+import com.example.materialmanagement.DTO.CurrentData
 import com.example.materialmanagement.R
 import com.example.materialmanagement.SearchActivity.SearchStorage
 import com.example.materialmanagement.StateActivity.TabRecyclerAdapter.CurrentStateRecyclerAdapter
 import com.google.gson.Gson
-import com.google.zxing.integration.android.IntentIntegrator
 import okhttp3.*
 import java.io.IOException
 
@@ -32,6 +30,8 @@ private const val ARG_PARAM2 = "param2"
  * Use the [FragmentCurrentState.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+//현재고조회
 class FragmentCurrentState : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -43,6 +43,8 @@ class FragmentCurrentState : Fragment() {
     private val NO_SEARCH : String = "null"
     private var storageNameString : String = NO_SEARCH
     private var storageNumString : String = NO_SEARCH
+
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +59,8 @@ class FragmentCurrentState : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_current_state, container, false)
-        val recyclerView: RecyclerView = view.findViewById(R.id.item_list)
+        recyclerView = view.findViewById(R.id.item_list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = CurrentStateRecyclerAdapter()
 
         return view
     }
@@ -68,7 +69,6 @@ class FragmentCurrentState : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         searchStorage = view.findViewById(R.id.searchStorage)
-
         searchStorage.isSubmitButtonEnabled = true
 
         searchStorage.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -93,12 +93,54 @@ class FragmentCurrentState : Fragment() {
                 100 -> {
                     storageNameString = data!!.getStringExtra("loca_nm").toString()
                     storageNumString = data!!.getStringExtra("loca_cd").toString()
-                    Toast.makeText(activity, "$storageNameString $storageNumString", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(activity, "$storageNameString $storageNumString", Toast.LENGTH_SHORT).show()
+                    getStorageStatus()
+
                 }
             }
         } else {
             Toast.makeText(activity, "검색결과없음", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun getStorageStatus(){
+        //val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
+        val url = "http://101.101.208.223:8080/curItemList"
+
+        val request: Request = Request.Builder()
+            .url(url)
+            .get()
+            .build();
+
+        var client = OkHttpClient()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                activity!!.runOnUiThread{ Log.d("test","fail")}
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val myRequest = response.body!!.string()
+                    val data = Gson().fromJson(myRequest, Array<CurrentData>::class.java).toList()
+
+                    activity!!.runOnUiThread{
+                        for(i in 0..data.size-1){
+                            System.out.println(data[i].item_cd + ", " +  data[i].item_nm)
+                        }
+
+                        val currentStateRecyclerAdapter = CurrentStateRecyclerAdapter(data)
+
+                        recyclerView.apply {
+                            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+                            adapter = currentStateRecyclerAdapter
+                        }
+
+                    }
+                }
+            }
+        })
     }
 
     companion object {

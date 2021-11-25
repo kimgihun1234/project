@@ -5,11 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.DTO.CurrentData
 import com.example.materialmanagement.R
-import java.text.SimpleDateFormat
-import java.util.*
 
-class CurrentStateRecyclerAdapter() : RecyclerView.Adapter<CurrentStateRecyclerAdapter.MyViewHolder>() {
+class CurrentStateRecyclerAdapter(private var myRequest: List<CurrentData>) : RecyclerView.Adapter<CurrentStateRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_state, parent, false)
         return MyViewHolder(itemView)
@@ -17,16 +16,14 @@ class CurrentStateRecyclerAdapter() : RecyclerView.Adapter<CurrentStateRecyclerA
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
         val now = System.currentTimeMillis()
-        var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
-
-        holder.item_num.text = "물품A"
-        holder.in_date.text = position.toString() + 3
-        holder.item_name.text = position.toString() + 3
-        holder.item_amount.text = position.toString() + 3
+        holder.item_num.text = myRequest[position].item_cd
+        holder.in_date.text = myRequest[position].stan
+        holder.item_name.text = myRequest[position].item_nm
+        holder.item_amount.text = myRequest[position].qty.toString()
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
-        return 20
+        return myRequest.size
     }
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){

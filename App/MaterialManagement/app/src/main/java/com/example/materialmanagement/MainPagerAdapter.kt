@@ -19,7 +19,7 @@ class MainPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
             0 -> FragmentIO()
             1 -> FragmentReturn()
             2 -> FragmentState()
-            else -> { FragmentHome.newInstance("설정", "")}
+            else -> FragmentSetting()
 
         }
     }

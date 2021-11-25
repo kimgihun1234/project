@@ -5,28 +5,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.materialmanagement.DTO.UnstoringListGetData
 import com.example.materialmanagement.R
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.ItemRecyclerAdapter
 
-class OutStateRecyclerAdapter() : RecyclerView.Adapter<OutStateRecyclerAdapter.MyViewHolder>() {
+class OutStateRecyclerAdapter(private var myRequest: List<UnstoringListGetData>) : RecyclerView.Adapter<OutStateRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_state, parent, false)
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        val now = System.currentTimeMillis()
-        var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
+        holder.item_num.text = myRequest[position].item_cd
+        holder.in_date.text = myRequest[position].ex_dt
+        holder.item_name.text = myRequest[position].item_nm
+        holder.item_amount.text =  myRequest[position].qty.toString()
 
-        holder.item_num.text = position.toString() + 3
-        holder.in_date.text = simpleDateFormat
-        holder.item_name.text = position.toString() + 3
-        holder.item_amount.text = position.toString() + 3
+        holder.itemView.setOnClickListener {
+            itemClickListener.onClick(it, position)
+        }
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
-        return 20
+        return myRequest.size
     }
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
@@ -35,4 +36,14 @@ class OutStateRecyclerAdapter() : RecyclerView.Adapter<OutStateRecyclerAdapter.M
         val item_name = itemView.findViewById<TextView>(R.id.item_name)
         val item_amount = itemView.findViewById<TextView>(R.id.item_amount)
     }
+
+    interface OnItemClickListener {
+        fun onClick(v: View, position: Int)
+    }
+    // (3) 외부에서 클릭 시 이벤트 설정
+    fun setItemClickListener(onItemClickListener: ItemRecyclerAdapter.OnItemClickListener) {
+        this.itemClickListener = onItemClickListener
+    }
+    // (4) setItemClickListener로 설정한 함수 실행
+    private lateinit var itemClickListener : ItemRecyclerAdapter.OnItemClickListener
 }
