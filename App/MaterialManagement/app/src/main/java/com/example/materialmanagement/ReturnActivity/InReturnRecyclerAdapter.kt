@@ -1,4 +1,4 @@
-package com.example.materialmanagement.InOutActivity;
+package com.example.materialmanagement.ReturnActivity;
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +11,9 @@ import com.example.materialmanagement.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-class InoutRecyclerAdapter() : RecyclerView.Adapter<InoutRecyclerAdapter.MyViewHolder>() {
+class InReturnRecyclerAdapter(private var myRequest: List<StoreStateInfo>) : RecyclerView.Adapter<InReturnRecyclerAdapter.MyViewHolder>() {
+    var isUnselectedAll : Boolean = false
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_input, parent, false)
 
         return MyViewHolder(itemView)
@@ -23,9 +23,15 @@ class InoutRecyclerAdapter() : RecyclerView.Adapter<InoutRecyclerAdapter.MyViewH
         val now = System.currentTimeMillis()
         var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
+        if (!isUnselectedAll){
+            holder.checkbox.setChecked(false);
+        } else {
+            holder.checkbox.setChecked(true)
+        }
+
         holder.in_date.text = simpleDateFormat
-        holder.item_name.text = position.toString()
-        holder.item_num.text = position.toString()
+        holder.item_name.text = myRequest[position].item_nm
+        holder.item_num.text = myRequest[position].qty.toString()
 
         // (1) 리스트 내 항목 클릭 시 onClick() 호출
         holder.itemView.setOnClickListener {
@@ -35,7 +41,7 @@ class InoutRecyclerAdapter() : RecyclerView.Adapter<InoutRecyclerAdapter.MyViewH
     }
 
     override fun getItemCount(): Int { // 리스트 만들 때 아이템 몇 개 있는지 카운트해서 리턴
-        return 20
+        return myRequest.size
     }
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
@@ -55,4 +61,9 @@ class InoutRecyclerAdapter() : RecyclerView.Adapter<InoutRecyclerAdapter.MyViewH
     }
     // (4) setItemClickListener로 설정한 함수 실행
     private lateinit var itemClickListener : OnItemClickListener
+
+    fun checkboxReset() {
+        isUnselectedAll = false
+        notifyDataSetChanged()
+    }
 }

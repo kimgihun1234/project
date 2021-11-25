@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +29,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import com.example.materialmanagement.MainActivity
-import com.example.materialmanagement.SearchActivity.RecyclerViewAdapter.InRecyclerAdapter
+import kotlinx.android.synthetic.main.fragment_i_o.*
 import kotlinx.android.synthetic.main.item_input.*
 
 
@@ -61,7 +60,6 @@ class FragmentIO : Fragment() {
     private lateinit var searchItemName : SearchView
 
     private var buttonState : Boolean = true // 입고는 true, 출고는 false
-    private lateinit var tableDate : TextView
 
     private lateinit var intent : Intent
 
@@ -69,11 +67,11 @@ class FragmentIO : Fragment() {
     private lateinit var setDate : TextView
     private lateinit var putDate : TextView
     private lateinit var deleteBtn : Button
+    private lateinit var tableDate : TextView
 
     private val NO_SEARCH : String = "null"
     private var searchCategory : Int = 0 // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명, 5 : 바코드
 
-    //dialog
     private var itemInNumString : String = NO_SEARCH // 발주번호
     private var itemOutNumString : String = NO_SEARCH // 수주번호
     private var itemNumString : String = NO_SEARCH // 품목번호
@@ -95,8 +93,15 @@ class FragmentIO : Fragment() {
     private lateinit var itemSize : EditText
 
     private lateinit var myRequest : String
-    private lateinit var inoutRecyclerAdapter: InoutRecyclerAdapter
+    private lateinit var inRecyclerAdapter: InRecyclerAdapter
+    private lateinit var outRecyclerAdapter: OutRecyclerAdapter
     private lateinit var recyclerView: RecyclerView
+
+    private var inData : MutableList<StoreStateInfo> = mutableListOf()
+    private var outData : MutableList<StoreStateInfo> = mutableListOf()
+
+    private var inDataPositionList : MutableList<Int> = mutableListOf()
+    private var outDataPositionList : MutableList<Int> = mutableListOf()
 
     private var jwt : String = "null"
 
@@ -117,27 +122,19 @@ class FragmentIO : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_i_o, container, false)
         recyclerView = view.findViewById(R.id.item_list)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        inoutRecyclerAdapter = InoutRecyclerAdapter()
+        inRecyclerAdapter = InRecyclerAdapter(inData)
+        outRecyclerAdapter = OutRecyclerAdapter(outData)
 
-        inoutRecyclerAdapter.setItemClickListener(object :
-            InoutRecyclerAdapter.OnItemClickListener {
-            override fun onClick(v: View, position: Int) {
-                // 클릭 시 이벤트 작성
-
-            }
-        })
         recyclerView.apply {
-            layoutManager =
-                LinearLayoutManager(
-                    activity,
-                    LinearLayoutManager.VERTICAL,
-                    false
-                )
-            adapter = inoutRecyclerAdapter
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            if(buttonState){
+                adapter = inRecyclerAdapter
+            } else {
+                adapter = outRecyclerAdapter
+            }
         }
 
         return view
@@ -168,6 +165,10 @@ class FragmentIO : Fragment() {
                         putBtn.text = "입고"
                         tableDate.text = "입고일자"
                         buttonState = true
+
+                        recyclerView.apply {
+                            adapter = inRecyclerAdapter
+                        }
                     }
                     R.id.btnOut -> {
                         btnOut.getBackground().setTint(view.getResources().getColor(R.color.white));
@@ -177,6 +178,10 @@ class FragmentIO : Fragment() {
                         putBtn.text = "출고"
                         tableDate.text = "출고일자"
                         buttonState = false
+
+                        recyclerView.apply {
+                            adapter = outRecyclerAdapter
+                        }
                     }
                 }
             } else {
@@ -214,15 +219,10 @@ class FragmentIO : Fragment() {
                 intent.putExtra("query", query) // 전달하는 인수 이름, 값
                 startActivityForResult(intent, 100) //호출한 화면으로 값 돌려주기
 
-                // 검색 버튼 누를 때 호출
-
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
-
                 return true
             }
         })
@@ -239,9 +239,6 @@ class FragmentIO : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
-
                 return true
             }
         })
@@ -252,15 +249,11 @@ class FragmentIO : Fragment() {
                 intent.putExtra("query", query)
                 searchCategory = 4 // 품목명검색
                 startActivityForResult(intent, 100);
-                // 검색 버튼 누를 때 호출
 
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
-
                 return true
             }
         })
@@ -271,15 +264,10 @@ class FragmentIO : Fragment() {
                 intent.putExtra("query", query)
                 searchCategory = 5 // 품목명검색
                 startActivityForResult(intent, 100);
-                // 검색 버튼 누를 때 호출
-
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
-                // 검색창에서 글자가 변경이 일어날 때마다 호출
-
                 return true
             }
         })
@@ -291,14 +279,13 @@ class FragmentIO : Fragment() {
                 Toast.makeText(activity, "수량을 입력해주세요", Toast.LENGTH_SHORT).show()
                 dialogInterface.dismiss()
             } else {
-                storageInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
-
+                storageInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
                 itemNameString = NO_SEARCH
                 storNameString = NO_SEARCH
             }
         }
         val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
-            unstoringInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+            unstoringInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
         }
         val negativeButtonClick = { dialogInterface: DialogInterface, i: Int ->
 
@@ -311,6 +298,7 @@ class FragmentIO : Fragment() {
             itemName = dialogView.findViewById(R.id.itemName)
             setDate = dialogView.findViewById(R.id.setDate)
             storName = dialogView.findViewById(R.id.storName)
+            emp_name = dialogView.findViewById(R.id.emp_name)
             itemSize = dialogView.findViewById(R.id.itemSize)
 
             setDate = dialogView.findViewById(R.id.setDate)
@@ -318,6 +306,9 @@ class FragmentIO : Fragment() {
 
             val now = System.currentTimeMillis()
             var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
+
+            var name = (activity as MainActivity?)?.getEmpName()
+            emp_name.setText(name)
 
             if(itemNameString != NO_SEARCH && storNameString != NO_SEARCH){
                 setDate.setText(simpleDateFormat)
@@ -340,7 +331,6 @@ class FragmentIO : Fragment() {
                     dlg.setView(dialogView)
                     dlg.setPositiveButton("출고", positiveOutButtonClick)
                 }
-
                 dlg.setNegativeButton("취소", negativeButtonClick)
                 dlg.show()
             } else {
@@ -355,11 +345,33 @@ class FragmentIO : Fragment() {
             scanIntegrator.setBeepEnabled(true)
             scanIntegrator.setBarcodeImageEnabled(true)
             scanIntegrator.initiateScan()
+            inDataPositionList = mutableListOf()
         }
 
+        inRecyclerAdapter.setItemClickListener (object: InRecyclerAdapter.OnItemClickListener{
+            override fun onClick(v: View, position: Int) {
+                if(inDataPositionList.contains(position)){
+                    inDataPositionList.remove(position)
+                } else {
+                    inDataPositionList.add(position)
+                }
+                Log.d("in position list", "$inDataPositionList")
+            }
+        })
+
+        outRecyclerAdapter.setItemClickListener (object: OutRecyclerAdapter.OnItemClickListener{
+            override fun onClick(v: View, position: Int) {
+                if(outDataPositionList.contains(position)){
+                    outDataPositionList.removeAt(position)
+                } else {
+                    outDataPositionList.add(position)
+                }
+                Log.d("out position list", "$outDataPositionList")
+            }
+        })
 
         deleteBtn.setOnClickListener {
-            Toast.makeText(activity, "삭제되었습니다", Toast.LENGTH_SHORT).show()
+            storingDelete()
         }
     }
 
@@ -402,9 +414,9 @@ class FragmentIO : Fragment() {
 
                                 if(storNameString != NO_SEARCH){
                                     if(buttonState){
-                                        storageInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+                                        storageInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
                                     } else {
-                                        unstoringInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+                                        unstoringInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
                                     }
                                     storNameString = NO_SEARCH
                                     itemNameString = NO_SEARCH
@@ -423,6 +435,7 @@ class FragmentIO : Fragment() {
             when (requestCode) {
                 100 -> {
                     // 1 : 수주번호, 2 : 발주번호,  3 : 창고, 4 : 품목명, 5 : 바코드
+                    inDataPositionList = mutableListOf()
                     when(searchCategory){
                         1 -> {
                             itemInNumString = data!!.getStringExtra("plord_no").toString()
@@ -454,9 +467,9 @@ class FragmentIO : Fragment() {
 
                             if(storNameString != NO_SEARCH){
                                 if(buttonState){
-                                    storageInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+                                    storageInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
                                 } else {
-                                    unstoringInsert(customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+                                    unstoringInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
                                 }
                                 storNameString = NO_SEARCH
                                 itemNameString = NO_SEARCH
@@ -473,7 +486,7 @@ class FragmentIO : Fragment() {
         }
     }
 
-    private fun storageInsert(customerNumString : String, storeNumString: String, locationNumString: String,
+    private fun storageInsert(itemNameString : String, customerNumString : String, storeNumString: String, locationNumString: String,
                       itemNumString: String, itemSizeString: String, jwt: String) {
         val data = InPostInfo(customerNumString, storeNumString, locationNumString, itemNumString,
             itemSizeString.toDouble())
@@ -503,6 +516,10 @@ class FragmentIO : Fragment() {
 
                         Log.d("Storing Insert", data.purc_in_no)
 
+                        inData.add(StoreStateInfo(purc_in_no, customerNumString, storeNumString, locationNumString, itemNumString, itemNameString,
+                            itemSizeString.toDouble()))
+
+                        inRecyclerAdapter.notifyDataSetChanged();
                         Toast.makeText(activity, "$purc_in_no 입고되었습니다", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -510,7 +527,7 @@ class FragmentIO : Fragment() {
         })
     }
 
-    private fun unstoringInsert(customerNumString : String, storeNumString: String, locationNumString: String,
+    private fun unstoringInsert(itemNameString : String, customerNumString : String, storeNumString: String, locationNumString: String,
                       itemNumString: String, itemSizeString: String, jwt: String) {
         val data = InPostInfo(customerNumString, storeNumString, locationNumString, itemNumString,
             itemSizeString.toDouble())
@@ -540,11 +557,142 @@ class FragmentIO : Fragment() {
 
                         Log.d("Unstoring Insert", data.ex_no)
 
+                        outData.add(StoreStateInfo(ex_no, customerNumString, storeNumString, locationNumString, itemNumString, itemNameString,
+                            itemSizeString.toDouble()))
+
+                        outRecyclerAdapter.notifyDataSetChanged();
+
                         Toast.makeText(activity, "$ex_no 출고되었습니다", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         })
+    }
+
+    private fun storingDelete() {
+        if (buttonState) {
+            val url = "http://101.101.208.223:8080/storingDelete"
+            var jsonString: String = ""
+            var deleteQty : Int = 0
+
+            for (i in 0..inDataPositionList.size - 1) {
+                val no = inData[inDataPositionList[i]].no
+                val itemNumString = inData[inDataPositionList[i]].item_cd
+                val itemSizeString = inData[inDataPositionList[i]].qty
+
+                val data = DeleteStateInfo(no, itemNumString, itemSizeString)
+                jsonString = jsonString + gson.toJson(data) + ","
+                deleteQty++
+            }
+            jsonString = jsonString.substring(0, jsonString.length - 1)
+            val jsonArrayString = "[$jsonString]"
+            System.out.println(jsonArrayString)
+            val formBody: RequestBody = RequestBody.create(JSON, jsonArrayString)
+
+            val request: Request = Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    activity!!.runOnUiThread { Log.d("test", "failt") }
+                }
+
+                @Throws(IOException::class)
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        myRequest = response.body!!.string()
+                        val requestList = "[$myRequest]"
+                        System.out.println(myRequest)
+                        var data: List<DeletePostInfo> =
+                            Gson().fromJson(requestList, Array<DeletePostInfo>::class.java).toList()
+                        activity!!.runOnUiThread {
+                            System.out.println(data[0].result)
+                            if (data[0].result == "0") {
+                                for (i in 0..inDataPositionList.size - 1) {
+                                    inData.removeAt(inDataPositionList[i])
+                                    for(i in 0..inDataPositionList.size - 1) {
+                                        inDataPositionList[i]--
+                                    }
+                                }
+                                inRecyclerAdapter.checkboxReset()
+                                Toast.makeText(activity, "삭제되었습니다", Toast.LENGTH_SHORT).show()
+                                inDataPositionList = mutableListOf()
+                                inRecyclerAdapter.notifyDataSetChanged()
+                            } else if (data[0].result == "1") {
+                                Toast.makeText(activity, "삭제에 실패했습니다", Toast.LENGTH_SHORT).show()
+                            } else {
+
+                            }
+                        }
+                    } else {
+                        activity!!.runOnUiThread { Log.d("test", "response fail") }
+                    }
+                }
+            })
+        } else {
+            val url = "http://101.101.208.223:8080/unstoringDelete"
+            var jsonString: String = ""
+            var deleteQty : Int = 0
+
+            for (i in 0..outDataPositionList.size - 1) {
+                val no = outData[outDataPositionList[i]].no
+                val itemNumString = outData[outDataPositionList[i]].item_cd
+                val itemSizeString = outData[outDataPositionList[i]].qty
+
+                val data = DeleteStateInfo(no, itemNumString, itemSizeString)
+                jsonString = jsonString + gson.toJson(data) + ","
+                deleteQty++
+            }
+            jsonString = jsonString.substring(0, jsonString.length - 1)
+            val jsonArrayString = "[$jsonString]"
+            System.out.println(jsonArrayString)
+            val formBody: RequestBody = RequestBody.create(JSON, jsonArrayString)
+
+            val request: Request = Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    activity!!.runOnUiThread { Log.d("test", "failt") }
+                }
+
+                @Throws(IOException::class)
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        myRequest = response.body!!.string()
+                        val requestList = "[$myRequest]"
+                        System.out.println(myRequest)
+                        var data: List<DeletePostInfo> =
+                            Gson().fromJson(requestList, Array<DeletePostInfo>::class.java).toList()
+                        activity!!.runOnUiThread {
+                            System.out.println(data[0].result)
+                            if (data[0].result == "0") {
+                                for (i in 0..outDataPositionList.size - 1) {
+                                    outData.removeAt(outDataPositionList[i])
+                                    for(i in 0..outDataPositionList.size - 1) {
+                                        outDataPositionList[i]--
+                                    }
+                                }
+                                outRecyclerAdapter.checkboxReset()
+                                Toast.makeText(activity, "삭제되었습니다", Toast.LENGTH_SHORT).show()
+                                outDataPositionList = mutableListOf()
+                                outRecyclerAdapter.notifyDataSetChanged()
+                            } else if (data[0].result == "1") {
+                                Toast.makeText(activity, "삭제에 실패했습니다", Toast.LENGTH_SHORT).show()
+                            } else {
+
+                            }
+                        }
+                    } else {
+                        activity!!.runOnUiThread { Log.d("test", "response fail") }
+                    }
+                }
+            })
+        }
     }
 
     companion object {

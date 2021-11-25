@@ -71,6 +71,7 @@ class LoginActivity: AppCompatActivity() {
                                 Toast.makeText(this@LoginActivity, "로그인 성공", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                                 intent.putExtra("jwt", data[0].data)
+                                intent.putExtra("emp_nm", data[0].emp_nm)
                                 startActivity(intent)
                             }
                         } else {
