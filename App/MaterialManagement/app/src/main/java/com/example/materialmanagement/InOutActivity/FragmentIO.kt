@@ -285,6 +285,8 @@ class FragmentIO : Fragment() {
                 itemNameString = NO_SEARCH
                 storNameString = NO_SEARCH
             }
+            itemSize.setText(null)
+            itemSizeString = itemSize.text.toString()
         }
         val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
             itemSizeString = itemSize.text.toString()
@@ -297,6 +299,8 @@ class FragmentIO : Fragment() {
                 itemNameString = NO_SEARCH
                 storNameString = NO_SEARCH
             }
+            itemSize.setText(null)
+            itemSizeString = itemSize.text.toString()
         }
         val negativeButtonClick = { dialogInterface: DialogInterface, i: Int ->
 
