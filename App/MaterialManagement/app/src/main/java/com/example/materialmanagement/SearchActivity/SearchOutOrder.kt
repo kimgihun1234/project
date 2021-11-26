@@ -88,7 +88,7 @@ class SearchOutOrder : AppCompatActivity() {
                         for(i in 0..data.size-1){
                             System.out.println(data[i].ex_requ_no + ", " +  data[i].cust_cd + ", "
                                     + data[i].cust_nm);
-                            if(data[i].ex_requ_no == itemNumber.toString()){
+                            if(data[i].ex_requ_no.contains(itemNumber)){
                                 searchData.add(data[i])
                             }
                         }

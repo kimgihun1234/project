@@ -16,10 +16,14 @@ class OutStateRecyclerAdapter(private var myRequest: List<UnstoringListGetData>)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        holder.item_num.text = myRequest[position].item_cd
+        //holder.item_num.text = myRequest[position].item_cd
         holder.in_date.text = myRequest[position].ex_dt
         holder.item_name.text = myRequest[position].item_nm
-        holder.item_amount.text =  myRequest[position].qty.toString()
+        if(myRequest[position].qty.toString().endsWith(".0")){
+            holder.item_amount.text = myRequest[position].qty.toInt().toString()
+        } else {
+            holder.item_amount.text = myRequest[position].qty.toString()
+        }
 
         holder.itemView.setOnClickListener {
             itemClickListener.onClick(it, position)
@@ -31,7 +35,7 @@ class OutStateRecyclerAdapter(private var myRequest: List<UnstoringListGetData>)
     }
 
     inner class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-        val item_num = itemView.findViewById<TextView>(R.id.item_num)
+        //val item_num = itemView.findViewById<TextView>(R.id.item_num)
         val in_date = itemView.findViewById<TextView>(R.id.in_date)
         val item_name = itemView.findViewById<TextView>(R.id.item_name)
         val item_amount = itemView.findViewById<TextView>(R.id.item_amount)

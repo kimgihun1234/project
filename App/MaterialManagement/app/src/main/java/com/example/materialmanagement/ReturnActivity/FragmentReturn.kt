@@ -273,7 +273,16 @@ class FragmentReturn : Fragment() {
             }
         }
         val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
-            unstoringReturnInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+            itemSizeString = itemSize.text.toString()
+            if(itemSize.getText().toString().equals("") || itemSize.getText().toString() == null){
+                Toast.makeText(activity, "수량을 입력해주세요", Toast.LENGTH_SHORT).show()
+                dialogInterface.dismiss()
+            } else {
+                unstoringReturnInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+
+                itemNameString = NO_SEARCH
+                storNameString = NO_SEARCH
+            }
         }
         val negativeButtonClick = { dialogInterface: DialogInterface, i: Int ->
 
@@ -301,25 +310,43 @@ class FragmentReturn : Fragment() {
             putDate.setText("반품일자")
 
             if(itemNameString != NO_SEARCH && storNameString != NO_SEARCH){ //itemInNumString != NO_SEARCH || itemOutNumString != NO_SEARCH)
-                setDate.setText(simpleDateFormat)
-                itemName.text = itemNameString
-                storName.text = storNameString + " / " + locationNameString
+                if(buttonState && itemInNumString != NO_SEARCH){
+                    setDate.setText(simpleDateFormat)
+                    itemName.text = itemNameString
+                    storName.text = storNameString + " / " + locationNameString
 
-                if(itemSizeString != NO_SEARCH){
-                    itemSize.setText(itemSizeString)
-                }
+                    if(itemSizeString != NO_SEARCH){
+                        itemSize.setText(itemSizeString)
+                    }
 
-                var dlg = AlertDialog.Builder(view.context)
-                dlg.setTitle("반품 등록")
-                if (buttonState){
+                    var dlg = AlertDialog.Builder(view.context)
+                    dlg.setTitle("반품 등록")
+
                     dlg.setView(dialogView)
                     dlg.setPositiveButton("입고반품", positiveInButtonClick)
-                } else {
+
+                    dlg.setNegativeButton("취소", negativeButtonClick)
+                    dlg.show()
+                } else if(!buttonState && itemOutNumString != NO_SEARCH){
+                    setDate.setText(simpleDateFormat)
+                    itemName.text = itemNameString
+                    storName.text = storNameString + " / " + locationNameString
+
+                    if(itemSizeString != NO_SEARCH){
+                        itemSize.setText(itemSizeString)
+                    }
+
+                    var dlg = AlertDialog.Builder(view.context)
+                    dlg.setTitle("반품 등록")
+
                     dlg.setView(dialogView)
                     dlg.setPositiveButton("출고반품", positiveOutButtonClick)
+
+                    dlg.setNegativeButton("취소", negativeButtonClick)
+                    dlg.show()
+                } else {
+                    Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
                 }
-                dlg.setNegativeButton("취소", negativeButtonClick)
-                dlg.show()
             } else {
                 Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
             }
@@ -399,10 +426,13 @@ class FragmentReturn : Fragment() {
                                         + data.item_cd + " " + data.qty.toString())
 
                                 if(storNameString != NO_SEARCH){
-                                    if(buttonState){
+                                    if(buttonState && itemInNumString != NO_SEARCH){
+                                        Log.d("itemInNumString", itemInNumString)
                                         storageReturnInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
-                                    } else {
+                                    } else if (!buttonState && itemOutNumString != NO_SEARCH){
                                         unstoringReturnInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+                                    } else {
+                                        Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
                                     }
                                     storNameString = NO_SEARCH
                                     itemNameString = NO_SEARCH
@@ -427,22 +457,26 @@ class FragmentReturn : Fragment() {
                             customerNameString = data!!.getStringExtra("cust_nm").toString()
                             customerNumString = data!!.getStringExtra("cust_cd").toString()
                             searchCustomer.setText(customerNameString)
+                            searchOrder.setQuery(itemInNumString, false)
                         }
                         2 -> {
                             itemOutNumString = data!!.getStringExtra("ex_requ_no").toString()
                             customerNameString = data!!.getStringExtra("cust_nm").toString()
                             customerNumString = data!!.getStringExtra("cust_cd").toString()
                             searchCustomer.setText(customerNameString)
+                            searchOrder.setQuery(itemOutNumString, false)
                         }
                         3 -> {
                             storNameString = data!!.getStringExtra("stor_nm").toString()
                             storeNumString = data!!.getStringExtra("stor_cd").toString()
                             locationNameString = data!!.getStringExtra("loca_nm").toString()
                             locationNumString = data!!.getStringExtra("loca_cd").toString()
+                            searchStorage.setQuery("$storNameString/$locationNameString", false)
                         }
                         4 -> {
                             itemNameString = data!!.getStringExtra("item_nm").toString()
                             itemNumString = data!!.getStringExtra("item_cd").toString()
+                            searchItemName.setQuery(itemNameString, false)
                         }
                         5 -> {
                             Log.d("getTest", "barcode Get")
@@ -504,7 +538,7 @@ class FragmentReturn : Fragment() {
                         inData.add(StoreStateInfo(purc_retu_no, customerNumString, storeNumString, locationNumString, itemNumString, itemNameString,
                             itemSizeString.toDouble()))
 
-                        inReturnRecyclerAdapter.notifyDataSetChanged();
+                        inReturnRecyclerAdapter.notifyDataSetChanged()
                         Toast.makeText(activity, "$purc_retu_no 반품되었습니다", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -545,7 +579,6 @@ class FragmentReturn : Fragment() {
                             itemSizeString.toDouble()))
 
                         outReturnRecyclerAdapter.notifyDataSetChanged()
-
                         Toast.makeText(activity, "$ex_retu_no 반품되었습니다", Toast.LENGTH_SHORT).show()
                     }
                 }

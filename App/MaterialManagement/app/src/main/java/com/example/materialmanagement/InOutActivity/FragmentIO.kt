@@ -5,6 +5,9 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -284,7 +287,16 @@ class FragmentIO : Fragment() {
             }
         }
         val positiveOutButtonClick = { dialogInterface: DialogInterface, i: Int ->
-            unstoringInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+            itemSizeString = itemSize.text.toString()
+            Log.d("Item Size", itemSizeString)
+            if(itemSizeString.equals("") || itemSizeString == null){
+                Toast.makeText(activity, "수량을 입력해주세요", Toast.LENGTH_SHORT).show()
+                dialogInterface.dismiss()
+            } else {
+                unstoringInsert(itemNameString, customerNumString, storeNumString, locationNumString, itemNumString, itemSizeString, jwt)
+                itemNameString = NO_SEARCH
+                storNameString = NO_SEARCH
+            }
         }
         val negativeButtonClick = { dialogInterface: DialogInterface, i: Int ->
 
@@ -310,28 +322,43 @@ class FragmentIO : Fragment() {
             emp_name.setText(name)
 
             if(itemNameString != NO_SEARCH && storNameString != NO_SEARCH){
-                setDate.setText(simpleDateFormat)
-                itemName.text = itemNameString
-                storName.text = storNameString + " / " + locationNameString
+                if(buttonState && itemInNumString != NO_SEARCH){
+                    setDate.setText(simpleDateFormat)
+                    itemName.text = itemNameString
+                    storName.text = storNameString + " / " + locationNameString
 
-                if(itemSizeString != NO_SEARCH){
-                    itemSize.setText(itemSizeString)
-                }
+                    if(itemSizeString != NO_SEARCH){
+                        itemSize.setText(itemSizeString)
+                    }
+                    var dlg = AlertDialog.Builder(view.context)
 
-                var dlg = AlertDialog.Builder(view.context)
-                if (buttonState){
                     dlg.setTitle("입고 등록")
                     putDate.setText("입고일자")
                     dlg.setView(dialogView)
                     dlg.setPositiveButton("입고", positiveInButtonClick)
-                } else {
+
+                    dlg.setNegativeButton("취소", negativeButtonClick)
+                    dlg.show()
+                } else if (!buttonState && itemOutNumString != NO_SEARCH){
+                    setDate.setText(simpleDateFormat)
+                    itemName.text = itemNameString
+                    storName.text = storNameString + " / " + locationNameString
+
+                    if(itemSizeString != NO_SEARCH){
+                        itemSize.setText(itemSizeString)
+                    }
+                    var dlg = AlertDialog.Builder(view.context)
+
                     dlg.setTitle("출고 등록")
                     putDate.setText("출고일자")
                     dlg.setView(dialogView)
                     dlg.setPositiveButton("출고", positiveOutButtonClick)
+
+                    dlg.setNegativeButton("취소", negativeButtonClick)
+                    dlg.show()
+                } else {
+                    Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
                 }
-                dlg.setNegativeButton("취소", negativeButtonClick)
-                dlg.show()
             } else {
                 Toast.makeText(activity, "검색 요소가 부족합니다", Toast.LENGTH_SHORT).show()
             }
@@ -441,22 +468,26 @@ class FragmentIO : Fragment() {
                             customerNameString = data!!.getStringExtra("cust_nm").toString()
                             customerNumString = data!!.getStringExtra("cust_cd").toString()
                             searchCustomer.setText(customerNameString)
+                            searchOrder.setQuery(itemInNumString, false)
                         }
                         2 -> {
                             itemOutNumString = data!!.getStringExtra("ex_requ_no").toString()
                             customerNameString = data!!.getStringExtra("cust_nm").toString()
                             customerNumString = data!!.getStringExtra("cust_cd").toString()
                             searchCustomer.setText(customerNameString)
+                            searchOrder.setQuery(itemOutNumString, false)
                         }
                         3 -> {
                             storNameString = data!!.getStringExtra("stor_nm").toString()
                             storeNumString = data!!.getStringExtra("stor_cd").toString()
                             locationNameString = data!!.getStringExtra("loca_nm").toString()
                             locationNumString = data!!.getStringExtra("loca_cd").toString()
+                            searchStorage.setQuery("$storNameString/$locationNameString", false)
                         }
                         4 -> {
                             itemNameString = data!!.getStringExtra("item_nm").toString()
                             itemNumString = data!!.getStringExtra("item_cd").toString()
+                            searchItemName.setQuery(itemNameString, false)
                         }
                         5 -> {
                             Log.d("getTest", "barcode Get")
@@ -518,7 +549,7 @@ class FragmentIO : Fragment() {
                         inData.add(StoreStateInfo(purc_in_no, customerNumString, storeNumString, locationNumString, itemNumString, itemNameString,
                             itemSizeString.toDouble()))
 
-                        inRecyclerAdapter.notifyDataSetChanged();
+                        inRecyclerAdapter.notifyDataSetChanged()
                         Toast.makeText(activity, "$purc_in_no 입고되었습니다", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -559,8 +590,7 @@ class FragmentIO : Fragment() {
                         outData.add(StoreStateInfo(ex_no, customerNumString, storeNumString, locationNumString, itemNumString, itemNameString,
                             itemSizeString.toDouble()))
 
-                        outRecyclerAdapter.notifyDataSetChanged();
-
+                        outRecyclerAdapter.notifyDataSetChanged()
                         Toast.makeText(activity, "$ex_no 출고되었습니다", Toast.LENGTH_SHORT).show()
                     }
                 }

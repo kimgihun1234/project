@@ -13,7 +13,7 @@ import java.util.*
 
 class CustomerRecyclerAdapter(private var myRequest: List<CustomerInfo>) : RecyclerView.Adapter<CustomerRecyclerAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_name, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_customer, parent, false)
 
         return MyViewHolder(itemView)
     }

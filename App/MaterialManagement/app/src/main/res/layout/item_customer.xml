@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="@color/black"
-    android:layout_weight="6"
+    android:stretchColumns="*"
+    android:weightSum="2"
     >
 
     <TableRow
@@ -22,44 +23,29 @@
             android:layout_gravity="center"
             android:layout_marginLeft="1dp"
             android:layout_marginBottom="1dp"
-            android:text="123145"
+            android:padding="3dp"
+            android:text="품목 번호"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_weight="3"
             android:gravity="center"
+            android:layout_weight="1"
             />
 
         <TextView
-            android:id="@+id/in_date"
+            android:id="@+id/item_name"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginLeft="1dp"
             android:layout_marginBottom="1dp"
             android:padding="3dp"
-            android:text="2021-9-21"
+            android:text="품목 이름"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_weight="2"
             android:gravity="center"
-            />
-
-        <TextView
-            android:id="@+id/customer"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="1dp"
-            android:layout_marginBottom="1dp"
-            android:padding="3dp"
-            android:text="주한식품"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_weight="2"
-            android:gravity="center"
+            android:layout_weight="1"
             />
     </TableRow>
 </TableLayout>

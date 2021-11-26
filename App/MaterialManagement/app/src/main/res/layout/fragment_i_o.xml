@@ -249,10 +249,11 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:weightSum="13"
                         >
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="1dp"
                             android:layout_marginBottom="1dp"
@@ -263,10 +264,11 @@
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:textColor="@color/black"
+                            android:layout_weight="2"
                             />
                         <TextView
                             android:id="@+id/tableDate"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
                             android:layout_marginLeft="1dp"
@@ -277,9 +279,10 @@
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:textColor="@color/black"
+                            android:layout_weight="4"
                             />
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
                             android:layout_marginLeft="1dp"
@@ -290,9 +293,10 @@
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:textColor="@color/black"
+                            android:layout_weight="5"
                             />
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="1dp"
                             android:layout_marginLeft="1dp"
@@ -303,6 +307,7 @@
                             android:textStyle="bold"
                             android:textSize="18sp"
                             android:textColor="@color/black"
+                            android:layout_weight="2"
                             />
                     </TableRow>
 

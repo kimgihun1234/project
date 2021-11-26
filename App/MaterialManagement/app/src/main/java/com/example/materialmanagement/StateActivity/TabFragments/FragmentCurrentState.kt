@@ -67,40 +67,7 @@ class FragmentCurrentState : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        searchStorage = view.findViewById(R.id.searchStorage)
-        searchStorage.isSubmitButtonEnabled = true
-
-        searchStorage.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                intent = Intent(getActivity(), SearchStorage::class.java)
-                intent.putExtra("query", query)
-                startActivityForResult(intent, 100)
-
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-        })
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                100 -> {
-                    storageNameString = data!!.getStringExtra("loca_nm").toString()
-                    storageNumString = data!!.getStringExtra("loca_cd").toString()
-//                    Toast.makeText(activity, "$storageNameString $storageNumString", Toast.LENGTH_SHORT).show()
-                    getStorageStatus()
-
-                }
-            }
-        } else {
-            Toast.makeText(activity, "검색결과없음", Toast.LENGTH_SHORT).show()
-        }
+        getStorageStatus()
     }
 
     fun getStorageStatus(){
@@ -127,7 +94,8 @@ class FragmentCurrentState : Fragment() {
 
                     activity!!.runOnUiThread{
                         for(i in 0..data.size-1){
-                            System.out.println(data[i].item_cd + ", " +  data[i].item_nm)
+                            System.out.println(data[i].item_cd + ", " +  data[i].item_nm + ", " +
+                            data[i].comm_cd_nm + ", " +  data[i].qty + ", " +  data[i].stan)
                         }
 
                         val currentStateRecyclerAdapter = CurrentStateRecyclerAdapter(data)

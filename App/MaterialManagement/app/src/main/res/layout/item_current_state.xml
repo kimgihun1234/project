@@ -12,26 +12,30 @@
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"
         android:layout_marginBottom="1dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:weightSum="14"
+        >
 
         <TextView
             android:id="@+id/item_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="1dp"
             android:layout_marginBottom="1dp"
             android:padding="3dp"
             android:text="품목A"
             android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_weight="5"
+            />
 
         <TextView
             android:id="@+id/item_standard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginLeft="1dp"
             android:layout_marginBottom="1dp"
@@ -39,12 +43,15 @@
             android:text="100"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_weight="3"
+            />
 
         <TextView
             android:id="@+id/item_account"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginLeft="1dp"
             android:layout_marginBottom="1dp"
@@ -52,19 +59,25 @@
             android:text="200"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_weight="3"
+            />
 
         <TextView
             android:id="@+id/item_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginLeft="1dp"
             android:layout_marginBottom="1dp"
             android:padding="3dp"
             android:text="123"
             android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_weight="3"
+            />
     </TableRow>
 </TableLayout>

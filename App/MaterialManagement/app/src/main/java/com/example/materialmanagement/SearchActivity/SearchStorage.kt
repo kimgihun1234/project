@@ -25,8 +25,6 @@ class SearchStorage : AppCompatActivity() {
     private lateinit var refreshBtn : TabItem
     private lateinit var searchText : TextView
 
-    private lateinit var orderBasic : Button
-
     private lateinit var storageRecyclerAdapter: StorageRecyclerAdapter
 
     private lateinit var myRequest : String
@@ -42,7 +40,6 @@ class SearchStorage : AppCompatActivity() {
 
         searchText = findViewById(R.id.searchText)
         refreshBtn = findViewById(R.id.refreshBtn)
-        orderBasic = findViewById(R.id.orderBasic)
 
         val extras = intent.extras
         var itemNumber: String? = "검색결과없음"
@@ -50,10 +47,6 @@ class SearchStorage : AppCompatActivity() {
         if (extras != null) {
             itemNumber = extras.getString("query") // 값 꺼내기
             searchText.setText(itemNumber)
-        }
-
-        orderBasic.setOnClickListener { // 반환값 테스트
-            Toast.makeText(this, "기본순", Toast.LENGTH_SHORT).show()
         }
 
         recyclerView = this.findViewById(R.id.in_num_list)
@@ -91,8 +84,9 @@ class SearchStorage : AppCompatActivity() {
                         for(i in 0..data.size-1){
                             System.out.println(data[i].stor_cd + ", " +  data[i].stor_nm + ", "
                                     + data[i].loca_cd+ ", " +  data[i].loca_nm)
-                            if(data[i].stor_nm == itemNumber.toString()
-                                || data[i].loca_nm == itemNumber.toString()){
+                            if(data[i].stor_nm.contains(itemNumber)
+                                || data[i].loca_nm.contains(itemNumber)
+                                || (data[i].stor_nm + "/" +data[i].loca_nm).contains(itemNumber)){
                                 searchData.add(data[i])
                             }
                         }

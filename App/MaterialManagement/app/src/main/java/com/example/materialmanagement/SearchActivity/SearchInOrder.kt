@@ -28,8 +28,6 @@ class SearchInOrder : AppCompatActivity() {
     private lateinit var refreshBtn : TabItem
     private lateinit var searchText : TextView
 
-    private lateinit var orderBasic : Button
-
     private lateinit var inRecyclerAdapter: InRecyclerAdapter
 
     private lateinit var myRequest : String
@@ -45,7 +43,6 @@ class SearchInOrder : AppCompatActivity() {
 
         searchText = findViewById(R.id.searchText)
         refreshBtn = findViewById(R.id.refreshBtn)
-        orderBasic = findViewById(R.id.orderBasic)
 
         val extras = intent.extras
         var itemNumber: String? = "검색결과없음"
@@ -53,10 +50,6 @@ class SearchInOrder : AppCompatActivity() {
         if (extras != null) {
             itemNumber = extras.getString("query") // 값 꺼내기
             searchText.setText(itemNumber)
-        }
-
-        orderBasic.setOnClickListener {
-            Toast.makeText(this, "기본순", Toast.LENGTH_SHORT).show()
         }
 
         if (itemNumber != null) {
@@ -96,7 +89,7 @@ class SearchInOrder : AppCompatActivity() {
                                 data[i].plord_no + ", " + data[i].cust_nm + ", "
                                         + data[i].cust_cd
                             )
-                            if(data[i].plord_no == itemNumber){
+                            if(data[i].plord_no.contains(itemNumber)){
                                 searchData.add(data[i])
                             }
                         }

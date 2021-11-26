@@ -305,7 +305,7 @@
                         android:background="@color/darkGray"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:text="수량"
+                        android:text="   수량   "
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:textColor="@color/black"

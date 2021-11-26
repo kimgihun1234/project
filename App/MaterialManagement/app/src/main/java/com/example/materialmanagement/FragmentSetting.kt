@@ -1,10 +1,15 @@
 package com.example.materialmanagement
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import com.example.materialmanagement.LoginActivity
+import com.example.materialmanagement.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +26,11 @@ class FragmentSetting : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var btnLogout : Button
+    private lateinit var txtId : TextView
+
+    private lateinit var id : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,7 +44,24 @@ class FragmentSetting : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false)
+        val view = inflater.inflate(R.layout.fragment_setting, container, false)
+        btnLogout = view.findViewById(R.id.btnLogout)
+        txtId = view.findViewById(R.id.txtId)
+
+        id = (activity as MainActivity?)?.getId().toString()
+        txtId.setText(id)
+
+        btnLogout.setOnClickListener {
+            logout(view)
+        }
+
+        return view
+    }
+
+    fun logout(v: View)
+    {
+        val intent = Intent(activity, LoginActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {

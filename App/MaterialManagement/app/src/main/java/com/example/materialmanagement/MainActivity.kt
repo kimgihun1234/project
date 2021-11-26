@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity(){
     private lateinit var binding: ActivityMainBinding
     private var jwt : String = "null"
     private var emp_nm : String = "null"
+    private var id : String = "null"
 
     private val tabName = listOf(
         "입출고", "반품", "현황보기", "설정"
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(){
         if (extras != null) {
             jwt = extras.getString("jwt")!! // 값 꺼내기
             emp_nm = extras.getString("emp_nm")!!
+            id = extras.getString("id")!!
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -45,11 +47,17 @@ class MainActivity : AppCompatActivity(){
         }.attach()
     }
 
+    override fun onBackPressed(){}
+
     fun getJwt(): String {
         return jwt
     }
 
     fun getEmpName() : String {
         return emp_nm
+    }
+
+    fun getId() : String {
+        return id
     }
 }

@@ -17,30 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingTop="15dp"
             >
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchStorage"
-                android:layout_width="350dp"
-                android:layout_height="55dp"
-                style="@style/SearchViewStyle"
-                app:iconifiedByDefault="false"
-                app:queryBackground="@null"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:queryHint="창고 검색"
-                app:searchIcon="@drawable/ic_baseline_search_24"
-                />
-
 
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/black"
-                android:stretchColumns="0,1,2"
-                android:shrinkColumns="3"
+                android:weightSum="14"
                 >
                 <View
                     android:layout_width="match_parent"
@@ -52,7 +35,7 @@
                     >
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dp"
                         android:layout_marginBottom="1dp"
@@ -63,9 +46,10 @@
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:textColor="@color/black"
+                        android:layout_weight="5"
                         />
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="1dp"
                         android:layout_marginLeft="1dp"
@@ -76,9 +60,10 @@
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:textColor="@color/black"
+                        android:layout_weight="3"
                         />
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="1dp"
                         android:layout_marginLeft="1dp"
@@ -89,9 +74,10 @@
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:textColor="@color/black"
+                        android:layout_weight="3"
                         />
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="1dp"
                         android:layout_marginLeft="1dp"
@@ -102,6 +88,7 @@
                         android:textStyle="bold"
                         android:textSize="18sp"
                         android:textColor="@color/black"
+                        android:layout_weight="3"
                         />
                 </TableRow>
 

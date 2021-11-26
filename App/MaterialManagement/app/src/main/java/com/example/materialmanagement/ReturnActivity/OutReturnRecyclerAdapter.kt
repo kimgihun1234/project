@@ -31,7 +31,11 @@ class OutReturnRecyclerAdapter(private var myRequest: List<StoreStateInfo>) : Re
 
         holder.in_date.text = simpleDateFormat
         holder.item_name.text = myRequest[position].item_nm
-        holder.item_num.text = myRequest[position].qty.toString()
+        if(myRequest[position].qty.toString().endsWith(".0")){
+            holder.item_num.text = myRequest[position].qty.toInt().toString()
+        } else {
+            holder.item_num.text = myRequest[position].qty.toString()
+        }
 
         // (1) 리스트 내 항목 클릭 시 onClick() 호출
         holder.itemView.setOnClickListener {

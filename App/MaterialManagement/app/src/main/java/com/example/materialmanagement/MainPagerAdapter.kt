@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.materialmanagement.InOutActivity.FragmentIO
+import com.example.materialmanagement.LoginActivity
 import com.example.materialmanagement.ReturnActivity.FragmentReturn
 import com.example.materialmanagement.StateActivity.FragmentState
 
