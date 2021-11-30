@@ -202,7 +202,7 @@ public class StoringController {
             searchResult = storingDetailService.checkStoringDetailList(info.getNo()); // Delete 이후 List를 확인
 
             for(StoringDetailDTO listTemp : searchResult) { // delete 결과 확인
-                if((checkingData.getQty() - info.getQty()) != (listTemp.getQty())) { // 예상한대로 Delete되지 않았으면(갯수가 맞지 않음, 삭제하려는 데이터가 없었음)
+                if(checkingData.getItem_cd().equals(listTemp.getItem_cd()) && (checkingData.getQty() - info.getQty()) != (listTemp.getQty())) { // 예상한대로 Delete되지 않았으면(갯수가 맞지 않음, 삭제하려는 데이터가 없었음)
                     result.result = check + 1; // 순서 중에 몇 번째까지만 진행되었음을 return
                     return new ResponseEntity(result, HttpStatus.SERVICE_UNAVAILABLE); // 503으로 반환
                 }
