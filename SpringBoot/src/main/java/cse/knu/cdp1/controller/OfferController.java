@@ -31,6 +31,7 @@ public class OfferController {
         String ex_requ_no;
         String cust_nm;
         String cust_cd;
+        String ex_requ_dt;
     }
 
     @GetMapping("/offerList")
@@ -46,6 +47,7 @@ public class OfferController {
             temp.ex_requ_no = offerData.getEx_requ_no();
             temp.cust_nm = customerInfo.getCust_nm();
             temp.cust_cd = offerData.getCust_cd();
+            temp.ex_requ_dt = offerData.getEx_requ_dt();
             result.add(temp);
         }
 

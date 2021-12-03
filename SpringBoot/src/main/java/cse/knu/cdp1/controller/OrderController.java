@@ -31,6 +31,7 @@ public class OrderController {
         String plord_no;
         String cust_nm;
         String cust_cd;
+        String plord_dt;
     }
 
     @GetMapping("/orderList")
@@ -46,6 +47,7 @@ public class OrderController {
             temp.plord_no = orderData.getPlord_no();
             temp.cust_nm = customerInfo.getCust_nm();
             temp.cust_cd = orderData.getCust_cd();
+            temp.plord_dt = orderData.getPlord_dt();
             result.add(temp);
         }
 
