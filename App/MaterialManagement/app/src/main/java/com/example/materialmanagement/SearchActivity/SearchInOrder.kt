@@ -103,6 +103,7 @@ class SearchInOrder : AppCompatActivity() {
                                 intent.putExtra("plord_no", searchData[position].plord_no)
                                 intent.putExtra("cust_nm", searchData[position].cust_nm)
                                 intent.putExtra("cust_cd", searchData[position].cust_cd)
+                                intent.putExtra("plord_dt", searchData[position].plord_dt)
 
                                 setResult(RESULT_OK, intent)
                                 finish()

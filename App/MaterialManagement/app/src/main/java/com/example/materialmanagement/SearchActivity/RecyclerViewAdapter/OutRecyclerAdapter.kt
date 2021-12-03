@@ -19,10 +19,10 @@ class OutRecyclerAdapter(private var myRequest: List<OutInfo>) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) { //xml과 data 연결
-        val now = System.currentTimeMillis()
-        var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
+//        val now = System.currentTimeMillis()
+//        var simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN).format(now)
 
-        holder.in_date.text = simpleDateFormat
+        holder.in_date.text = myRequest[position].ex_requ_dt
         holder.item_num.text = myRequest[position].ex_requ_no
         holder.customer.text = myRequest[position].cust_nm
 

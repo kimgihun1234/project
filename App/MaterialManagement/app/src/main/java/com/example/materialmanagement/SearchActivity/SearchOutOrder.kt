@@ -100,6 +100,7 @@ class SearchOutOrder : AppCompatActivity() {
                                 intent.putExtra("ex_requ_no", searchData[position].ex_requ_no)
                                 intent.putExtra("cust_cd", searchData[position].cust_cd)
                                 intent.putExtra("cust_nm", searchData[position].cust_nm)
+                                intent.putExtra("ex_requ_dt", searchData[position].ex_requ_dt)
 
                                 setResult(RESULT_OK, intent)
                                 finish()
